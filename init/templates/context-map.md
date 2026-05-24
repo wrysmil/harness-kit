@@ -1,6 +1,6 @@
 # Context Map
 
-本文件由 Harness 初始化流程生成，用于帮助 AI 快速理解项目结构。迁移到新项目后，应通过 `cow-harness/init/project-profiler.prompt.md` 重新生成。
+本文件由 Harness 初始化流程生成，用于帮助 AI 快速理解项目结构。迁移到新项目后，应通过 `harness-kit/init/project-profiler.prompt.md` 重新生成。
 
 ## 顶层结构
 

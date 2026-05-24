@@ -7,21 +7,21 @@
 <!-- omx:generated:agents-md -->
 
 <!-- 项目 Harness 覆盖层 — 请勿删除 -->
-在开展任务专项工作之前，加载 `cow-harness/` 中的项目 harness。
+在开展任务专项工作之前，加载 `harness-kit/` 中的项目 harness。
 
 项目 harness 阅读顺序：
-1. `cow-harness/core/harness.md`
-2. `cow-harness/project.profile.md`
-3. `cow-harness/context-map.md`
-4. `cow-harness/core/routing.md`
-5. `cow-harness/core/artifacts.md`
-6. `cow-harness/project.verification.md`
-7. `cow-harness/core/verification.md`
-8. 当任务匹配 runbook 时，阅读 `cow-harness/core/runbooks.md`
+1. `harness-kit/core/harness.md`
+2. `harness-kit/project.profile.md`
+3. `harness-kit/context-map.md`
+4. `harness-kit/core/routing.md`
+5. `harness-kit/core/artifacts.md`
+6. `harness-kit/project.verification.md`
+7. `harness-kit/core/verification.md`
+8. 当任务匹配 runbook 时，阅读 `harness-kit/core/runbooks.md`
 
-OMX 运行时负责编排。`cow-harness/` 层负责项目边界、产物契约、验证门禁与迁移可移植性。
-默认 harness 路由是强制基线。若用户指定技能或工具，将其视为对 `cow-harness/core/routing.md` 的附加项，除非用户明确要求跳过、禁用或仅使用其他路由。
-当本 AGENTS.md 被重新生成时，保留此覆盖层，或从 `cow-harness/README.md` 重新应用。
+OMX 运行时负责编排。`harness-kit/` 层负责项目边界、产物契约、验证门禁与迁移可移植性。
+默认 harness 路由是强制基线。若用户指定技能或工具，将其视为对 `harness-kit/core/routing.md` 的附加项，除非用户明确要求跳过、禁用或仅使用其他路由。
+当本 AGENTS.md 被重新生成时，保留此覆盖层，或从 `harness-kit/README.md` 重新应用。
 <!-- 项目 Harness 覆盖层结束 -->
 
 # oh-my-codex - 智能多代理编排

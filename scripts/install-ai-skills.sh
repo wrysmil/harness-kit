@@ -13,7 +13,7 @@ if ! npm install -g "$OH_MY_CODEX_PACKAGE"; then
 Failed to install oh-my-codex.
 
 Check npm registry access and permissions, then rerun:
-  bash cow-harness/scripts/install-ai-skills.sh
+  bash harness-kit/scripts/install-ai-skills.sh
 MSG
   exit 1
 fi
@@ -34,7 +34,7 @@ if ! omx setup; then
   cat <<'MSG' >&2
 
 `omx setup` failed. Fix the reported setup issue, then rerun:
-  bash cow-harness/scripts/install-ai-skills.sh
+  bash harness-kit/scripts/install-ai-skills.sh
 MSG
   exit 1
 fi
@@ -44,7 +44,7 @@ if ! omx doctor; then
   cat <<'MSG' >&2
 
 `omx doctor` reported problems. Fix the reported issues, then rerun:
-  bash cow-harness/scripts/install-ai-skills.sh
+  bash harness-kit/scripts/install-ai-skills.sh
 MSG
   exit 1
 fi

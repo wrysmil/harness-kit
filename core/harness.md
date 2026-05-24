@@ -1,6 +1,6 @@
 # Harness Engineering
 
-本文件描述可迁移 Agent Harness 的通用架构。它不包含具体项目业务背景；项目业务画像放在 `cow-harness/project.profile.md`。
+本文件描述可迁移 Agent Harness 的通用架构。它不包含具体项目业务背景；项目业务画像放在 `harness-kit/project.profile.md`。
 
 ## 三层架构
 
@@ -16,7 +16,7 @@
 
 ### Project Overlay Layer
 
-由 `cow-harness/` 管理：
+由 `harness-kit/` 管理：
 
 - `project.profile.md`：当前项目画像，迁移到新项目后必须重新生成。
 - `context-map.md`：目录、模块和关键入口地图，初始化后由 AI 生成。
@@ -39,28 +39,28 @@
 - `CLAUDE.md`
 - `GEMINI.md`
 - `.cursor/rules/ai-entry.mdc`
-- `cow-harness/scripts/install-ai-skills.sh`
-- `cow-harness/scripts/harness-init.sh`
-- `cow-harness/scripts/harness-check.sh`
+- `harness-kit/scripts/install-ai-skills.sh`
+- `harness-kit/scripts/harness-init.sh`
+- `harness-kit/scripts/harness-check.sh`
 
-这层负责让不同工具进入同一套 Harness。根目录入口和工具目录从 `cow-harness/entrypoints/`、`cow-harness/adapters/` 投影；脚本直接在 `cow-harness/scripts/` 内执行，不投影到根目录。
+这层负责让不同工具进入同一套 Harness。根目录入口和工具目录从 `harness-kit/entrypoints/`、`harness-kit/adapters/` 投影；脚本直接在 `harness-kit/scripts/` 内执行，不投影到根目录。
 
 ## 新项目初始化顺序
 
-1. 将 `cow-harness/` 放入新项目。
+1. 将 `harness-kit/` 放入新项目。
 2. 对 AI 说：
 
 ```text
-请先读取 cow-harness/README.md 和 cow-harness/init/bootstrap.prompt.md。
+请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理。
 请先投影入口文件和工具适配目录。
-如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 cow-harness/scripts/install-ai-skills.sh。
-请读取 cow-harness/init/project-profiler.prompt.md，扫描当前项目并生成项目画像、上下文地图和验证画像。
+如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
+请读取 harness-kit/init/project-profiler.prompt.md，扫描当前项目并生成项目画像、上下文地图和验证画像。
 最后由你运行 Harness 检查，并汇总推断项、待确认项和验证结果。
 ```
 
 3. AI 生成或更新：
-   - `cow-harness/project.profile.md`
-   - `cow-harness/context-map.md`
-   - `cow-harness/project.verification.md`
+   - `harness-kit/project.profile.md`
+   - `harness-kit/context-map.md`
+   - `harness-kit/project.verification.md`
 4. 人 review `project.profile.md` 中的推断项和待确认项。

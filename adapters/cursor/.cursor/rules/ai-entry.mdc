@@ -10,4 +10,4 @@ alwaysApply: true
 
 开始任何任务前，先读取并遵循 `AGENTS.md`。若本文件与 `AGENTS.md` 冲突，以 `AGENTS.md` 为准。
 
-项目级约束位于 `cow-harness/`。任务路由、过程产物和验证门禁以 `cow-harness/` 为准。
+项目级约束位于 `harness-kit/`。任务路由、过程产物和验证门禁以 `harness-kit/` 为准。

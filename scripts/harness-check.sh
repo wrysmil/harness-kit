@@ -10,33 +10,33 @@ required_files=(
   "GEMINI.md"
   ".cursor/rules/ai-entry.mdc"
   ".agents/README.md"
-  "cow-harness/README.md"
-  "cow-harness/core/harness.md"
-  "cow-harness/project.profile.md"
-  "cow-harness/context-map.md"
-  "cow-harness/project.verification.md"
-  "cow-harness/core/routing.md"
-  "cow-harness/core/artifacts.md"
-  "cow-harness/core/verification.md"
-  "cow-harness/core/runbooks.md"
-  "cow-harness/init/bootstrap.prompt.md"
-  "cow-harness/init/project-profiler.prompt.md"
-  "cow-harness/init/templates/project.profile.md"
-  "cow-harness/init/templates/context-map.md"
-  "cow-harness/init/templates/project.verification.md"
-  "cow-harness/artifact-templates/spec.md"
-  "cow-harness/artifact-templates/plan.md"
-  "cow-harness/artifact-templates/verification.md"
-  "cow-harness/artifact-templates/decision.md"
-  "cow-harness/entrypoints/AGENTS.md"
-  "cow-harness/entrypoints/CLAUDE.md"
-  "cow-harness/entrypoints/GEMINI.md"
-  "cow-harness/adapters/agents/.agents/README.md"
-  "cow-harness/adapters/cursor/.cursor/rules/ai-entry.mdc"
-  "cow-harness/adapters/codex/README.md"
-  "cow-harness/scripts/install-ai-skills.sh"
-  "cow-harness/scripts/harness-init.sh"
-  "cow-harness/scripts/harness-check.sh"
+  "harness-kit/README.md"
+  "harness-kit/core/harness.md"
+  "harness-kit/project.profile.md"
+  "harness-kit/context-map.md"
+  "harness-kit/project.verification.md"
+  "harness-kit/core/routing.md"
+  "harness-kit/core/artifacts.md"
+  "harness-kit/core/verification.md"
+  "harness-kit/core/runbooks.md"
+  "harness-kit/init/bootstrap.prompt.md"
+  "harness-kit/init/project-profiler.prompt.md"
+  "harness-kit/init/templates/project.profile.md"
+  "harness-kit/init/templates/context-map.md"
+  "harness-kit/init/templates/project.verification.md"
+  "harness-kit/artifact-templates/spec.md"
+  "harness-kit/artifact-templates/plan.md"
+  "harness-kit/artifact-templates/verification.md"
+  "harness-kit/artifact-templates/decision.md"
+  "harness-kit/entrypoints/AGENTS.md"
+  "harness-kit/entrypoints/CLAUDE.md"
+  "harness-kit/entrypoints/GEMINI.md"
+  "harness-kit/adapters/agents/.agents/README.md"
+  "harness-kit/adapters/cursor/.cursor/rules/ai-entry.mdc"
+  "harness-kit/adapters/codex/README.md"
+  "harness-kit/scripts/install-ai-skills.sh"
+  "harness-kit/scripts/harness-init.sh"
+  "harness-kit/scripts/harness-check.sh"
   ".ai-runtime-artifacts/README.md"
 )
 
@@ -74,7 +74,7 @@ fi
 
 echo "==> Checking unfinished markers"
 if rg -n "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" \
-  AGENTS.md CLAUDE.md GEMINI.md .cursor .agents cow-harness .ai-runtime-artifacts; then
+  AGENTS.md CLAUDE.md GEMINI.md .cursor .agents harness-kit .ai-runtime-artifacts; then
   echo "unfinished markers found" >&2
   exit 1
 fi
@@ -109,8 +109,8 @@ echo "==> Checking package.json"
 node -e "JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package-json-ok')"
 
 echo "==> Checking shell scripts"
-bash -n cow-harness/scripts/install-ai-skills.sh
-bash -n cow-harness/scripts/harness-init.sh
-bash -n cow-harness/scripts/harness-check.sh
+bash -n harness-kit/scripts/install-ai-skills.sh
+bash -n harness-kit/scripts/harness-init.sh
+bash -n harness-kit/scripts/harness-check.sh
 
 echo "==> Harness check complete"

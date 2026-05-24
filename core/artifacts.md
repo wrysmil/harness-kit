@@ -40,7 +40,7 @@ skills:
   - superpowers:writing-plans
 source:
   - AGENTS.md
-  - cow-harness/core/routing.md
+  - harness-kit/core/routing.md
 created_at: 2026-05-14
 ---
 ```

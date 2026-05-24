@@ -13,12 +13,12 @@ Harness 脚手架不会预置业务 skill。比如专利、业务分析、发布
 团队成员不需要自己照着命令逐条执行。把下面这段话交给 AI：
 
 ```text
-请先读取 AGENTS.md 和 cow-harness/README.md。
-如果当前环境需要安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 cow-harness/scripts/install-ai-skills.sh。
+请先读取 AGENTS.md 和 harness-kit/README.md。
+如果当前环境需要安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
 完成后请汇总 oh-my-codex / omx 和基础 skills 的可用状态。
 ```
 
-AI 会按需调用 `cow-harness/scripts/install-ai-skills.sh`。该脚本负责安装或检查 `oh-my-codex` / `omx`，并检查本机是否已安装 superpowers skills。
+AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责安装或检查 `oh-my-codex` / `omx`，并检查本机是否已安装 superpowers skills。
 
 ## 外部通用 Skills
 
@@ -42,6 +42,6 @@ npx skills add obra/superpowers -g
 
 ## 优先级
 
-项目级 skill 只放真正属于本项目的能力。`oh-my-codex` / `omx` 由 npm 包和 `cow-harness/scripts/install-ai-skills.sh` 管理，不在 `.agents/skills/` 中重复定义。
+项目级 skill 只放真正属于本项目的能力。`oh-my-codex` / `omx` 由 npm 包和 `harness-kit/scripts/install-ai-skills.sh` 管理，不在 `.agents/skills/` 中重复定义。
 
 若 `.agents/skills/` 中的项目级规则与旧 `.cursor/`、`.agent/`、`.conductor/`、`.kiro/` 规则冲突，以项目级规则和 `AGENTS.md` 为准。

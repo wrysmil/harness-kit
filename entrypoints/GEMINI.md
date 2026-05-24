@@ -6,13 +6,13 @@
 
 ## Harness 规则（强制）
 
-本项目使用 `cow-harness/` 工程标准。以下规则在每个会话中自动生效。
+本项目使用 `harness-kit/` 工程标准。以下规则在每个会话中自动生效。
 
 ### 任务前检查清单
 
 在任何**非琐碎**任务之前，你必须：
 
-1. 阅读 `cow-harness/project.profile.md` 与 `cow-harness/context-map.md`
+1. 阅读 `harness-kit/project.profile.md` 与 `harness-kit/context-map.md`
 2. 使用下表为任务路由，并声明所选路由
 3. 遵循对应 runbook，将产物写入 `.ai-runtime-artifacts/`
 
@@ -47,18 +47,18 @@
 
 ### 产物格式
 
-每个产物文件**必须**以 YAML front matter 开头，包含：`artifact`、`route`、`skills`、`source`、`created_at`。详见 `cow-harness/core/artifacts.md`。
+每个产物文件**必须**以 YAML front matter 开头，包含：`artifact`、`route`、`skills`、`source`、`created_at`。详见 `harness-kit/core/artifacts.md`。
 
 ### 约束
 
 - **强制声明（每个任务）：** 回复第一行**必须**为 `「Harness：<路由或「小改动，直接处理」>」`。这证明已评估路由。对小改动任务，打印声明后直接继续。
-- **未声明时用户干预：** 若 AI 回复未以 `「Harness：...」` 开头，说明规则未加载。用户应发送：`请先读取 CLAUDE.md 和 cow-harness/core/routing.md，按 harness 规范重新处理我的上一个请求。`
+- **未声明时用户干预：** 若 AI 回复未以 `「Harness：...」` 开头，说明规则未加载。用户应发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - 非琐碎任务前，声明路由、技能与来源
 - 任何完成声明**必须**附带验证证据
 - 默认路由是强制基线；用户指定技能为附加项，而非替代项
 
 ---
 
-详细规范参见：`cow-harness/core/routing.md`、`cow-harness/core/artifacts.md`、`cow-harness/core/runbooks.md`、`cow-harness/core/verification.md`。
+详细规范参见：`harness-kit/core/routing.md`、`harness-kit/core/artifacts.md`、`harness-kit/core/runbooks.md`、`harness-kit/core/verification.md`。
 
 若本文件与 `AGENTS.md` 有冲突，以 `AGENTS.md` 为准。

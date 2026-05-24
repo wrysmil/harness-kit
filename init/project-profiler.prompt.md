@@ -5,10 +5,10 @@ skills:
   - explore
   - planner
 source:
-  - cow-harness/core/harness.md
-  - cow-harness/init/templates/project.profile.md
-  - cow-harness/init/templates/context-map.md
-  - cow-harness/init/templates/project.verification.md
+  - harness-kit/core/harness.md
+  - harness-kit/init/templates/project.profile.md
+  - harness-kit/init/templates/context-map.md
+  - harness-kit/init/templates/project.verification.md
 created_at: 2026-05-14
 ---
 
@@ -32,9 +32,9 @@ created_at: 2026-05-14
 
 请创建或更新：
 
-1. `cow-harness/project.profile.md`
-2. `cow-harness/context-map.md`
-3. `cow-harness/project.verification.md`
+1. `harness-kit/project.profile.md`
+2. `harness-kit/context-map.md`
+3. `harness-kit/project.verification.md`
 
 ## 要求
 
@@ -43,7 +43,7 @@ created_at: 2026-05-14
 - 对无法确认的信息，写入“待确认项”。
 - 对基于文件结构推断的信息，写入“推断项”。
 - 保持内容简洁，面向 AI 和工程师共同阅读。
-- 最后运行 `bash cow-harness/scripts/harness-check.sh`。
+- 最后运行 `bash harness-kit/scripts/harness-check.sh`。
 
 ## 输出摘要
 

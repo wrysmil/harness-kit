@@ -5,7 +5,7 @@ skills:
   - <skill>
 source:
   - AGENTS.md
-  - cow-harness/core/verification.md
+  - harness-kit/core/verification.md
 created_at: <YYYY-MM-DD>
 ---
 

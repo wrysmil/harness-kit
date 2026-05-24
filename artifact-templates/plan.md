@@ -5,7 +5,7 @@ skills:
   - <skill>
 source:
   - AGENTS.md
-  - cow-harness/core/routing.md
+  - harness-kit/core/routing.md
 created_at: <YYYY-MM-DD>
 ---
 
