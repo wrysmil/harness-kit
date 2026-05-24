@@ -17,8 +17,8 @@
 
 ## 平台判定
 
-- **Cursor**：使用 Task 工具 + `cursor-orchestration` skill；**不**调用 omx
-- **Codex CLI**：使用 `AGENTS.md` 中 OMX 专章 + `omx ultrawork`
+- **Cursor**：使用 Task 工具 + `cursor-orchestration` skill；**不**调用 omx；**不**加载 `AGENTS.omx.md`
+- **Codex CLI**：加载 `harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
 
 ## Cursor 路由摘要
 
@@ -46,8 +46,8 @@
 
 ## 与根 AGENTS.md 的关系
 
-根 `AGENTS.md` 若含 oh-my-codex / OMX 全文：**Cursor 会话忽略**其中 CLI、tmux、spawn_agent 相关段落。  
-Harness 覆盖层（`<!-- 项目 Harness 覆盖层 -->`）对 Cursor 与 Codex **均有效**。
+根 `AGENTS.md` 为工具中立 Harness 入口。OMX 全文在 `harness-kit/entrypoints/AGENTS.omx.md`。  
+Cursor 会话**仅**加载本 overlay + `.cursor/rules/`。
 
 ## 投影说明
 

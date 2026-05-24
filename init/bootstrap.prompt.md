@@ -19,6 +19,8 @@ created_at: 2026-05-14
 从 `harness-kit/entrypoints/` 投影到项目根目录：
 
 - `harness-kit/entrypoints/AGENTS.md` -> `AGENTS.md`
+- `harness-kit/entrypoints/AGENTS.omx.md` -> 保留在 harness-kit 内，或 Codex 项目合并进 `AGENTS.md`
+- `harness-kit/entrypoints/AGENTS.cursor-overlay.md` -> 保留在 harness-kit 内（Cursor 深读）
 - `harness-kit/entrypoints/CLAUDE.md` -> `CLAUDE.md`
 - `harness-kit/entrypoints/GEMINI.md` -> `GEMINI.md`
 
@@ -39,6 +41,15 @@ Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存
 
 - `.cursor/rules/cursor-subagent-routing.mdc`
 - `.agents/skills/cursor-orchestration/SKILL.md`
+
+可选启用 Cursor hooks：
+
+```bash
+cp harness-kit/adapters/cursor/.cursor/hooks.json.example .cursor/hooks.json
+chmod +x .cursor/hooks/*.sh
+```
+
+见 `harness-kit/adapters/cursor/orchestration/hooks/README.md`。
 
 ## 初始化项目画像
 

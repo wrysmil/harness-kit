@@ -282,11 +282,14 @@ Cursor 会话：**不**应加载 OMX tmux / spawn_agent / omx question 段落。
 
 ### Phase 3 — 可选增强
 
-| 交付物 | 说明 |
-|---|---|
-| `.cursor/hooks.json` 示例 | beforeSubmitPrompt 注入路由上下文 |
-| continuous loop 文档 | 明确 opt-in；引用 harness-engineer loop 摘要 |
-| harness-engineer 版本钉扎 | `orchestration/VENDOR.md` 记录上游版本与 diff |
+| 交付物 | 路径 | 状态 |
+|---|---|---|
+| hooks.json 示例 | `adapters/cursor/.cursor/hooks.json.example` | [√] |
+| hook 脚本 | `adapters/cursor/.cursor/hooks/*.sh` | [√] |
+| hooks 说明 | `adapters/cursor/orchestration/hooks/README.md` | [√] |
+| continuous loop | `adapters/cursor/orchestration/continuous-loop.md` | [√] |
+| AGENTS 拆分 | `entrypoints/AGENTS.md` + `AGENTS.omx.md` | [√] |
+| VENDOR 版本钉扎 | `orchestration/VENDOR.md` | [√] |
 
 ---
 

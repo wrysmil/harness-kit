@@ -6,24 +6,19 @@ Cursor 侧子 Agent 编排层，与 Codex/omx Runtime 并列，共享 `harness-k
 
 ```
 adapters/cursor/
-├── .cursor/rules/
-│   ├── ai-entry.mdc
-│   └── cursor-subagent-routing.mdc
+├── .cursor/
+│   ├── rules/                   # ai-entry、cursor-subagent-routing
+│   ├── hooks.json.example       # 可选 hooks（复制为 hooks.json）
+│   └── hooks/*.sh
 ├── orchestration/
 │   ├── platform-adapters.zh.md
 │   ├── dispatcher-workflow.md
 │   ├── context-budget.md
+│   ├── continuous-loop.md       # opt-in 自治循环
 │   ├── model-routing.yaml
-│   ├── config.defaults.yaml
-│   ├── CURSOR-PRECHECK.md
-│   ├── VENDOR.md
-│   ├── agents/                    # Phase 2 角色面
-│   │   ├── leader.md
-│   │   ├── implementer.md
-│   │   ├── reviewer.md
-│   │   └── debugger.md
-│   └── tracking/
-│       └── schema.md
+│   ├── hooks/README.md
+│   ├── agents/                  # Leader / Implementer / Reviewer / Debugger
+│   └── tracking/schema.md
 └── README.md
 ```
 
@@ -35,17 +30,20 @@ adapters/cursor/
 | `adapters/agents/.agents/skills/cursor-orchestration/` | `.agents/skills/cursor-orchestration/` |
 | `adapters/cursor/orchestration/` | 保留在 harness-kit 内（不投影） |
 
-## 产物模板（项目根 artifact-templates 投影后）
+## AGENTS 拆分
 
-- `dispatch-track.md` — 并行追踪
-- `handoff.md` — 中断恢复
-- `wu-checklist.md` — 单 WU 验收
+| 文件 | 用途 |
+| --- | --- |
+| `entrypoints/AGENTS.md` | 工具中立 Harness 入口（投影到根） |
+| `entrypoints/AGENTS.omx.md` | Codex/OMX 专章 |
+| `entrypoints/AGENTS.cursor-overlay.md` | Cursor 深读 |
 
-## 验收（Phase 2）
+## 可选 Hooks
 
-- [ ] 并行 WU 有 `tracking/DISPATCH-TRACK-*.md`
-- [ ] implementer 与 reviewer 为不同 Task
-- [ ] 中断后可从 HANDOFF + track 恢复
+```bash
+cp harness-kit/adapters/cursor/.cursor/hooks.json.example .cursor/hooks.json
+chmod +x .cursor/hooks/*.sh
+```
 
 ## 上游
 

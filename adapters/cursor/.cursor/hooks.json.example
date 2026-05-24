@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/harness-session-init.sh"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": ".cursor/hooks/harness-subagent-track-reminder.sh"
+      }
+    ]
+  }
+}

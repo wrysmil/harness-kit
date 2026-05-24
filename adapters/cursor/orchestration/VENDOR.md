@@ -6,7 +6,15 @@
 | 版本 | 5.3.1 |
 | 源路径 | `~/.cursor/skills/harness-engineer-5.3.0/` |
 | 改编日期 | 2026-05-24 |
+| Phase 3 完成 | 2026-05-24 |
 | harness-kit 方案 | CURSOR-HARNESS-INTEGRATION-PLAN.md 方案 B |
+
+## 版本钉扎策略
+
+1. **不**整包 vendoring harness-engineer；仅 fork 列于下表的文件。
+2. 上游升级时：对比 `~/.cursor/skills/harness-engineer-5.3.0/`，更新本目录对应文件，并递增本表「改编日期」。
+3. 重大差异写入 `CURSOR-HARNESS-INTEGRATION-PLAN.md` 或本文件「未引入模块」。
+4. `_meta.json` 上游版本：**5.3.1**（slug: harness-engineer）。
 
 ## 本目录改编来源
 
@@ -22,6 +30,10 @@
 | `context-budget.md` | `runtime/context-engineering.md` |
 | `model-routing.yaml` | `platform-adapters` + OMX 模型表（手写） |
 | `artifact-templates/dispatch-track.md` 等 | 新建（harness-kit 产物契约） |
+| `continuous-loop.md` | `runtime/loop.md`（摘要 + harness-kit 映射） |
+| `orchestration/hooks/README.md` | `runtime/hook-system.md` |
+| `.cursor/hooks.json.example` | 新建（Cursor 原生 hooks） |
+| `entrypoints/AGENTS.omx.md` | 自 `entrypoints/AGENTS.md` 拆分 |
 | `config.defaults.yaml` | `CONFIG.yaml`（简化） |
 | `.cursor/rules/cursor-subagent-routing.mdc` | `SKILL.md` Rule 1–15 + platform-adapters |
 | `.agents/skills/cursor-orchestration/SKILL.md` | dispatcher + context-engineering 摘要 |
@@ -29,6 +41,6 @@
 ## 未引入的上游模块
 
 - `PLATFORM_REQUIREMENTS.md`（HALT 语义）→ 降级为 `CURSOR-PRECHECK.md`
-- `runtime/loop.md` 全文
+- `runtime/loop.md` 全文 → 摘要见 `continuous-loop.md`
 - `tools/tool-router.md`
 - `docs/status/` 目录约定 → 合并至 `.ai-runtime-artifacts/execution-logs/`
