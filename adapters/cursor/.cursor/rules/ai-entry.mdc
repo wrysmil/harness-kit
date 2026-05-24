@@ -1,0 +1,13 @@
+---
+description: 统一 AI 入口
+globs:
+alwaysApply: true
+---
+
+# Cursor 统一入口
+
+本项目的 AI 执行契约以根目录 `AGENTS.md` 为准。
+
+开始任何任务前，先读取并遵循 `AGENTS.md`。若本文件与 `AGENTS.md` 冲突，以 `AGENTS.md` 为准。
+
+项目级约束位于 `cow-harness/`。任务路由、过程产物和验证门禁以 `cow-harness/` 为准。
