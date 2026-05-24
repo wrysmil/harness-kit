@@ -18,10 +18,13 @@
 
 ### 相对上游的 Cursor 增强
 
-- **统一入口规则**：`adapters/cursor/.cursor/rules/ai-entry.mdc` 设为 `alwaysApply: true`，Cursor 会话自动加载项目 AI 契约。
-- **契约优先级明确**：Cursor 以根目录 `AGENTS.md` 为执行契约；项目级路由、产物与验证以 `harness-kit/` 为准，避免 Rules 与 Harness 规范脱节。
+- **统一入口规则**：`adapters/cursor/.cursor/rules/ai-entry.mdc` 与 `cursor-subagent-routing.mdc` 设为 `alwaysApply: true`。
+- **Cursor 子 Agent 编排**：`cursor-orchestration` skill + `adapters/cursor/orchestration/`，Task 并行实现等价于 `omx ultrawork`。
+- **双平台路由**：`core/routing.md` 含 Codex 与 Cursor 并列路由列。
 - **一键投影**：初始化流程会将 Cursor 适配目录投影到项目根 `.cursor/`，与 `entrypoints/`、`adapters/agents/` 等保持同一套 Harness 语义。
-- **与 `.agents/` 协同**：项目级 skills 放 `.agents/skills/`，与 Cursor Rules、Harness 路由分层清晰，减少多工具并存时的规则冲突。
+- **与 `.agents/` 协同**：预置 `cursor-orchestration` skill；业务 skill 仍放 `.agents/skills/`。
+
+集成方案详见根目录 `CURSOR-HARNESS-INTEGRATION-PLAN.md`；Cursor 适配说明见 `adapters/cursor/README.md`。
 
 感谢上游作者的开源贡献。使用或再分发时，请保留对本仓库及上游项目的适当署名。
 
@@ -46,7 +49,8 @@ Harness 工程化的难点往往在「起步」：规则散落、各工具各一
 | 顶层契约 | `AGENTS.md` |
 | Claude Code | `CLAUDE.md` |
 | Gemini | `GEMINI.md` |
-| Cursor | `.cursor/rules/ai-entry.mdc` |
+| Cursor | `.cursor/rules/`（含 `ai-entry`、`cursor-subagent-routing`） |
+| Cursor 编排文档 | `harness-kit/adapters/cursor/orchestration/`（不投影） |
 | Agents / Skills | `.agents/` |
 | Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
 

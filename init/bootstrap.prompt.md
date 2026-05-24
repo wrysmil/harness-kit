@@ -31,7 +31,14 @@ created_at: 2026-05-14
 - `harness-kit/adapters/agents/.agents/` -> `.agents/`
 - `harness-kit/adapters/cursor/.cursor/` -> `.cursor/`
 
+`harness-kit/adapters/cursor/orchestration/` **不投影**，保留在 harness-kit 内供 AI 读取。
+
 Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.codex/` 当作纯手写模板；它主要由 `omx setup` 生成。
+
+Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存在：
+
+- `.cursor/rules/cursor-subagent-routing.mdc`
+- `.agents/skills/cursor-orchestration/SKILL.md`
 
 ## 初始化项目画像
 
@@ -43,6 +50,10 @@ Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.co
 - `.ai-runtime-artifacts/verifications/`
 - `.ai-runtime-artifacts/decisions/`
 - `.ai-runtime-artifacts/retros/`
+- `.ai-runtime-artifacts/execution-logs/`
+- `.ai-runtime-artifacts/execution-logs/tracking/`（Cursor 并行追踪，可选目录）
+
+产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`wu-checklist.md`）。
 
 完成入口和工具适配投影后，读取 `harness-kit/init/project-profiler.prompt.md`，生成或更新：
 

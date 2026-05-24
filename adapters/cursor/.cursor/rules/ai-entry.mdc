@@ -6,8 +6,18 @@ alwaysApply: true
 
 # Cursor 统一入口
 
-本项目的 AI 执行契约以根目录 `AGENTS.md` 为准。
+## 规范优先级
 
-开始任何任务前，先读取并遵循 `AGENTS.md`。若本文件与 `AGENTS.md` 冲突，以 `AGENTS.md` 为准。
+1. `harness-kit/core/` — 路由、产物、验证（强制）
+2. `.cursor/rules/cursor-subagent-routing.mdc` — Cursor 子 Agent 委派
+3. 根目录 `AGENTS.md` — Harness 覆盖层有效；**OMX/Codex 专章在 Cursor 中忽略**（omx、tmux、spawn_agent）
 
-项目级约束位于 `harness-kit/`。任务路由、过程产物和验证门禁以 `harness-kit/` 为准。
+## 会话开始
+
+1. 读取 `harness-kit/core/routing.md`
+2. 多 task 实现走 `cursor-orchestration`（`.agents/skills/cursor-orchestration/`）
+3. 可选深读：`harness-kit/entrypoints/AGENTS.cursor-overlay.md`
+
+## 声明
+
+每个任务第一句：`「Harness：<route 或 "小改动，直接处理">」`

@@ -6,7 +6,9 @@
 
 - `skills/`：项目自己新增的 skills。
 
-Harness 脚手架不会预置业务 skill。比如专利、业务分析、发布检查等能力，都应由项目按需新增到 `.agents/skills/`。
+Harness 脚手架预置 **Cursor 编排** skill（投影后位于 `.agents/skills/cursor-orchestration/`），用于 Cursor 上多 task 并行实现（`omx ultrawork` 的语义等价）。Codex 仍走 `omx`。
+
+其他业务 skill（专利、业务分析、发布检查等）由项目按需新增到 `.agents/skills/`。
 
 ## AI 接入方式
 

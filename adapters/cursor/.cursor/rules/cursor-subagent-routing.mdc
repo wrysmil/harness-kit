@@ -1,0 +1,117 @@
+---
+description: Cursor 子 Agent 路由与委派协议
+globs:
+alwaysApply: true
+---
+
+# Cursor 子 Agent 路由
+
+本规则适用于 **Cursor Agent 模式**。在 Cursor 中，子 Agent 通过 **Task 工具** 派发，不使用 `omx`、`spawn_agent`、tmux 或 Codex 专有命令。
+
+## 优先级
+
+1. `harness-kit/core/routing.md` — 路由与产物规范（强制）
+2. 本文件 — Cursor 执行映射
+3. 根目录 `AGENTS.md` — 若含 OMX/Codex 专章，Cursor 会话**忽略**其中 omx/tmux/spawn 段落
+
+详细平台映射见 `harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`。
+
+## 平台检测
+
+满足以下任一条件即视为 Cursor 环境：
+
+- 工作区存在 `.cursor/` 且 Task 工具可用
+- 用户明确在 Cursor IDE 中运行 Agent
+
+检测到 Cursor 后，多 task 并行实现走 `cursor-orchestration`，**不要**调用 `omx ultrawork`。
+
+## Harness 强制声明
+
+收到任务后，第一句必须为：
+
+```text
+「Harness：<route 或 "小改动，直接处理">」
+```
+
+Cursor 多 task 实现示例：
+
+```text
+「Harness：cursor-orchestration:dispatcher-workflow」
+```
+
+## OMX 角色 → Cursor Task 映射
+
+| 任务形态 | Task `subagent_type` | 说明 |
+| --- | --- | --- |
+| 仓库搜索 / 符号映射 | `explore` | 设 `readonly: true` |
+| 实现 / 重构 | `generalPurpose` | prompt 中钉死文件列表与禁止事项 |
+| Shell / 测试 / 构建 | `shell` | 仅执行命令，不做架构决策 |
+| CI 失败调查 | `ci-investigator` | 只读分析 CI 日志 |
+| 实验性多方案 | `best-of-n-runner` | 需用户明确请求 |
+
+无专用类型的角色（architect / critic / planner / debugger）用 `generalPurpose`，在 prompt 开头声明只读或实现职责。
+
+## Leader 协议（主 Agent）
+
+1. 路由判定 → 声明 `「Harness：…」`
+2. 非小改动：读 `harness-kit/core/routing.md` 与相关 spec/plan
+3. 可并行时：拆分为**有界、可验证、文件所有权清晰**的子任务
+4. 同一批次最多 **5** 个并行 Task；遇 429/500 降至 3
+5. 整合子 Agent 结果，**主 Agent 负责最终验证**后再声称完成
+6. **生成与审查分离**：实现 Task 与审查 Task **必须不同实例**（见 `agents/reviewer.md`）
+7. **并行必追踪**：多 WU 并行时维护 `tracking/DISPATCH-TRACK-*.md`（见 `tracking/schema.md`）
+
+## Worker 协议（子 Agent）
+
+1. 只执行分配切片，不重写全局计划
+2. 不递归派发子 Agent（除非主 Agent 明确要求）
+3. 遇阻塞、范围扩大、文件冲突时向上报告，不静默扩 scope
+4. 返回结构化摘要：结论、证据路径、风险、建议下一步
+
+## 何时派发子 Agent
+
+**派发：**
+
+- 跨 3+ 模块的只读探索
+- 已批准 plan 中的独立 work unit（WU）可并行
+- 多个独立测试失败 / 独立子系统 bug
+- 实现后的独立审查
+
+**不派发（主 Agent 直接做）：**
+
+- 单文件机械修改（routing 小改动）
+- 子任务强依赖、需共享可变状态
+- 范围不清晰（先 brainstorming 或澄清）
+
+## 上下文纪律
+
+- 上下文约 **40%** 时：压缩或写 handoff，再开新 Task
+- 每个实现子 Agent：**最多 3–5 个文件**；超出则拆分
+- 大仓库探索：限定目录，跳过 `node_modules/`、`.git/`、`dist/`、`target/`、`.venv/`
+
+## 产物
+
+| 阶段 | 路径 |
+| --- | --- |
+| 执行日志 | `.ai-runtime-artifacts/execution-logs/` |
+| 追踪（可选） | `.ai-runtime-artifacts/execution-logs/tracking/` |
+| Handoff | `.ai-runtime-artifacts/execution-logs/HANDOFF.md` |
+| 追踪 schema | `harness-kit/adapters/cursor/orchestration/tracking/schema.md` |
+| Agent 面 | `harness-kit/adapters/cursor/orchestration/agents/` |
+
+格式遵循 `harness-kit/core/artifacts.md` 与 `harness-kit/artifact-templates/execution-log.md`。
+
+## 推荐 skill 链（Cursor）
+
+```text
+superpowers:brainstorming → superpowers:writing-plans → cursor-orchestration → superpowers:verification-before-completion
+```
+
+多 task 编码激活 `cursor-orchestration`（`.agents/skills/cursor-orchestration/SKILL.md`）。
+
+## 禁止（Cursor 会话）
+
+- 调用 `omx ultrawork`、`omx team`、`omx explore` 等 OMX CLI
+- 引用 `spawn_agent`、`omx question`、tmux 窗格指令
+- 将 OMX 团队 `worker` 角色当作通用子 Agent 类型
+- 无验证证据声称完成
