@@ -8,7 +8,7 @@
 - 已批准设计后的实施计划使用 `superpowers:writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
   - **Codex CLI**：使用 `oh-my-codex` 的 `omx` 工作流（如 `omx ultrawork`）
-  - **Cursor**：使用 `cursor-orchestration:dispatcher-workflow`（Task 工具并行，见 `harness-kit/adapters/cursor/orchestration/`）
+  - **Cursor**：使用 `cursor-orchestration:dispatcher-workflow`（`.cursor/agents/` subagent 并行，见 `harness-kit/adapters/cursor/orchestration/`）
 - 小改动和单文件机械修改由当前助手直接处理。
 - 项目级 skill 优先于通用 skill。
 
@@ -33,8 +33,8 @@
 | 实施计划 | `superpowers:writing-plans` | `superpowers:writing-plans` | `.ai-runtime-artifacts/plans/` |
 | 多 task 编码 / 并行实现 | `omx ultrawork` 或等价 omx 工作流 | `cursor-orchestration:dispatcher-workflow` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
 | 代码审查 / 验证 | `superpowers:verification-before-completion` | `superpowers:verification-before-completion` | `.ai-runtime-artifacts/verifications/` |
-| 缺陷调查 | `superpowers:systematic-debugging` 或 `omx` debugger 路由 | `superpowers:systematic-debugging` + Task `explore`（只读） | `.ai-runtime-artifacts/specs/` 或 `.ai-runtime-artifacts/verifications/` |
-| 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立审查 Task | `.ai-runtime-artifacts/verifications/` |
+| 缺陷调查 | `superpowers:systematic-debugging` 或 `omx` debugger 路由 | `superpowers:systematic-debugging` + `harness-debugger` 或 `harness-explorer` | `.ai-runtime-artifacts/specs/` 或 `.ai-runtime-artifacts/verifications/` |
+| 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立 `harness-reviewer` | `.ai-runtime-artifacts/verifications/` |
 | 架构决策 | architect / critic / planner 组合 | Task `generalPurpose`（只读）× 多轮 + decision 产物 | `.ai-runtime-artifacts/decisions/` |
 | 文章 / 知识沉淀 / 对外文档 | `superpowers:brainstorming` + 写作风格 skill + 文档发布 skill | 同左 | `.ai-runtime-artifacts/retros/` 或用户指定位置 |
 | 小改动 / 单文件机械修改 | 直接处理 | 直接处理 | 无需产物 |
@@ -48,6 +48,20 @@
 - 作为实施流程末尾的验证步骤（无论用户是否显式说"验证"）
 - 需要跨模块理解才能给出结论的分析
 
+## 阶段门禁
+
+写入下列产物后**须暂停**，等用户在本会话明确继续，再进入下一阶段。此规则优先于 AGENTS.md 自主性指令。
+
+| 阶段 | 产物 | 暂停后用户可说 |
+| --- | --- | --- |
+| 设计完成 | `.ai-runtime-artifacts/specs/` | 「写计划」「直接实现」或给修改意见 |
+| 计划完成 | `.ai-runtime-artifacts/plans/` | 「开始实现」「并行执行」或给修改意见 |
+| 决策完成 | `.ai-runtime-artifacts/decisions/` | 「执行」 |
+
+**已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须记录在产物 front matter 或回复中）。
+
+**Cursor 实现阶段：** 用户说「开始实现」后，Leader 须委派 `.cursor/agents/harness-implementer`，不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
+
 ## 运行约束
 
 - **强制声明（每次任务必须）：** 收到用户任务后，第一句话必须声明 harness 判定结果，格式为 `「Harness：<route 或 "小改动，直接处理">」`。无论任务大小，必须有这一行，证明已经过路由判定。如果判定为小改动，直接打印声明后开始处理。
@@ -55,5 +69,5 @@
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。
 - **Codex**：调用 `omx` 前写清目标、范围、禁止事项和验收标准；`omx` 输出只作为建议，主执行者必须复核后才能落地。
-- **Cursor**：派发 Task 前写清 WU 目标、文件列表、禁止事项与 done criteria；子 Agent 输出须由主 Agent 整合并验证后再落地。
+- **Cursor**：委派 `.cursor/agents/harness-*` subagent 前写清 WU 目标、文件列表、禁止事项与 done criteria；子 Agent 输出须由主 Agent 整合并验证后再落地。
 - 任何完成声明前必须有验证证据。

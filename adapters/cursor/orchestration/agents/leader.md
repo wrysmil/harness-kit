@@ -28,14 +28,14 @@
 
 1. **路由**：首句 `「Harness：…」`；多 task 实现走 `cursor-orchestration`
 2. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权）
-3. **派发**：并行 Task ≤5；每个 prompt 引用 `agents/implementer.md` 或 `agents/reviewer.md`
+3. **派发**：并行委派 `harness-implementer` ≤5；完成后委派独立 `harness-reviewer`
 4. **整合**：合并 WU 结果，处理文件冲突
-5. **验证**：运行 project.verification；派发**独立** reviewer Task
+5. **验证**：运行 project.verification；委派**独立** `harness-reviewer`
 6. **追踪**：append-only 写入 `DISPATCH-TRACK-*.md`；中断时写 `HANDOFF.md`
 
 ## 禁止
 
-- 与 implementer 共用同一 Task 会话做审查
+- 与 implementer 共用同一 subagent 实例做审查
 - 未写 tracking 就并行派发多个 WU
 - 跳过 execution-log 完成声明
 - 调用 omx / spawn_agent / tmux

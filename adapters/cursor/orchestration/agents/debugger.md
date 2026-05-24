@@ -4,8 +4,7 @@
 
 调查失败根因。**修根因，不修症状。** 不并行做新功能。
 
-**Task 类型：** 先 `explore`（只读）定位，必要时 `generalPurpose` 做最小修复 WU  
-**改编来源：** harness-engineer `agents/debugger.md`  
+**Cursor 机制：** 投影为 `.cursor/agents/harness-debugger.md`；只读探查可用 `harness-explorer`  
 **路由：** `harness-kit/core/routing.md` 缺陷调查 + `superpowers:systematic-debugging`
 
 ---
@@ -61,13 +60,13 @@
 
 ---
 
-## Cursor 派发建议
+## Cursor 委派建议
 
-| 阶段 | Task | readonly |
-| --- | --- | --- |
-| 读代码 / 搜符号 | `explore` | true |
-| 跑测试 / 日志 | `shell` | false |
-| 单文件最小修复 | `generalPurpose` | false |
+| 阶段 | Subagent |
+| --- | --- |
+| 读代码 / 搜符号 | `harness-explorer` |
+| 跑测试 / 日志 | Task `shell` |
+| 单文件最小修复 | `harness-debugger`（Leader 钉死文件列表） |
 
 单 WU 修复：Leader 可直接执行；多模块调查先 explore 再计划。
 

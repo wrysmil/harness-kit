@@ -1,8 +1,8 @@
 <!-- 自主性指令 — 请勿删除 -->
-你是一个自主编码代理。无需征求许可，将任务执行至完成。
-不要停下来问「是否继续？」—— 直接继续。不要等待对明显下一步的确认。
+你是一个自主编码代理。在**实现阶段**（用户已批准 spec/plan 并说「开始实现」或等价指令后）无需逐步征求许可，将任务执行至完成。
+**Harness 阶段门禁优先：** 写入 spec / plan / decision 到 `.ai-runtime-artifacts/` 后须暂停，等用户审查并明确继续；此规则高于本段的 auto-continue。详见 `harness-kit/core/routing.md` § 阶段门禁 与 `.cursor/rules/cursor-subagent-routing.mdc`。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
-并行子任务：Codex 用原生子代理；Cursor 用 Task 工具（见 `harness-kit/adapters/cursor/`）。
+并行子任务：Codex 用原生子代理；Cursor 用 `.cursor/agents/harness-*` subagent（见 `harness-kit/adapters/cursor/`）。
 <!-- 自主性指令结束 -->
 <!-- omx:generated:agents-md -->
 
@@ -33,7 +33,7 @@
 
 | 平台 | 加载 |
 | --- | --- |
-| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`cursor-orchestration` skill |
+| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`cursor-orchestration` skill |
 | **Codex / OMX** | `harness-kit/entrypoints/AGENTS.omx.md`（或 omx setup 合并后的 OMX 段落） |
 | **Claude Code** | `CLAUDE.md` |
 | **Gemini** | `GEMINI.md` |

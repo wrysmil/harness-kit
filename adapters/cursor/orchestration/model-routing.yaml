@@ -1,40 +1,33 @@
-# Cursor Task 模型路由建议（非强制）
-# omx 有 omx setup 自动生成表；Cursor 由 Leader 在 Task 调用时可选指定 model。
-# 未指定时继承主 Agent 默认模型。
+# Cursor subagent 模型路由建议（非强制）
+# 实现/审查优先使用 .cursor/agents/harness-*；未指定 model 时继承主 Agent。
 
 roles:
   leader:
     description: 主 Agent 编排、整合、验证
-    subagent_type: null  # 主线程
+    subagent: null
     model: inherit
-    notes: 复杂路由与 worktree 拆分
 
-  explore:
-    description: 仓库搜索、符号映射、只读调查
-    subagent_type: explore
+  harness_explorer:
+    description: 只读探查
+    subagent: harness-explorer
     readonly: true
-    model: fast   # 如 composer-2.5-fast / 低延迟模型
-    reasoning: low
+    model: fast
 
-  implementer:
+  harness_implementer:
     description: 有界 WU 实现
-    subagent_type: generalPurpose
+    subagent: harness-implementer
     model: inherit
-    reasoning: medium
 
-  reviewer:
+  harness_reviewer:
     description: 独立审查
-    subagent_type: generalPurpose
+    subagent: harness-reviewer
     readonly: true
     model: inherit
-    reasoning: high
 
-  debugger:
+  harness_debugger:
     description: 根因调查
-    subagent_type: explore
-    readonly: true
+    subagent: harness-debugger
     model: inherit
-    reasoning: high
 
   shell_runner:
     description: 测试、构建、lint
@@ -45,9 +38,6 @@ roles:
     description: CI 失败分析
     subagent_type: ci-investigator
     model: inherit
-
-# 映射到 Cursor Task 可用 model  slug 时，以当前 Cursor 版本文档为准。
-# 仅当任务确实需要不同能力时指定 model；否则省略 model 参数继承 Leader。
 
 defaults:
   max_parallel: 3

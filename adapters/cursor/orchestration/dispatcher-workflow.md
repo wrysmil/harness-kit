@@ -40,17 +40,19 @@ GROUP-2（依赖 GROUP-1）:
   WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口
 ```
 
-## 步骤 2：并行派发（Task）
+## 步骤 2：并行派发（Subagent）
 
-对当前 GROUP 内无未完成依赖的 WU，**并行**派发 Task：
+对当前 GROUP 内无未完成依赖的 WU，**并行**委派 `.cursor/agents/` 中的 subagent：
 
-| WU 类型 | subagent_type | readonly |
+| WU 类型 | Subagent | 说明 |
 | --- | --- | --- |
-| 只读探查 | `explore` | true |
-| 代码实现 | `generalPurpose` | false |
-| 测试/构建 | `shell` | false |
+| 只读探查 | `harness-explorer` 或 Task `explore` | readonly |
+| 代码实现 | **`harness-implementer`** | 每 WU 独立实例 |
+| 测试/构建 | Task `shell` | 仅命令，不做架构决策 |
 
-**每个 Task prompt 必须包含：**
+**禁止** Leader 在主线程直接修改业务代码（routing「小改动」除外）。
+
+**每个委派 prompt 必须包含：**
 
 1. WU 目标与 done criteria
 2. 允许修改的文件列表
@@ -62,7 +64,7 @@ GROUP-2（依赖 GROUP-1）:
 1. 收集所有 WU 结果
 2. 检查文件冲突 — 有冲突则顺序合并或开修复 WU
 3. 运行 `harness-kit/project.verification.md` 中的最小验证集
-4. **派发独立审查 Task**（`generalPurpose`，只读 + 审查 prompt）— 不得用实现者自审
+4. **委派独立 `harness-reviewer` subagent** — 不得与 implementer 同实例
 5. 审查通过后写 execution-log
 
 ## 步骤 4：追踪（并行编排时**必须**）
@@ -78,12 +80,12 @@ GROUP-2（依赖 GROUP-1）:
 
 ## Agent 面索引
 
-| 角色 | 文件 | Task 类型 |
+| 角色 | 文件 | Cursor 机制 |
 | --- | --- | --- |
 | Leader | `agents/leader.md` | 主 Agent |
-| Implementer | `agents/implementer.md` | `generalPurpose` / `shell` |
-| Reviewer | `agents/reviewer.md` | `generalPurpose`（只读，**独立实例**） |
-| Debugger | `agents/debugger.md` | `explore` → 修复 WU |
+| Implementer | `agents/implementer.md` | `.cursor/agents/harness-implementer.md` |
+| Reviewer | `agents/reviewer.md` | `.cursor/agents/harness-reviewer.md` |
+| Debugger | `agents/debugger.md` | `.cursor/agents/harness-debugger.md` |
 
 上下文纪律：`context-budget.md`。模型建议：`model-routing.yaml`。
 

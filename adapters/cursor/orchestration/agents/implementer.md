@@ -4,7 +4,7 @@
 
 通过 Task 派发的 **实现者 Worker**。只执行分配 WU，不重规划，不派发子 Agent。
 
-**Task 类型：** `generalPurpose`（写）或 `shell`（测试/构建）  
+**Cursor 机制：** 投影为 `.cursor/agents/harness-implementer.md`（本文件为详细参考）  
 **改编来源：** harness-engineer `agents/implementer.md`
 
 ---

@@ -3,57 +3,38 @@
 
 # Cursor 执行契约（Harness Kit）
 
-本文件是 **Cursor Agent** 的补充契约。完整 Harness 规范仍以 `harness-kit/core/` 为准。
+本文件是 **Cursor Agent** 的补充契约。路由与阶段门禁以 `harness-kit/core/routing.md` 与 `.cursor/rules/cursor-subagent-routing.mdc` 为准。
 
 ## 阅读顺序（Cursor 会话）
 
-1. `harness-kit/core/harness.md`
-2. `harness-kit/project.profile.md`
-3. `harness-kit/context-map.md`
-4. `harness-kit/core/routing.md`（含 Cursor 等价路由列）
-5. `harness-kit/core/artifacts.md`
-6. `harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`
-7. `.cursor/rules/cursor-subagent-routing.mdc`（投影后路径）
+1. `harness-kit/core/routing.md`（含阶段门禁）
+2. `.cursor/rules/cursor-subagent-routing.mdc`
+3. `harness-kit/project.profile.md`、`harness-kit/context-map.md`
+4. `harness-kit/core/artifacts.md`
+5. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
 
 ## 平台判定
 
-- **Cursor**：使用 Task 工具 + `cursor-orchestration` skill；**不**调用 omx；**不**加载 `AGENTS.omx.md`
-- **Codex CLI**：加载 `harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
+- **Cursor**：`.cursor/agents/harness-*` + `cursor-orchestration` skill；**不**调用 omx
+- **Codex CLI**：`harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
 
-## Cursor 路由摘要
+## 子 Agent
 
-| 任务 | Route |
-| --- | --- |
-| 需求 / 设计 | `superpowers:brainstorming` |
-| 计划 | `superpowers:writing-plans` |
-| 多 task 实现 | `cursor-orchestration:dispatcher-workflow` |
-| 验证 | `superpowers:verification-before-completion` |
-| 小改动 | 直接处理 |
+项目 subagent 位于 `.cursor/agents/`（bootstrap 从 `harness-kit/adapters/cursor/.cursor/agents/` 投影）：
+
+- `harness-implementer` — 有界实现（plan 批准后）
+- `harness-reviewer` — 独立审查（readonly）
+- `harness-explorer` — 只读探查
+- `harness-debugger` — 缺陷调查
+
+路由表见 `harness-kit/core/routing.md`（不在此重复）。
 
 ## 强制声明
 
 每个任务第一句：`「Harness：<route>」`
 
-## 子 Agent
-
-- 机制：**Task 工具**（`explore` / `generalPurpose` / `shell` / `ci-investigator`）
-- 并行上限：5（默认 3）
-- Leader 整合 + 验证；Worker 只做分配切片
-
 ## 产物
 
 统一写入 `.ai-runtime-artifacts/`（见 `harness-kit/core/artifacts.md`）。
 
-## 与根 AGENTS.md 的关系
-
-根 `AGENTS.md` 为工具中立 Harness 入口。OMX 全文在 `harness-kit/entrypoints/AGENTS.omx.md`。  
-Cursor 会话**仅**加载本 overlay + `.cursor/rules/`。
-
-## 投影说明
-
-初始化时可选：
-
-- 合并本文件段落进 `AGENTS.md` 末尾，或
-- 保持独立：`harness-kit/entrypoints/AGENTS.cursor-overlay.md`（本模板源）
-
-Cursor 规则 `ai-entry.mdc` 会在会话中加载 routing 规则；本文件供深读与人工审计。
+Cursor 规则 `ai-entry.mdc` 会在会话中加载；本文件供深读与人工审计。

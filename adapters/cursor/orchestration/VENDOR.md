@@ -7,13 +7,13 @@
 | 源路径 | `~/.cursor/skills/harness-engineer-5.3.0/` |
 | 改编日期 | 2026-05-24 |
 | Phase 3 完成 | 2026-05-24 |
-| harness-kit 方案 | CURSOR-HARNESS-INTEGRATION-PLAN.md 方案 B |
+| harness-kit 方案 | 方案 B（见 `adapters/cursor/README.md`） |
 
 ## 版本钉扎策略
 
 1. **不**整包 vendoring harness-engineer；仅 fork 列于下表的文件。
 2. 上游升级时：对比 `~/.cursor/skills/harness-engineer-5.3.0/`，更新本目录对应文件，并递增本表「改编日期」。
-3. 重大差异写入 `CURSOR-HARNESS-INTEGRATION-PLAN.md` 或本文件「未引入模块」。
+3. 重大差异写入 `adapters/cursor/README.md` 或本文件「未引入模块」。
 4. `_meta.json` 上游版本：**5.3.1**（slug: harness-engineer）。
 
 ## 本目录改编来源
@@ -35,8 +35,9 @@
 | `.cursor/hooks.json.example` | 新建（Cursor 原生 hooks） |
 | `entrypoints/AGENTS.omx.md` | 自 `entrypoints/AGENTS.md` 拆分 |
 | `config.defaults.yaml` | `CONFIG.yaml`（简化） |
-| `.cursor/rules/cursor-subagent-routing.mdc` | `SKILL.md` Rule 1–15 + platform-adapters |
-| `.agents/skills/cursor-orchestration/SKILL.md` | dispatcher + context-engineering 摘要 |
+| `.cursor/rules/cursor-subagent-routing.mdc` | Rule 1–15 + platform-adapters + 阶段门禁 |
+| `.cursor/agents/harness-*.md` | orchestration/agents/* 投影 |
+| `.agents/skills/cursor-orchestration/SKILL.md` | dispatcher 摘要（指向完整 workflow） |
 
 ## 未引入的上游模块
 

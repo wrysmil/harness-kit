@@ -2,31 +2,7 @@
 
 可迁移的 Agent Harness 脚手架：把项目规则、工作流路由、过程产物、验证门禁和工具适配打包成一套标准，接入任意代码仓库即可使用。
 
-本仓库（`harness-kit`）是**迁移源头**。接入目标项目后，将其放入项目根目录的 `harness-kit/` 下；AI 会据此投影根目录入口文件与工具适配目录，并生成项目画像。
-
----
-
-## 二次开发说明
-
-本项目基于原作者 **[WxqKb/cow-harness](https://github.com/WxqKb/cow-harness)** 进行二次开发，在保留原有 Harness 工程化理念与 OMX 编排能力的基础上，**增强了对 Cursor 的适配与开箱即用体验**。
-
-| 维度 | 说明 |
-|------|------|
-| **上游项目** | [WxqKb/cow-harness](https://github.com/WxqKb/cow-harness) |
-| **本仓库定位** | 二开版本，项目名 `harness-kit` |
-| **主要增强** | Cursor 统一入口、Rules 自动加载、与 `AGENTS.md` / `harness-kit/` 的衔接 |
-
-### 相对上游的 Cursor 增强
-
-- **统一入口规则**：`adapters/cursor/.cursor/rules/ai-entry.mdc` 与 `cursor-subagent-routing.mdc` 设为 `alwaysApply: true`。
-- **Cursor 子 Agent 编排**：`cursor-orchestration` skill + `adapters/cursor/orchestration/`，Task 并行实现等价于 `omx ultrawork`。
-- **双平台路由**：`core/routing.md` 含 Codex 与 Cursor 并列路由列。
-- **一键投影**：初始化流程会将 Cursor 适配目录投影到项目根 `.cursor/`，与 `entrypoints/`、`adapters/agents/` 等保持同一套 Harness 语义。
-- **与 `.agents/` 协同**：预置 `cursor-orchestration` skill；业务 skill 仍放 `.agents/skills/`。
-
-集成方案详见根目录 `CURSOR-HARNESS-INTEGRATION-PLAN.md`；Cursor 适配说明见 `adapters/cursor/README.md`。
-
-感谢上游作者的开源贡献。使用或再分发时，请保留对本仓库及上游项目的适当署名。
+本仓库是 **Harness 迁移源头**。接入目标项目后，将其放入项目根目录的 `harness-kit/` 下；AI 会据此投影根目录入口文件与工具适配目录，并生成项目画像。
 
 ---
 
@@ -34,7 +10,7 @@
 
 Harness 工程化的难点往往在「起步」：规则散落、各工具各一套、验证标准不统一。Harness Kit 的目标是：
 
-1. **降低接入成本** — 复制 `harness-kit/` 到项目，把初始化话术交给 AI 即可。
+1. **降低接入成本** — 将 `harness-kit/` 放入项目，把初始化话术交给 AI 即可。
 2. **统一多工具入口** — 同一套规范投影到 Cursor、Codex、Claude Code、Gemini 等环境。
 3. **可迁移、可沉淀** — 规范在 `harness-kit/` 中迭代，团队可逐步优化为自有资产。
 
@@ -49,18 +25,21 @@ Harness 工程化的难点往往在「起步」：规则散落、各工具各一
 | 顶层契约 | `AGENTS.md` |
 | Claude Code | `CLAUDE.md` |
 | Gemini | `GEMINI.md` |
-| Cursor | `.cursor/rules/`（含 `ai-entry`、`cursor-subagent-routing`） |
-| Cursor 编排文档 | `harness-kit/adapters/cursor/orchestration/`（不投影） |
-| Agents / Skills | `.agents/` |
+| Cursor | `.cursor/rules/`、`.cursor/agents/`（harness-* subagent） |
+| Cursor 编排文档 | `harness-kit/adapters/cursor/orchestration/`（不投影，供 AI 读取） |
+| Agents / Skills | `.agents/`（含 `cursor-orchestration`） |
 | Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
 
 ---
 
 ## 核心能力
 
+- **Harness 路由** — 默认 route 为强制基线；`core/routing.md` 提供 Codex 与 Cursor 并列路由表。
+- **Cursor 子 Agent 编排** — `.cursor/agents/harness-*` + `cursor-orchestration` skill，语义等价于 Codex 的 `omx ultrawork`（见 `adapters/cursor/`）。
+- **oh-my-codex / omx** — Codex CLI 多 Agent 运行时编排与高级角色路由。
 - **superpowers** — 结构化思考、计划、调试、TDD、完成前验证等技能链。
-- **oh-my-codex / omx** — 多 Agent 运行时编排与高级角色路由。
-- **Harness 路由** — 默认 route 为强制基线；用户指定 skills 时，按「默认 route + 用户 skills」合并执行，除非明确要求跳过默认 route。
+
+更多 Cursor 集成说明见 `adapters/cursor/README.md`。
 
 ---
 
@@ -94,7 +73,7 @@ harness-kit/
 │   └── runbooks.md
 ├── init/                      # 初始化 prompt 与模板
 ├── entrypoints/               # 根目录 AI 入口模板
-├── adapters/                  # 各工具适配（含 Cursor / Agents / Codex）
+├── adapters/                  # 各工具适配（Cursor / Agents / Codex）
 ├── scripts/                   # Harness 内部脚本
 └── artifact-templates/        # 过程产物模板
 ```
@@ -103,10 +82,10 @@ harness-kit/
 
 - `core/` — 通用 Harness 规则，不随业务重写。
 - `init/` — 新项目初始化 prompt 与画像模板。
-- `entrypoints/` — 投影到根目录的 AI 入口模板。
-- `adapters/` — 各编程工具的目录模板（**含 Cursor 增强**）。
+- `entrypoints/` — 投影到根目录的 AI 入口模板（含工具中立的 `AGENTS.md` 与 `AGENTS.omx.md` 等）。
+- `adapters/` — 各编程工具的目录模板与编排文档。
 - `scripts/` — 安装、初始化、检查脚本（不投影到根目录）。
-- `artifact-templates/` — spec / plan / verification 等产物模板。
+- `artifact-templates/` — spec / plan / verification / execution-log 等产物模板。
 - `project.profile.md`、`context-map.md`、`project.verification.md` — 初始化后由 AI 生成或更新。
 
 ---
@@ -119,14 +98,16 @@ harness-kit/
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
 1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
-2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/）。
-3. 创建 .ai-runtime-artifacts/ 及其子目录。
+2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。
+3. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
 4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
 5. 读取 harness-kit/init/project-profiler.prompt.md。
 6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md。
 7. 由你运行 harness-kit/scripts/harness-check.sh。
 8. 汇总推断项、待确认项和验证结果。
 ```
+
+详细步骤（含可选 Cursor hooks、AGENTS 拆分说明）以 `harness-kit/init/bootstrap.prompt.md` 为准。
 
 初始化完成后，AI 应生成或更新：
 
@@ -138,7 +119,18 @@ harness-kit/
 
 ---
 
-## 相关链接
+## 接入方式建议
 
-- **本仓库（二开）**：`harness-kit`
-- **上游项目**：[github.com/WxqKb/cow-harness](https://github.com/WxqKb/cow-harness)
+| 方式 | 适用场景 |
+|------|----------|
+| **Git Submodule** | 多项目共用同一份 harness-kit，升级与业务提交分离 |
+| **目录拷贝** | 单项目快速接入；Harness 变更请使用独立 commit（如 `chore(harness-kit): ...`） |
+
+无论哪种方式，`harness-kit/` 内的规范迭代与业务代码提交建议分开，便于 review 与回滚。
+
+---
+
+## 更多文档
+
+- Cursor 适配：`adapters/cursor/README.md`
+- Bootstrap 详版：`init/bootstrap.prompt.md`

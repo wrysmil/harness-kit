@@ -20,8 +20,8 @@ Handoff 路径：`.ai-runtime-artifacts/execution-logs/HANDOFF.md`
 
 ## 范围控制
 
-- 每个 Implementer Task：**≤5 个写文件**
-- 每个 Explore Task：限定目录，跳过 `node_modules/`、`.git/`、`dist/`、`target/`、`.venv/`
+- 每个 Implementer subagent：**≤5 个写文件**
+- 每个 Explorer subagent：限定目录，跳过 `node_modules/`、`.git/`、`dist/`、`target/`、`.venv/`
 - 大仓库：按模块拆多个 explore Task
 
 ---
@@ -40,4 +40,4 @@ Handoff 路径：`.ai-runtime-artifacts/execution-logs/HANDOFF.md`
 | --- | --- |
 | 调研 → 计划 | 新会话或 HANDOFF |
 | 计划 → 实现 | **必须** HANDOFF 或新 Leader 上下文 |
-| 实现 → 审查 | **必须** 新 Reviewer Task（不同实例） |
+| 实现 → 审查 | **必须** 独立 `harness-reviewer` subagent（不同实例） |

@@ -8,7 +8,7 @@ cat >/dev/null
 
 cat <<'EOF'
 {
-  "additional_context": "Harness Kit：每个任务首句声明「Harness：<route>」。Cursor 多 task 实现走 cursor-orchestration（Task 并行），不调用 omx。详见 harness-kit/core/routing.md 与 .cursor/rules/cursor-subagent-routing.mdc。"
+  "additional_context": "Harness Kit：首句声明「Harness：<route>」。spec/plan 写入后须暂停等用户审查（阶段门禁）。实现阶段委派 .cursor/agents/harness-implementer，审查用 harness-reviewer。详见 harness-kit/core/routing.md 与 .cursor/rules/cursor-subagent-routing.mdc。"
 }
 EOF
 exit 0

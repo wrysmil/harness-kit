@@ -6,7 +6,7 @@
 
 | # | 检查项 | 通过标准 |
 | --- | --- | --- |
-| 1 | Task 派发 | 只读 `explore` 子 Agent 可完成小范围搜索 |
+| 1 | Subagent 定义 | `.cursor/agents/harness-implementer.md` 等四套角色存在 |
 | 2 | 规则加载 | `.cursor/rules/cursor-subagent-routing.mdc` 存在 |
 | 3 | Skill 可用 | `.agents/skills/cursor-orchestration/SKILL.md` 存在 |
 | 4 | 产物目录 | `.ai-runtime-artifacts/execution-logs/` 存在 |
@@ -16,7 +16,7 @@
 ## 建议但非必须
 
 - MCP 工具已配置且 descriptor 可读
-- `.cursor/hooks.json` 已配置（Phase 3）
+- `.cursor/hooks.json` 已配置
 - 并行度已与 `config.defaults.yaml` 对齐
 
 ## 降级策略
@@ -24,5 +24,5 @@
 任一项未通过时：
 
 1. `max_parallel_agents: 1`
-2. 不派发并行 Task，主 Agent 顺序执行
+2. 不并行委派 subagent，主 Agent 顺序执行（仍遵守阶段门禁）
 3. 在 execution-log 中记录 `degraded: true` 及原因

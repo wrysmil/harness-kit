@@ -6,24 +6,15 @@ alwaysApply: true
 
 # Cursor 子 Agent 路由
 
-本规则适用于 **Cursor Agent 模式**。在 Cursor 中，子 Agent 通过 **Task 工具** 派发，不使用 `omx`、`spawn_agent`、tmux 或 Codex 专有命令。
+本规则适用于 **Cursor Agent 模式**。子 Agent 通过 **`.cursor/agents/` 项目 subagent** 委派；Task 工具用于内置类型（`explore` / `shell` / `ci-investigator` 等）或与 harness subagent 配合。不使用 `omx`、`spawn_agent`、tmux 或 Codex 专有命令。
 
 ## 优先级
 
-1. `harness-kit/core/routing.md` — 路由与产物规范（强制）
+1. `harness-kit/core/routing.md` — 路由、阶段门禁、产物规范（强制）
 2. 本文件 — Cursor 执行映射
-3. 根目录 `AGENTS.md` — 若含 OMX/Codex 专章，Cursor 会话**忽略**其中 omx/tmux/spawn 段落
+3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX/Codex 专章在 Cursor 中**忽略**
 
-详细平台映射见 `harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`。
-
-## 平台检测
-
-满足以下任一条件即视为 Cursor 环境：
-
-- 工作区存在 `.cursor/` 且 Task 工具可用
-- 用户明确在 Cursor IDE 中运行 Agent
-
-检测到 Cursor 后，多 task 并行实现走 `cursor-orchestration`，**不要**调用 `omx ultrawork`。
+平台映射见 `harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`。
 
 ## Harness 强制声明
 
@@ -33,85 +24,82 @@ alwaysApply: true
 「Harness：<route 或 "小改动，直接处理">」
 ```
 
-Cursor 多 task 实现示例：
+多 task 实现示例：`「Harness：cursor-orchestration:dispatcher-workflow」`
 
-```text
-「Harness：cursor-orchestration:dispatcher-workflow」
-```
+## 阶段门禁（Cursor 强制）
 
-## OMX 角色 → Cursor Task 映射
+**高于** AGENTS.md 自主性指令。写入阶段产物后须暂停，等用户明确继续。
 
-| 任务形态 | Task `subagent_type` | 说明 |
+| 阶段 | 产物路径 | 写入后 | 继续条件（用户须在本会话明确说过） |
+| --- | --- | --- | --- |
+| 设计 | `.ai-runtime-artifacts/specs/` | **停止**，不进入 plan 或改业务代码 | 「写计划」「制定实施计划」「直接实现」「直接做」 |
+| 计划 | `.ai-runtime-artifacts/plans/` | **停止**，不派发 implementer 或改业务代码 | 「开始实现」「执行」「并行执行」 |
+| 决策 | `.ai-runtime-artifacts/decisions/` | **停止** | 「执行」或用户指定下一步 |
+
+**「已批准 plan/spec」** = 用户在本会话说过上表「继续条件」之一，或用户在本轮任务开头一次性授权该阶段（如「spec 确认后直接写计划」）。
+
+**用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
+
+**实现阶段**：收到「开始实现」后，Leader **必须**委派 `.cursor/agents/harness-implementer`，禁止主 Agent 在主线程直接修改业务代码（routing「小改动」除外）。
+
+暂停时回复须包含：产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
+
+## 项目 Subagent（`.cursor/agents/`）
+
+| 文件 | 角色 | readonly |
 | --- | --- | --- |
-| 仓库搜索 / 符号映射 | `explore` | 设 `readonly: true` |
-| 实现 / 重构 | `generalPurpose` | prompt 中钉死文件列表与禁止事项 |
-| Shell / 测试 / 构建 | `shell` | 仅执行命令，不做架构决策 |
-| CI 失败调查 | `ci-investigator` | 只读分析 CI 日志 |
-| 实验性多方案 | `best-of-n-runner` | 需用户明确请求 |
+| `harness-implementer.md` | 有界 WU 实现 | false |
+| `harness-reviewer.md` | 独立审查 | true |
+| `harness-explorer.md` | 只读探查 | true |
+| `harness-debugger.md` | 缺陷调查 | 视阶段 |
 
-无专用类型的角色（architect / critic / planner / debugger）用 `generalPurpose`，在 prompt 开头声明只读或实现职责。
+委派示例：`Use the harness-implementer subagent to implement WU-01: ...`
 
-## Leader 协议（主 Agent）
+详细 prompt 与返回格式见各 agent 文件及 `harness-kit/adapters/cursor/orchestration/agents/`。
+
+## Task 内置类型（补充）
+
+| 任务形态 | 机制 | 说明 |
+| --- | --- | --- |
+| 有界实现 / 审查 | **`.cursor/agents/harness-*`** | 优先于 Task `generalPurpose` |
+| 仓库搜索（无 harness 角色时） | Task `explore` | `readonly: true` |
+| Shell / 测试 / 构建 | Task `shell` | 仅执行命令 |
+| CI 失败 | Task `ci-investigator` | 只读分析 |
+
+## Leader 协议
 
 1. 路由判定 → 声明 `「Harness：…」`
-2. 非小改动：读 `harness-kit/core/routing.md` 与相关 spec/plan
-3. 可并行时：拆分为**有界、可验证、文件所有权清晰**的子任务
-4. 同一批次最多 **5** 个并行 Task；遇 429/500 降至 3
-5. 整合子 Agent 结果，**主 Agent 负责最终验证**后再声称完成
-6. **生成与审查分离**：实现 Task 与审查 Task **必须不同实例**（见 `agents/reviewer.md`）
-7. **并行必追踪**：多 WU 并行时维护 `tracking/DISPATCH-TRACK-*.md`（见 `tracking/schema.md`）
+2. 遵守**阶段门禁**；非小改动读 `harness-kit/core/routing.md` 与相关 spec/plan
+3. 实现阶段委派 `harness-implementer`；完成后委派 **独立** `harness-reviewer`
+4. 并行 WU ≤5（默认 3）；维护 `tracking/DISPATCH-TRACK-*.md`
+5. 整合子 Agent 结果，主 Agent 验证后再声称完成
 
-## Worker 协议（子 Agent）
+## 何时委派 vs 主 Agent 直接做
 
-1. 只执行分配切片，不重写全局计划
-2. 不递归派发子 Agent（除非主 Agent 明确要求）
-3. 遇阻塞、范围扩大、文件冲突时向上报告，不静默扩 scope
-4. 返回结构化摘要：结论、证据路径、风险、建议下一步
+**委派 subagent：**
 
-## 何时派发子 Agent
+- 已批准 plan 中的 WU（实现 → `harness-implementer`）
+- 实现后的审查（→ `harness-reviewer`，不同实例）
+- 跨 3+ 模块只读探索（→ `harness-explorer`）
+- 缺陷调查（→ `harness-debugger`）
 
-**派发：**
+**主 Agent 直接做：**
 
-- 跨 3+ 模块的只读探索
-- 已批准 plan 中的独立 work unit（WU）可并行
-- 多个独立测试失败 / 独立子系统 bug
-- 实现后的独立审查
+- routing「小改动」（单文件机械修改）
+- 写 spec / plan / decision 产物（写完后**暂停**）
+- 范围不清晰（先 brainstorming）
 
-**不派发（主 Agent 直接做）：**
-
-- 单文件机械修改（routing 小改动）
-- 子任务强依赖、需共享可变状态
-- 范围不清晰（先 brainstorming 或澄清）
-
-## 上下文纪律
-
-- 上下文约 **40%** 时：压缩或写 handoff，再开新 Task
-- 每个实现子 Agent：**最多 3–5 个文件**；超出则拆分
-- 大仓库探索：限定目录，跳过 `node_modules/`、`.git/`、`dist/`、`target/`、`.venv/`
-
-## 产物
-
-| 阶段 | 路径 |
-| --- | --- |
-| 执行日志 | `.ai-runtime-artifacts/execution-logs/` |
-| 追踪（可选） | `.ai-runtime-artifacts/execution-logs/tracking/` |
-| Handoff | `.ai-runtime-artifacts/execution-logs/HANDOFF.md` |
-| 追踪 schema | `harness-kit/adapters/cursor/orchestration/tracking/schema.md` |
-| Agent 面 | `harness-kit/adapters/cursor/orchestration/agents/` |
-
-格式遵循 `harness-kit/core/artifacts.md` 与 `harness-kit/artifact-templates/execution-log.md`。
-
-## 推荐 skill 链（Cursor）
+## 推荐 skill 链
 
 ```text
-superpowers:brainstorming → superpowers:writing-plans → cursor-orchestration → superpowers:verification-before-completion
+superpowers:brainstorming → [门禁] → superpowers:writing-plans → [门禁] → cursor-orchestration → superpowers:verification-before-completion
 ```
 
-多 task 编码激活 `cursor-orchestration`（`.agents/skills/cursor-orchestration/SKILL.md`）。
+并行编排详情：`.agents/skills/cursor-orchestration/SKILL.md` → `orchestration/dispatcher-workflow.md`。
 
-## 禁止（Cursor 会话）
+## 禁止
 
-- 调用 `omx ultrawork`、`omx team`、`omx explore` 等 OMX CLI
-- 引用 `spawn_agent`、`omx question`、tmux 窗格指令
-- 将 OMX 团队 `worker` 角色当作通用子 Agent 类型
-- 无验证证据声称完成
+- 未过阶段门禁修改业务代码
+- 主 Agent 在实现阶段直接改代码（非小改动）
+- 实现与审查同一 subagent 实例
+- 调用 omx CLI；无验证证据声称完成

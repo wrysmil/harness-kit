@@ -8,15 +8,15 @@ alwaysApply: true
 
 ## 规范优先级
 
-1. `harness-kit/core/` — 路由、产物、验证（强制）
-2. `.cursor/rules/cursor-subagent-routing.mdc` — Cursor 子 Agent 委派
-3. 根目录 `AGENTS.md` — Harness 覆盖层有效；**OMX/Codex 专章在 Cursor 中忽略**（omx、tmux、spawn_agent）
+1. `harness-kit/core/routing.md` — 路由、**阶段门禁**、产物（强制）
+2. `.cursor/rules/cursor-subagent-routing.mdc` — subagent 委派
+3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX 专章忽略
 
 ## 会话开始
 
-1. 读取 `harness-kit/core/routing.md`
-2. 多 task 实现走 `cursor-orchestration`（`.agents/skills/cursor-orchestration/`）
-3. 可选深读：`harness-kit/entrypoints/AGENTS.cursor-overlay.md`
+1. 读取 `harness-kit/core/routing.md`（含阶段门禁）
+2. 多 task 实现：`.cursor/agents/harness-implementer` + `cursor-orchestration` skill
+3. 编排步骤：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
 
 ## 声明
 
