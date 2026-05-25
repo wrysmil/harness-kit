@@ -25,5 +25,5 @@ skills:
     upstream: inference.sh agent-browser
   ui-ux-pro-max:
     source: ~/.trae/skills/ui-ux-pro-max/
-    upstream: ui-ux-pro-max (full directory: SKILL.md + data/ + scripts/)
-    note: sync copies entire directory, not SKILL.md only
+    upstream: "ui-ux-pro-max (full directory: SKILL.md + data/ + scripts/)"
+    note: "sync copies entire directory, not SKILL.md only"
