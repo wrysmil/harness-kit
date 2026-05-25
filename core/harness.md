@@ -37,8 +37,7 @@
 
 由根目录投影和 Harness 内部脚本组成：
 
-- `CLAUDE.md`
-- `GEMINI.md`
+- `CLAUDE.md`、`GEMINI.md`（投影桩；共享正文 `entrypoints/HARNESS-PLATFORM-ENTRY.md`）
 - `.cursor/rules/ai-entry.mdc`
 - `harness-kit/scripts/install-ai-skills.sh`
 - `harness-kit/scripts/harness-init.sh`
@@ -49,17 +48,7 @@
 ## 新项目初始化顺序
 
 1. 将 `harness-kit/` 放入新项目。
-2. 对 AI 说：
-
-```text
-请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
-这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理。
-请先投影入口文件和工具适配目录。
-如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
-请读取 harness-kit/init/project-profiler.prompt.md，扫描当前项目并生成项目画像、上下文地图和验证画像。
-最后由你运行 Harness 检查，并汇总推断项、待确认项和验证结果。
-```
-
+2. 对 AI 执行 **`harness-kit/init/bootstrap.prompt.md`** 全文流程（或 `bash harness-kit/scripts/harness-init.sh` 输出的话术）。
 3. AI 生成或更新：
    - `harness-kit/project.profile.md`
    - `harness-kit/context-map.md`

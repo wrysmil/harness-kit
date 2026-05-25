@@ -1,49 +1,23 @@
----
-generated_at: 2026-05-14
-generator: harness-init
----
+# Project Verification
 
-# Project Verification — lightapp-meeting-summary
+本文件描述当前项目的验证命令。迁移到新项目后，应通过 `harness-kit/init/project-profiler.prompt.md` 重新生成。
 
-## 可用验证手段
+骨架见 `harness-kit/init/templates/project.verification.md`。
 
-| 验证类型 | 命令 | 状态 |
-|----------|------|------|
-| TypeScript 类型检查 | `tsc` | ✅ 可用 |
-| ESLint | `yarn eslint` | ✅ 可用 |
-| Stylelint | `yarn stylelint` | ✅ 可用 |
-| Vite 构建 | `yarn build` | ✅ 可用 |
-| 主进程构建 | `yarn build:processes` | ✅ 可用 |
-| 子项目构建 | `yarn build:subprojects` | ✅ 可用 |
-| 单元测试 | — | ❌ 未配置 |
-| E2E 测试 | — | ❌ 未配置 |
-
-## 验证策略
-
-### 代码变更最小验证
+## Harness 验证
 
 ```bash
-tsc && yarn eslint src/
+bash harness-kit/scripts/harness-check.sh
 ```
 
-### 完整构建验证
+## 应用验证
 
-```bash
-yarn build:all
-```
+| 命令 | 用途 |
+| --- | --- |
 
-### 变更前检查 (pre-commit)
+## 静态检查
 
-```bash
-yarn pre-check   # tsc + lint-staged
-```
-
-## 推断项
-
-- 【推断】项目无测试框架，验证依赖 tsc + lint + build
-- 【推断】husky pre-commit hook 执行 lint-staged
+| 命令 | 用途 |
+| --- | --- |
 
 ## 待确认项
-
-- 【待确认】是否有计划引入测试框架
-- 【待确认】CI 流水线中是否有额外验证步骤

@@ -24,6 +24,8 @@ created_at: 2026-05-14
 - `harness-kit/entrypoints/CLAUDE.md` -> `CLAUDE.md`
 - `harness-kit/entrypoints/GEMINI.md` -> `GEMINI.md`
 
+`harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 为 Claude/Gemini **共享正文**（不单独投影到根目录）。
+
 如果目标文件已存在，先读取现有内容，只合并 Harness 入口，不删除项目已有约束。
 
 ## 投影工具适配

@@ -30,15 +30,9 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。通过 `.cursor/agents/h
 
 ---
 
-## 执行摘要
+## 激活后
 
-1. 声明：`「Harness：cursor-orchestration:dispatcher-workflow」`
-2. 拆 WU → 创建 `tracking/DISPATCH-TRACK-*.md`
-3. 并行委派 `harness-implementer`（每 WU 独立实例，≤5 并行）
-4. 整合 → 运行验证 → 委派 **独立** `harness-reviewer`
-5. 写 `execution-log`（模板 `harness-kit/artifact-templates/execution-log.md`）
-
-WU prompt 模板与禁止项见 `dispatcher-workflow.md`。
+声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，然后**按序读完** `dispatcher-workflow.md` 再派发 WU。未读 dispatcher 不得并行 implementer。
 
 ---
 

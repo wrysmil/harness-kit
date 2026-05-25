@@ -54,6 +54,7 @@ required_kit_files=(
   "artifact-templates/handoff.md"
   "artifact-templates/wu-checklist.md"
   "entrypoints/AGENTS.md"
+  "entrypoints/HARNESS-PLATFORM-ENTRY.md"
   "entrypoints/CLAUDE.md"
   "entrypoints/GEMINI.md"
   "entrypoints/AGENTS.omx.md"

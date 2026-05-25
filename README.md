@@ -169,16 +169,7 @@ flowchart TD
 
 ## 推荐阅读顺序
 
-1. `AGENTS.md`（投影后的根目录入口）
-2. `harness-kit/project.profile.md`
-3. `harness-kit/context-map.md`
-4. `harness-kit/project.git.md`（涉及提交 / 分支 / MR 时）
-5. `harness-kit/core/routing.md`
-6. `harness-kit/core/artifacts.md`
-7. `harness-kit/project.verification.md`
-8. `harness-kit/core/verification.md`
-9. `harness-kit/core/runbooks.md`
-10. 与任务相关的 `.agents/skills/` 或 `.codex/skills/`（含组织级 `git-xywh`）
+以根目录 **`AGENTS.md`** 覆盖层中的列表为准（含 `core/harness.md` 与项目画像路径）。Cursor 会话另见 `entrypoints/AGENTS.cursor-overlay.md`。
 
 ---
 
@@ -220,22 +211,7 @@ harness-kit/
 
 ## 新项目接入
 
-将本仓库内容放入目标项目的 `harness-kit/` 目录后，**无需手工逐步执行**；把下面这段话发给 AI 即可：
-
-```text
-请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
-这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
-2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。
-3. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
-4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
-5. 读取 harness-kit/init/project-profiler.prompt.md。
-6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md、harness-kit/project.git.md。
-7. 由你运行 harness-kit/scripts/harness-check.sh。
-8. 汇总推断项、待确认项和验证结果。
-```
-
-详细步骤（含可选 Cursor hooks、AGENTS 拆分说明）以 `init/bootstrap.prompt.md` 为准；流程概览见上文 [新项目接入（初始化）](#新项目接入初始化)。
+将本仓库放入目标项目的 `harness-kit/` 后，把 **`init/bootstrap.prompt.md`** 交给 AI 执行（或运行 `bash harness-kit/scripts/harness-init.sh` 获取同一段话术）。流程概览见上文 [新项目接入（初始化）](#新项目接入初始化)。
 
 **初始化完成后**，AI 应生成或更新：
 
