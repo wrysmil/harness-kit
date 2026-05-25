@@ -22,7 +22,7 @@ org_skill: git-xywh
 | 提交格式 | <!-- 如：commitlint / 仅 Angular / 自定义 --> |
 | 提交前检查 | <!-- 如：husky、lint-staged、CI pre-commit --> |
 | MR / PR 平台 | <!-- GitLab / GitHub / 其他 --> |
-| Harness 脚手架提交 | `chore(harness-kit): <说明>`，与业务分开 |
+| Harness 脚手架提交 | 类型可用 `feat`/`chore`/`docs` 等；**标题与正文须中文**（如 `chore(harness-kit): 瘦身编排文档`），与业务 commit 分开 |
 
 ## AI 执行约束
 
