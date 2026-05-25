@@ -24,7 +24,8 @@ readonly: false
 1. 读取目标文件当前状态
 2. 只实现 plan 中本 WU 范围
 3. 运行最小验证（按 `harness-kit/project.verification.md`）
-4. 返回结构化摘要（不提交 git，除非 Leader 明确要求）
+4. **编辑 plan 文件**（及可选 CHECKLIST）：将已完成项 `- [ ]` → `- [√]`（见 `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md`）。**禁止**仅在回复里列出 `[√]`
+5. 返回结构化摘要（不提交 git，除非 Leader 明确要求）
 
 ## 禁止
 
@@ -45,8 +46,9 @@ readonly: false
 - 命令: ...
 - 结果: pass | fail
 
-### Checklist
-- [√] / [ ] done criteria...
+### 计划勾选同步
+- 文件: `.ai-runtime-artifacts/plans/<plan-file>.md`（及可选 CHECKLIST 路径）
+- 已勾选项: 仅列标题或行号，**勿**在回复中复述带 `[√]` 的完整 checklist
 
 ### 阻塞项
 无 | <描述>

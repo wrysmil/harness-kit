@@ -57,15 +57,17 @@ GROUP-2（依赖 GROUP-1）:
 1. WU 目标与 done criteria
 2. 允许修改的文件列表
 3. 禁止事项（不改哪些文件、不新增依赖等）
-4. 必须返回：变更摘要、命令输出摘要、阻塞项
+4. 必须返回：变更摘要、命令输出摘要、**计划勾选同步**（路径 + 已勾项标题，见 `runtime/plan-progress-sync.md`）、阻塞项
+5. Implementer 须在 **plan 文件**内同步 `- [ ]` → `- [√]`，不得仅在回复中列出 `[√]`
 
 ## 步骤 3：整合与门禁
 
 1. 收集所有 WU 结果
-2. 检查文件冲突 — 有冲突则顺序合并或开修复 WU
-3. 运行 `harness-kit/project.verification.md` 中的最小验证集
-4. **委派独立 `harness-reviewer` subagent** — 不得与 implementer 同实例
-5. 审查通过后写 execution-log
+2. 对照 `.ai-runtime-artifacts/plans/` 中勾选是否与实现一致（`runtime/plan-progress-sync.md`）
+3. 检查文件冲突 — 有冲突则顺序合并或开修复 WU
+4. 运行 `harness-kit/project.verification.md` 中的最小验证集
+5. **委派独立 `harness-reviewer` subagent** — 不得与 implementer 同实例
+6. 审查通过后写 execution-log
 
 ## 步骤 4：追踪（并行编排时**必须**）
 

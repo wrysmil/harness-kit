@@ -17,6 +17,11 @@ created_at: <YYYY-MM-DD>
 
 ## 任务
 
+> Implementer 每步验收通过后，在本文件中把对应行 `- [ ]` 改为 `- [√]`（见 `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md`）。**不要**只在聊天里输出勾选。
+
+- [ ] 步骤 1：…
+- [ ] 步骤 2：…
+
 ## 验证
 
 ## 风险

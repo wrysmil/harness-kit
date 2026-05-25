@@ -24,8 +24,9 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。通过 `.cursor/agents/h
 ## 执行前读取（按序）
 
 1. `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md` — **唯一完整步骤**
-2. `harness-kit/adapters/cursor/orchestration/tracking/schema.md`
-3. 已批准 plan + `harness-kit/project.verification.md`
+2. `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md` — plan 内 `- [ ]`→`- [√]`，禁止仅在回复里勾选
+3. `harness-kit/adapters/cursor/orchestration/tracking/schema.md`
+4. 已批准 plan + `harness-kit/project.verification.md`
 
 ---
 
@@ -47,3 +48,4 @@ WU prompt 模板与禁止项见 `dispatcher-workflow.md`。
 - 主 Agent 直接改业务代码（非小改动）
 - 实现与审查同一 subagent 实例
 - `omx` CLI；无 tracking 的并行 WU；无 execution-log 完成声明
+- 仅在聊天回复里输出 `[√]` 而不改 plan / CHECKLIST 文件

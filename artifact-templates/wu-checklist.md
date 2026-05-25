@@ -12,7 +12,7 @@ wu_id: WU-<id>
 
 # CHECKLIST — <topic> / WU-<id>
 
-Implementer 按项勾选；Reviewer 对照验收。
+Implementer 在**本文件**（及 plan）里把 `- [ ]` 改为 `- [√]`；Reviewer 对照验收。禁止仅在 Agent 回复里复述 `[√]`。
 
 ## Done criteria
 

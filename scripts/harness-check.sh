@@ -82,6 +82,7 @@ required_kit_files=(
   "adapters/cursor/orchestration/agents/implementer.md"
   "adapters/cursor/orchestration/agents/reviewer.md"
   "adapters/cursor/orchestration/agents/debugger.md"
+  "adapters/cursor/orchestration/runtime/plan-progress-sync.md"
   "adapters/cursor/orchestration/tracking/schema.md"
   "adapters/agents/.agents/skills/cursor-orchestration/SKILL.md"
   "adapters/codex/README.md"

@@ -29,6 +29,8 @@ Worker 启动时上下文仅包含：
 3. plan 有歧义 → 报告 Leader，**不要猜测**
 4. 创建或更新 `CHECKLIST-<topic>-WU-<id>.md`（见 `artifact-templates/wu-checklist.md`）
 
+**计划勾选：** 遵循 `runtime/plan-progress-sync.md`——在 **plan / CHECKLIST 文件**里把 `- [ ]` 改为 `- [√]`，禁止仅在回复里输出 `[√]`。
+
 ---
 
 ## 实现纪律
@@ -38,7 +40,7 @@ Worker 启动时上下文仅包含：
 1. 读取目标文件当前状态
 2. **只实现** plan 中本 WU 范围
 3. 运行最小验证（单测 / lint / typecheck，按 project.verification）
-4. 勾选 checklist
+4. **编辑** `.ai-runtime-artifacts/plans/`（及可选 CHECKLIST）中对应项：`- [ ]` → `- [√]`（见 `runtime/plan-progress-sync.md`）
 5. 返回结构化摘要（不提交 git，除非 Leader 明确要求）
 
 ### 增量规则
@@ -83,8 +85,9 @@ Worker 启动时上下文仅包含：
 - 命令: ...
 - 结果: pass | fail
 
-### Checklist
-- [√] / [ ] done criteria...
+### 计划勾选同步
+- 文件: `.ai-runtime-artifacts/plans/<plan-file>.md`（及可选 CHECKLIST 路径）
+- 已勾选项: 仅列标题或行号，**勿**在回复中复述带 `[√]` 的完整 checklist
 
 ### 阻塞项
 无 | <描述>
