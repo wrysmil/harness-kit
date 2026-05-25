@@ -64,6 +64,10 @@
 
 **已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须记录在产物 front matter 或回复中）。
 
+**用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
+
+**暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
+
 **Cursor 实现阶段：** 用户说「开始实现」后，Leader 须委派 `.cursor/agents/harness-implementer`，不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
 
 ## Git 协作

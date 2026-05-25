@@ -28,21 +28,9 @@ alwaysApply: true
 
 ## 阶段门禁（Cursor 强制）
 
-**高于** AGENTS.md 自主性指令。写入阶段产物后须暂停，等用户明确继续。
+**高于** AGENTS.md 自主性指令。完整表格、已批准判定与暂停回复格式见 **`harness-kit/core/routing.md` § 阶段门禁**。
 
-| 阶段 | 产物路径 | 写入后 | 继续条件（用户须在本会话明确说过） |
-| --- | --- | --- | --- |
-| 设计 | `.ai-runtime-artifacts/specs/` | **停止**，不进入 plan 或改业务代码 | 「写计划」「制定实施计划」「直接实现」「直接做」 |
-| 计划 | `.ai-runtime-artifacts/plans/` | **停止**，不派发 implementer 或改业务代码 | 「开始实现」「执行」「并行执行」 |
-| 决策 | `.ai-runtime-artifacts/decisions/` | **停止** | 「执行」或用户指定下一步 |
-
-**「已批准 plan/spec」** = 用户在本会话说过上表「继续条件」之一，或用户在本轮任务开头一次性授权该阶段（如「spec 确认后直接写计划」）。
-
-**用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
-
-**实现阶段**：收到「开始实现」后，Leader **必须**委派 `.cursor/agents/harness-implementer`，禁止主 Agent 在主线程直接修改业务代码（routing「小改动」除外）。
-
-暂停时回复须包含：产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
+**Cursor 追加：** 用户说「开始实现」等继续指令后，Leader **必须**委派 `.cursor/agents/harness-implementer`；禁止主 Agent 在主线程直接改业务代码（routing「小改动」除外）。
 
 ## 项目 Subagent 与 Task 补充
 
@@ -85,10 +73,7 @@ superpowers:brainstorming → [门禁] → superpowers:writing-plans → [门禁
 
 ## Git（Leader）
 
-- **先** invoke / Read **`git-xywh` skill**（见 `harness-kit/core/runbooks.md` § Git 协作），再读 `project.git.md`
-- 路由声明：`harness-kit/core/routing.md` Git 路由行
-- **Leader** 执行 commit / push / MR；子 Agent 默认禁止（见各 `harness-*.md`）
-- 声明示例：`「Harness：git-xywh + project.git.md」`
+按 **`harness-kit/core/routing.md` § Git 协作** 与 **`core/runbooks.md` § Git 协作** 执行；声明 `「Harness：git-xywh + project.git.md」`。子 Agent 默认不 commit/push（见各 `harness-*.md`）。
 
 ## 禁止
 

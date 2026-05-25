@@ -66,6 +66,7 @@ created_at: 2026-05-14
 - `execution-log`
 - `dispatch-track`
 - `handoff`
+- `progress-summary`
 - `wu-checklist`
 - `decision-record`
 - `retro`

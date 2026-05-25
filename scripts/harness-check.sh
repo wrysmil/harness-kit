@@ -52,6 +52,7 @@ required_kit_files=(
   "artifact-templates/decision.md"
   "artifact-templates/dispatch-track.md"
   "artifact-templates/handoff.md"
+  "artifact-templates/progress.md"
   "artifact-templates/wu-checklist.md"
   "entrypoints/AGENTS.md"
   "entrypoints/HARNESS-PLATFORM-ENTRY.md"
