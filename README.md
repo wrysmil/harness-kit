@@ -13,6 +13,7 @@
 - [解决什么问题](#解决什么问题)
 - [支持的工具](#支持的工具)
 - [核心能力](#核心能力)
+- [编排术语：WU、Leader、Worker](#编排术语wuleaderworker)
 - [流程图](#流程图)
 - [推荐阅读顺序](#推荐阅读顺序)
 - [目录结构](#目录结构)
@@ -60,7 +61,7 @@
 | `harness-kit/adapters/cursor/` | Cursor 专用：`.cursor/rules/`、`.cursor/agents/harness-*`、`orchestration/` 编排文档 |
 | `harness-kit/adapters/codex/` | Codex / OMX 适配说明与 omx 工作流对接 |
 | `harness-kit/adapters/agents/` | 通用 `.agents/skills/`（如 `cursor-orchestration`）模板 |
-| `harness-kit/init/` | 接入话术（`onboarding-handoff.txt`）、详版（`bootstrap.prompt.md`）、画像（`project-profiler.prompt.md`） |
+| `harness-kit/init/` | 接入话术见 README「新项目接入」、详版（`bootstrap.prompt.md`）、画像（`project-profiler.prompt.md`） |
 | `harness-kit/artifact-templates/` | spec / plan / verification / execution-log 等产物 Markdown 模板 |
 
 ---
@@ -102,6 +103,73 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 | **superpowers** | 结构化思考、计划、调试、TDD、完成前验证等技能链 |
 
 更多 Cursor 集成说明见 `adapters/cursor/README.md`。
+
+---
+
+## 编排术语：WU、Leader、Worker
+
+多 task 实现（Cursor 的 `cursor-orchestration`，或 Codex 的 `omx ultrawork`）时，用下面三个概念分工。详细步骤见 `adapters/cursor/orchestration/dispatcher-workflow.md`。
+
+### WU（Work Unit，工作单元）
+
+从**已批准的实施计划**里拆出的一小块、可独立执行的任务。每个 WU 须满足：
+
+| 要求 | 含义 |
+|------|------|
+| **有界** | 明确要改哪些文件（通常 ≤5 个写文件） |
+| **可验证** | 有完成标准（测试、lint 或检查点） |
+| **所有权清晰** | 并行 WU 不修改同一文件，避免冲突 |
+
+多个 WU 按 **GROUP** 分组：组内可并行，组间按依赖顺序执行。示例：
+
+```text
+GROUP-1（并行）:
+  WU-01: 实现用户 API | 文件: api/users.ts | 依赖: 无
+  WU-02: 实现前端列表 | 文件: pages/users.tsx | 依赖: 无
+
+GROUP-2（依赖 GROUP-1）:
+  WU-03: 联调 | 文件: hooks/useUsers.ts | 依赖: WU-01 的接口
+```
+
+### Leader（编排者）
+
+**Leader = 主 Agent**（Cursor 里即当前 Agent 模式的主会话）。负责路由、从 plan 拆 WU、派发子 Agent、整合结果、跑验证并写 `execution-log`。
+
+| 职责 | 说明 |
+|------|------|
+| 路由 | 首句声明 `「Harness：…」`，多 task 实现走 `cursor-orchestration` |
+| 拆分 | 从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件归属） |
+| 派发 | 并行委派 `harness-implementer`（每 WU 一个子 Agent），完成后委派**独立** `harness-reviewer` |
+| 整合与验证 | 合并 WU 结果、处理冲突、跑 `project.verification.md` |
+
+**Leader 不应：** 在用户说「开始实现」后，主线程大规模直接改业务代码（routing 定义的「小改动」除外）；实现与审查不得用同一 subagent 实例。
+
+对应关系：Cursor Leader ≈ Codex/OMX 的 leader / dispatcher 编排面。详见 `adapters/cursor/orchestration/agents/leader.md`。
+
+### Worker（工作者）
+
+文档里的 **Worker** 指被 Leader 派出去执行**单个 WU** 的子 Agent。在 Cursor 上主要是 **`harness-implementer`**（`.cursor/agents/harness-implementer.md`）。
+
+| 职责 | 禁止 |
+|------|------|
+| 只实现 Leader 分配的一个 WU | 不重规划、不派子 Agent、不审查自己的代码 |
+| 只改 prompt 中「允许修改」的文件列表 | 不擅自扩 scope；阻塞或范围扩大须**上报 Leader** |
+
+OMX 侧同一套分工（见 `entrypoints/AGENTS.omx.md`）：Leader 选模式、委派有界工作、负责验证；Worker 执行分配切片并向上报告。
+
+> **易混词：** 「work」在 Harness 语境里通常指 **Work Unit（WU）** 或 **Worker（实现者）**；Codex 侧的并行实现工作流名是 **`omx ultrawork`**，在 Cursor 上等价于 **`cursor-orchestration:dispatcher-workflow`**。
+
+### 关系一览
+
+```text
+用户批准 plan → 「开始实现」
+       ↓
+    Leader（主 Agent）— 拆 WU、画 GROUP
+       ↓
+  并行派发 Worker（harness-implementer），每 Worker 只做 1 个 WU
+       ↓
+    Leader 整合 → harness-reviewer → execution-log
+```
 
 ---
 
@@ -255,7 +323,6 @@ harness-kit/
 | 文档 | 说明 |
 |------|------|
 | `adapters/cursor/README.md` | Cursor 适配与编排 |
-| `init/onboarding-handoff.txt` | 可复制给 AI 的接入话术（单一来源） |
 | `init/bootstrap.prompt.md` | Bootstrap 详版流程 |
 | `core/artifacts.md` | 过程产物命名与 front matter |
 | `core/routing.md` | 默认路由与阶段门禁 |
