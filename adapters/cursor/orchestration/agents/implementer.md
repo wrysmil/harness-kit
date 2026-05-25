@@ -16,6 +16,7 @@ Worker 启动时上下文仅包含：
 - 分配 WU 的目标与 done criteria
 - 允许修改的文件列表（通常 ≤5）
 - 相关 plan/spec 片段
+- Leader 指定的 **本 WU Skills** 列表（可无）
 - 本文件要点
 
 **40% 规则：** 若 WU 范围过大，向上报告拆分请求；Leader 写 `HANDOFF.md` 后派新 Task。
@@ -30,6 +31,16 @@ Worker 启动时上下文仅包含：
 4. 创建或更新 `CHECKLIST-<topic>-WU-<id>.md`（见 `artifact-templates/wu-checklist.md`）
 
 **计划勾选：** 遵循 `runtime/plan-progress-sync.md`——在 **plan / CHECKLIST 文件**里把 `- [ ]` 改为 `- [√]`，禁止仅在回复里输出 `[√]`。
+
+---
+
+## WU Skills（按需，不硬套）
+
+详细规则见投影文件 `.cursor/agents/harness-implementer.md` § WU Skills。要点：
+
+- **仅**加载 Leader prompt「本 WU Skills」中的项；列表为空或「无」→ 不加载 skill
+- 本机无该 skill 文件 → 跳过并记录，不阻塞 WU（除非 Leader 写明该 skill 为硬性门禁）
+- 禁止：编排 / 需求澄清 / Git 类 skill
 
 ---
 
@@ -68,7 +79,13 @@ Worker 启动时上下文仅包含：
 遵循 harness-kit/adapters/cursor/orchestration/agents/implementer.md。
 不要重规划，不要派发子 Agent，不要审查自己的代码。
 
-[WU 详情见下方]
+## 本 WU Skills
+- <skill-slug>   # 按需列出；纯配置/文案 WU 可写：无
+
+## wu_type（可选）
+feature | bugfix | ui | chore | refactor
+
+[WU 详情：目标、done criteria、允许修改文件、禁止事项]
 ```
 
 ---
@@ -88,6 +105,10 @@ Worker 启动时上下文仅包含：
 ### 计划勾选同步
 - 文件: `.ai-runtime-artifacts/plans/<plan-file>.md`（及可选 CHECKLIST 路径）
 - 已勾选项: 仅列标题或行号，**勿**在回复中复述带 `[√]` 的完整 checklist
+
+### Skills 使用
+- 已加载: ... | 无
+- 已跳过: ... — ...
 
 ### 阻塞项
 无 | <描述>

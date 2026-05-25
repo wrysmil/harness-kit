@@ -33,12 +33,14 @@
 ## 执行图
 
 GROUP-1（并行）:
-  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无
-  WU-02: <描述> | 文件: c.ts | 依赖: 无
+  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | wu_skills: verification-before-completion, test-driven-development
+  WU-02: <描述> | 文件: c.ts | 依赖: 无 | wu_type: chore | wu_skills: 无
 
 GROUP-2（依赖 GROUP-1）:
-  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口
+  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | wu_skills: test-driven-development
 ```
+
+`wu_skills` 为 Leader 对本 WU **建议加载** 的 skill slug（逗号分隔）；Implementer 本机无文件则跳过，不硬套无关 skill。见下文 § Leader 为 WU 选配 Skills。
 
 ## 步骤 2：并行派发（Subagent）
 
@@ -57,8 +59,24 @@ GROUP-2（依赖 GROUP-1）:
 1. WU 目标与 done criteria
 2. 允许修改的文件列表
 3. 禁止事项（不改哪些文件、不新增依赖等）
-4. 必须返回：变更摘要、命令输出摘要、**计划勾选同步**（路径 + 已勾项标题，见 `runtime/plan-progress-sync.md`）、阻塞项
-5. Implementer 须在 **plan 文件**内同步 `- [ ]` → `- [√]`，不得仅在回复中列出 `[√]`
+4. **本 WU Skills**（见 `agents/implementer.md` Task Prompt 前缀）：按需列出；纯机械/配置 WU 可写 `无`
+5. 必须返回：变更摘要、命令输出摘要、**Skills 使用**、**计划勾选同步**（路径 + 已勾项标题，见 `runtime/plan-progress-sync.md`）、阻塞项
+6. Implementer 须在 **plan 文件**内同步 `- [ ]` → `- [√]`，不得仅在回复中列出 `[√]`
+
+### Leader 为 WU 选配 Skills（建议，非全量硬套）
+
+按 WU 实际需要挑选；plan front matter 的 `skills` 与项目 `.agents/skills/` 可叠加，**无关则不要写进 prompt**。
+
+| wu_type | 常配 skill（本机已安装时） | 可不配 |
+| --- | --- | --- |
+| `feature` / `bugfix` / `refactor` | `test-driven-development` | 纯文档/注释 chore |
+| 任何需跑命令验收的 WU | `verification-before-completion` | 仅改 markdown 且无验证命令 |
+| `ui` | `frontend-design`（仅动 UI 时） | 后端-only WU |
+| 项目专有 | plan 或 `.agents/skills/<name>` | — |
+
+**不要**传给 Implementer：`brainstorming`、`writing-plans`、`cursor-orchestration`、`git-xywh`。
+
+检查本机：`bash harness-kit/scripts/install-ai-skills.sh`（缺失 skill 时 Implementer 会 skipped，Leader 整合阶段可补跑验证）。
 
 ## 步骤 3：整合与门禁
 

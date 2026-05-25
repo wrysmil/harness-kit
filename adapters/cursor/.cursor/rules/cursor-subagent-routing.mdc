@@ -44,7 +44,7 @@ alwaysApply: true
 
 1. 路由判定 → 声明 `「Harness：…」`
 2. 遵守**阶段门禁**；非小改动读 `harness-kit/core/routing.md` 与相关 spec/plan
-3. 实现阶段委派 `harness-implementer`；完成后委派 **独立** `harness-reviewer`
+3. 实现阶段委派 `harness-implementer`（prompt 含 **本 WU Skills**，按需、可写 `无`）；完成后委派 **独立** `harness-reviewer`
 4. 并行 WU ≤5（默认 3）；维护 `tracking/DISPATCH-TRACK-*.md`
 5. 整合子 Agent 结果，主 Agent 验证后再声称完成
 
