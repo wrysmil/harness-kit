@@ -27,4 +27,4 @@ Cursor 适配分两层：
 
 ## 接入
 
-与通用 Harness 相同：先 `harness-kit/init/bootstrap.prompt.md`，再投影 `adapters/cursor/.cursor/` 与 `adapters/agents/.agents/`。
+与通用 Harness 相同：先 `harness-kit/init/onboarding-handoff.txt`（详版 `init/bootstrap.prompt.md`），再投影 `adapters/cursor/.cursor/` 与 `adapters/agents/.agents/`。

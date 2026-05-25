@@ -5,6 +5,7 @@ skills:
   - planner
 source:
   - harness-kit/README.md
+  - harness-kit/init/onboarding-handoff.txt
   - harness-kit/entrypoints/
   - harness-kit/adapters/
 created_at: 2026-05-14
@@ -54,6 +55,16 @@ chmod +x .cursor/hooks/*.sh
 
 见 `harness-kit/adapters/cursor/orchestration/hooks/README.md`。
 
+## AI runtime（可选）
+
+如需安装或检查 AI runtime（`oh-my-codex` / `omx`、superpowers、组织 skill `git-xywh` 等），先说明会修改哪些本机环境，再由你执行：
+
+```bash
+bash harness-kit/scripts/install-ai-skills.sh
+```
+
+见 `harness-kit/adapters/agents/.agents/README.md`。
+
 ## 初始化项目画像
 
 创建 AI 运行时产物目录：
@@ -67,14 +78,23 @@ chmod +x .cursor/hooks/*.sh
 - `.ai-runtime-artifacts/execution-logs/`
 - `.ai-runtime-artifacts/execution-logs/tracking/`（Cursor 并行追踪，可选目录）
 
-产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`wu-checklist.md`）。
+产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`）。
 
-完成入口和工具适配投影后，读取 `harness-kit/init/project-profiler.prompt.md`，生成或更新：
+完成入口和工具适配投影后，读取 `harness-kit/init/project-profiler.prompt.md`。
+
+以 `harness-kit/init/templates/` 下对应文件为**章节骨架**，扫描当前仓库后生成或更新：
 
 - `harness-kit/project.profile.md`
 - `harness-kit/context-map.md`
 - `harness-kit/project.verification.md`
 - `harness-kit/project.git.md`
+
+## 填充平台入口背景
+
+用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换下列文件中的 `{{PROJECT_BACKGROUND}}`（勿删除 Harness 规则段落）：
+
+- 根目录 `CLAUDE.md`、`GEMINI.md`（若已投影）
+- `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`（共享正文，供 Claude/Gemini 深读）
 
 ## 验证
 
@@ -91,3 +111,4 @@ bash harness-kit/scripts/harness-check.sh
 - 是否执行了 AI runtime 安装或检查。
 - 生成或更新了哪些项目画像文件。
 - Harness 检查是否通过。
+- **推断项**与**待确认项**（摘自 `project.profile.md`、`project.git.md` 等，供负责人 review）。

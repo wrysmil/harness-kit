@@ -45,7 +45,7 @@
 ## Harness 迁移到新项目
 
 1. 将 `harness-kit/` 放入新项目。
-2. 对 AI 发送 **`harness-kit/init/bootstrap.prompt.md`** 中的完整流程（或运行 `bash harness-kit/scripts/harness-init.sh` 获取同一段话术）。
+2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文（或运行 `bash harness-kit/scripts/harness-init.sh` 输出同一段话术）；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
 3. 人 review `project.profile.md` 与 `project.git.md` 中的推断项和待确认项。
 
 ---
@@ -54,4 +54,9 @@
 
 **适用：** Cursor Agent + `.cursor/agents/harness-*`；路由见 `harness-kit/core/routing.md` Cursor 列。
 
-完整步骤见 `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`（含阶段门禁、tracking、HANDOFF 恢复）。
+完整步骤见 `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`。要点：
+
+1. 遵守 **阶段门禁**（spec/plan 写入后暂停，见 `harness-kit/core/routing.md` § 阶段门禁）
+2. plan 批准后声明 `cursor-orchestration`，拆 WU，委派 `harness-implementer`
+3. 整合后委派 **独立** `harness-reviewer`
+4. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）

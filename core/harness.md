@@ -48,10 +48,11 @@
 ## 新项目初始化顺序
 
 1. 将 `harness-kit/` 放入新项目。
-2. 对 AI 执行 **`harness-kit/init/bootstrap.prompt.md`** 全文流程（或 `bash harness-kit/scripts/harness-init.sh` 输出的话术）。
+2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文（或 `bash harness-kit/scripts/harness-init.sh` 输出同一段话术）；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
 3. AI 生成或更新：
    - `harness-kit/project.profile.md`
    - `harness-kit/context-map.md`
    - `harness-kit/project.verification.md`
    - `harness-kit/project.git.md`
-4. 人 review `project.profile.md` 与 `project.git.md` 中的推断项和待确认项。
+4. AI 用 `project.profile.md` 摘要替换 `CLAUDE.md`、`GEMINI.md` 与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
+5. 人 review `project.profile.md` 与 `project.git.md` 中的推断项和待确认项。

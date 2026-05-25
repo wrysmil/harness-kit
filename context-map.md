@@ -1,5 +1,7 @@
 # Context Map
 
+> **脚手架源仓：** 本文件为占位骨架，非业务项目地图。接入目标项目后由 profiler 重新生成。
+
 本文件由 Harness 初始化流程生成，用于帮助 AI 快速理解项目结构。迁移到新项目后，应通过 `harness-kit/init/project-profiler.prompt.md` 重新生成。
 
 骨架见 `harness-kit/init/templates/context-map.md`。

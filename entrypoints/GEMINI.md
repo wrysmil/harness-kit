@@ -2,6 +2,8 @@
 
 项目背景：{{PROJECT_BACKGROUND}}
 
+> 初始化后由 profiler 用 `harness-kit/project.profile.md` 摘要替换上一行占位符。
+
 ## Harness（Gemini）
 
 共享规则正文：**`harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`**（与 `CLAUDE.md` 相同）。

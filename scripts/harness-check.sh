@@ -41,6 +41,7 @@ required_kit_files=(
   "core/verification.md"
   "core/runbooks.md"
   "init/bootstrap.prompt.md"
+  "init/onboarding-handoff.txt"
   "init/project-profiler.prompt.md"
   "init/templates/project.profile.md"
   "init/templates/context-map.md"

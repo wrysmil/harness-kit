@@ -73,7 +73,7 @@ superpowers:brainstorming → [门禁] → superpowers:writing-plans → [门禁
 
 ## Git（Leader）
 
-按 **`harness-kit/core/routing.md` § Git 协作** 与 **`core/runbooks.md` § Git 协作** 执行；声明 `「Harness：git-xywh + project.git.md」`。子 Agent 默认不 commit/push（见各 `harness-*.md`）。
+声明 `「Harness：git-xywh + project.git.md」` → invoke/Read **`git-xywh`** → Read **`harness-kit/project.git.md`** → 按 **`harness-kit/core/routing.md` § Git 协作** 与 **`harness-kit/core/runbooks.md` § Git 协作** 执行。子 Agent 默认不 commit/push（见各 `harness-*.md`）。
 
 ## 禁止
 

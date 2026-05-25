@@ -58,7 +58,7 @@
 
 | 阶段 | 产物 | 暂停后用户可说 |
 | --- | --- | --- |
-| 设计完成 | `.ai-runtime-artifacts/specs/` | 「写计划」「直接实现」或给修改意见 |
+| 设计完成 | `.ai-runtime-artifacts/specs/` | 「写计划」「制定实施计划」「直接实现」「直接做」或给修改意见 |
 | 计划完成 | `.ai-runtime-artifacts/plans/` | 「开始实现」「并行执行」或给修改意见 |
 | 决策完成 | `.ai-runtime-artifacts/decisions/` | 「执行」 |
 
@@ -79,7 +79,7 @@
 | 谁执行 Git | **Leader / 主 Agent**；`harness-implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
 | skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
-| **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `core/runbooks.md` § Git 协作 |
+| **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `harness-kit/core/runbooks.md` § Git 协作 |
 
 **Harness 声明示例：** `「Harness：git-xywh + project.git.md」`（用户仅说「提交代码」时）
 

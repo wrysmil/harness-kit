@@ -32,12 +32,16 @@ created_at: 2026-05-14
 
 ## 输出文件
 
-请创建或更新：
+以 `harness-kit/init/templates/` 中同名文件为**章节骨架**（保留「推断项」「待确认项」等节），创建或更新：
 
 1. `harness-kit/project.profile.md`
 2. `harness-kit/context-map.md`
 3. `harness-kit/project.verification.md`
 4. `harness-kit/project.git.md`（仅项目相对 `git-xywh` 的差异；不复制组织 Git 全文）
+
+## 填充平台入口背景
+
+用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换根目录 `CLAUDE.md`、`GEMINI.md`（若已投影）与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
 
 ## 要求
 

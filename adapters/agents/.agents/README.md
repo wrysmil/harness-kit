@@ -31,7 +31,7 @@ AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责�
 - `superpowers:systematic-debugging`
 - `superpowers:test-driven-development`
 - `superpowers:verification-before-completion`
-- `git-xywh`（组织 Git：分支、Angular 提交、MR；路由见 `harness-kit/core/routing.md`，项目差异见 `project.git.md`）
+- `git-xywh`（组织 Git：分支、Angular 提交、MR；路由见 `harness-kit/core/routing.md`，项目差异见 `harness-kit/project.git.md`）
 
 安装方式（全局）：
 
@@ -42,7 +42,7 @@ npx skills add obra/superpowers -g
 
 安装后 skills 位于 `~/.cursor/skills/`、`~/.claude/skills/` 或 `~/.agents/skills/` 下（由 skills CLI 或团队流程管理）。
 
-**Git 任务时：** 必须先 invoke / Read **`git-xywh`**，再读 `harness-kit/project.git.md`（见 `core/runbooks.md` § Git 协作）。
+**Git 任务时：** 必须先 invoke / Read **`git-xywh`**，再读 `harness-kit/project.git.md`（见 `harness-kit/core/runbooks.md` § Git 协作）。
 
 其他成员如果尚未安装，AI 应按 `AGENTS.md` 的行为要求使用当前工具中等价的能力。
 

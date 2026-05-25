@@ -60,7 +60,7 @@
 | `harness-kit/adapters/cursor/` | Cursor 专用：`.cursor/rules/`、`.cursor/agents/harness-*`、`orchestration/` 编排文档 |
 | `harness-kit/adapters/codex/` | Codex / OMX 适配说明与 omx 工作流对接 |
 | `harness-kit/adapters/agents/` | 通用 `.agents/skills/`（如 `cursor-orchestration`）模板 |
-| `harness-kit/init/` | 接入与画像生成 prompt（`bootstrap.prompt.md`、`project-profiler.prompt.md`） |
+| `harness-kit/init/` | 接入话术（`onboarding-handoff.txt`）、详版（`bootstrap.prompt.md`）、画像（`project-profiler.prompt.md`） |
 | `harness-kit/artifact-templates/` | spec / plan / verification / execution-log 等产物 Markdown 模板 |
 
 ---
@@ -123,7 +123,7 @@ flowchart TD
     H -->|需要| I[先说明会改什么，再安装]
     H -->|不需要| J[AI 通读项目代码与结构]
     I --> J
-    J --> K[产出三份项目说明]
+    J --> K[产出四份项目说明]
     K --> L[做一次配置是否齐全的体检]
     L --> M{体检是否通过？}
     M -->|未通过| N[改好后重新体检]
@@ -133,7 +133,7 @@ flowchart TD
     P --> Q([可以正式用 AI 协作开发])
 ```
 
-**三份项目说明：** 项目是什么（技术栈与边界）、代码怎么分块读、改动后怎么验收。
+**四份项目说明：** 项目是什么（技术栈与边界）、代码怎么分块读、改动后怎么验收、Git 协作相对组织规范的差异。
 
 ### 日常软件工程运作
 
@@ -209,9 +209,24 @@ harness-kit/
 
 ---
 
+
 ## 新项目接入
 
-将本仓库放入目标项目的 `harness-kit/` 后，把 **`init/bootstrap.prompt.md`** 交给 AI 执行（或运行 `bash harness-kit/scripts/harness-init.sh` 获取同一段话术）。流程概览见上文 [新项目接入（初始化）](#新项目接入初始化)。
+将本仓库放入目标项目的 `harness-kit/` 后，**无需手工逐步执行**；把以下内容发给AI
+
+```txt
+请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
+这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
+1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
+2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。
+3. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
+4. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
+5. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
+6. 汇总推断项、待确认项和验证结果。
+
+详版步骤见 harness-kit/init/bootstrap.prompt.md。
+
+```
 
 **初始化完成后**，AI 应生成或更新：
 
@@ -240,6 +255,7 @@ harness-kit/
 | 文档 | 说明 |
 |------|------|
 | `adapters/cursor/README.md` | Cursor 适配与编排 |
+| `init/onboarding-handoff.txt` | 可复制给 AI 的接入话术（单一来源） |
 | `init/bootstrap.prompt.md` | Bootstrap 详版流程 |
 | `core/artifacts.md` | 过程产物命名与 front matter |
 | `core/routing.md` | 默认路由与阶段门禁 |

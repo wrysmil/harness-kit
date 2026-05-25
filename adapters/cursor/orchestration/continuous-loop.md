@@ -31,7 +31,7 @@
 
 ## single-pass 标准路径（Cursor）
 
-与 `core/runbooks.md` § Cursor 编排 Runbook 一致：
+与 `harness-kit/core/runbooks.md` § Cursor 编排 Runbook 一致：
 
 ```text
 brainstorming → writing-plans → cursor-orchestration → verification-before-completion
