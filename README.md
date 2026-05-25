@@ -52,7 +52,8 @@
 | `harness-kit/project.profile.md` | **项目画像**：技术栈、主要目录职责、禁区、交付口径；初始化时由 AI 扫描生成，含「推断项 / 待确认项」供人工 review |
 | `harness-kit/context-map.md` | **上下文地图**：模块边界、目录树与读码优先级，减少 Agent 盲目全仓搜索 |
 | `harness-kit/project.verification.md` | **项目验证清单**：本仓库可用的 lint / build / test 命令与最小验证策略 |
-| `harness-kit/core/routing.md` | **默认路由表**（Codex / Cursor 并列）与阶段门禁；个人或团队可在此覆盖任务类型 → skill / subagent 的映射 |
+| `harness-kit/project.git.md` | **Git 协作差异**：相对组织 `git-xywh` skill 的本项目约束（MR 平台、commitlint、AI 是否可 push）；组织通用流程不复制进仓库 |
+| `harness-kit/core/routing.md` | **默认路由表**（Codex / Cursor 并列）与阶段门禁；含 Git 任务 → `git-xywh` + `project.git.md` |
 | `harness-kit/core/harness.md` | Harness 总契约：阅读顺序、与 `AGENTS.md` 覆盖层的关系 |
 | `harness-kit/core/artifacts.md` | 过程产物目录 `.ai-runtime-artifacts/` 的命名与 front matter 规范 |
 | `harness-kit/entrypoints/` | 投影到根目录的入口模板（`AGENTS.md`、`CLAUDE.md`、`GEMINI.md` 等），统一加载 `harness-kit/` |
@@ -171,12 +172,13 @@ flowchart TD
 1. `AGENTS.md`（投影后的根目录入口）
 2. `harness-kit/project.profile.md`
 3. `harness-kit/context-map.md`
-4. `harness-kit/core/routing.md`
-5. `harness-kit/core/artifacts.md`
-6. `harness-kit/project.verification.md`
-7. `harness-kit/core/verification.md`
-8. `harness-kit/core/runbooks.md`
-9. 与任务相关的 `.agents/skills/` 或 `.codex/skills/`
+4. `harness-kit/project.git.md`（涉及提交 / 分支 / MR 时）
+5. `harness-kit/core/routing.md`
+6. `harness-kit/core/artifacts.md`
+7. `harness-kit/project.verification.md`
+8. `harness-kit/core/verification.md`
+9. `harness-kit/core/runbooks.md`
+10. 与任务相关的 `.agents/skills/` 或 `.codex/skills/`（含组织级 `git-xywh`）
 
 ---
 
@@ -188,6 +190,7 @@ harness-kit/
 ├── project.profile.md         # AI 生成的项目画像
 ├── context-map.md             # 模块与上下文边界
 ├── project.verification.md    # 项目级验证规则
+├── project.git.md             # Git 协作差异（组织规范用 git-xywh skill）
 ├── core/                      # 通用 Harness 规则（不随业务重写）
 │   ├── harness.md
 │   ├── routing.md
@@ -227,7 +230,7 @@ harness-kit/
 3. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
 4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
 5. 读取 harness-kit/init/project-profiler.prompt.md。
-6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md。
+6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md、harness-kit/project.git.md。
 7. 由你运行 harness-kit/scripts/harness-check.sh。
 8. 汇总推断项、待确认项和验证结果。
 ```
@@ -239,6 +242,7 @@ harness-kit/
 - `harness-kit/project.profile.md`
 - `harness-kit/context-map.md`
 - `harness-kit/project.verification.md`
+- `harness-kit/project.git.md`
 
 并在回复中说明 Harness 检查结果、推断项与待确认项。
 

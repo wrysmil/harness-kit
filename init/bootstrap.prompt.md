@@ -72,6 +72,7 @@ chmod +x .cursor/hooks/*.sh
 - `harness-kit/project.profile.md`
 - `harness-kit/context-map.md`
 - `harness-kit/project.verification.md`
+- `harness-kit/project.git.md`
 
 ## 验证
 

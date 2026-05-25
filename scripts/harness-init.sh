@@ -23,7 +23,7 @@ Give this task to your AI agent:
 3. 创建 .ai-runtime-artifacts/ 及其子目录。
 4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
 5. 读取 harness-kit/init/project-profiler.prompt.md。
-6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md。
+6. 扫描当前项目，生成或更新 harness-kit/project.profile.md、harness-kit/context-map.md、harness-kit/project.verification.md、harness-kit/project.git.md。
 7. 由你运行 harness-kit/scripts/harness-check.sh。
 8. 汇总推断项、待确认项和验证结果。
 

@@ -31,6 +31,7 @@ AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责�
 - `superpowers:systematic-debugging`
 - `superpowers:test-driven-development`
 - `superpowers:verification-before-completion`
+- `git-xywh`（组织 Git：分支、Angular 提交、MR；路由见 `harness-kit/core/routing.md`，项目差异见 `project.git.md`）
 
 安装方式（全局）：
 

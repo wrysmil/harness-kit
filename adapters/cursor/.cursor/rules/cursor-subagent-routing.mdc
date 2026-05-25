@@ -97,6 +97,13 @@ superpowers:brainstorming → [门禁] → superpowers:writing-plans → [门禁
 
 并行编排详情：`.agents/skills/cursor-orchestration/SKILL.md` → `orchestration/dispatcher-workflow.md`。
 
+## Git（Leader）
+
+- 组织规范：**invoke `git-xywh` skill**（见 `harness-kit/core/routing.md` Git 路由行）
+- 项目差异：`harness-kit/project.git.md`
+- **Leader** 执行 commit / push / MR；子 Agent 默认禁止（见各 `harness-*.md`）
+- 声明示例：`「Harness：git-xywh + project.git.md」`
+
 ## 禁止
 
 - 未过阶段门禁修改业务代码

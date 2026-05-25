@@ -9,6 +9,7 @@ source:
   - harness-kit/init/templates/project.profile.md
   - harness-kit/init/templates/context-map.md
   - harness-kit/init/templates/project.verification.md
+  - harness-kit/init/templates/project.git.md
 created_at: 2026-05-14
 ---
 
@@ -26,7 +27,8 @@ created_at: 2026-05-14
 4. 顶层目录结构
 5. `src/`、`main/`、`preload/`、`apps/`、`packages/`、`docs/` 等存在的关键目录
 6. 已有构建、测试、lint、CI 配置
-7. 现有项目文档
+7. Git 相关：`.husky/`、`commitlint`、`.gitlab-ci.yml`、`.github/workflows`、`CONTRIBUTING.md` 等
+8. 现有项目文档
 
 ## 输出文件
 
@@ -35,6 +37,7 @@ created_at: 2026-05-14
 1. `harness-kit/project.profile.md`
 2. `harness-kit/context-map.md`
 3. `harness-kit/project.verification.md`
+4. `harness-kit/project.git.md`（仅项目相对 `git-xywh` 的差异；不复制组织 Git 全文）
 
 ## 要求
 

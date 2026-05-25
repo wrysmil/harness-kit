@@ -16,7 +16,8 @@ alwaysApply: true
 
 1. 读取 `harness-kit/core/routing.md`（含阶段门禁）
 2. 多 task 实现：`.cursor/agents/harness-implementer` + `cursor-orchestration` skill
-3. 编排步骤：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+3. Git 任务：`git-xywh` skill + `harness-kit/project.git.md`（Leader 执行，子 Agent 默认不 commit）
+4. 编排步骤：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
 
 ## 声明
 

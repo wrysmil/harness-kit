@@ -13,11 +13,12 @@
 1. `harness-kit/core/harness.md`
 2. `harness-kit/project.profile.md`
 3. `harness-kit/context-map.md`
-4. `harness-kit/core/routing.md`
-5. `harness-kit/core/artifacts.md`
-6. `harness-kit/project.verification.md`
-7. `harness-kit/core/verification.md`
-8. 当任务匹配 runbook 时，阅读 `harness-kit/core/runbooks.md`
+4. `harness-kit/project.git.md`（Git 任务或用户要求提交 / 开 MR 时）
+5. `harness-kit/core/routing.md`
+6. `harness-kit/core/artifacts.md`
+7. `harness-kit/project.verification.md`
+8. `harness-kit/core/verification.md`
+9. 当任务匹配 runbook 时，阅读 `harness-kit/core/runbooks.md`
 
 `harness-kit/` 层负责项目边界、产物契约、验证门禁与迁移可移植性。  
 默认 harness 路由是强制基线。若用户指定技能或工具，将其视为对 `harness-kit/core/routing.md` 的附加项，除非用户明确要求跳过、禁用或仅使用其他路由。
@@ -51,6 +52,9 @@
 | 计划 | `superpowers:writing-plans` | 同左 |
 | 多 task 实现 | `omx ultrawork` | `cursor-orchestration:dispatcher-workflow` |
 | 验证 | `superpowers:verification-before-completion` | 同左 |
+| Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 |
+
+涉及提交、分支、MR 时由 **Leader** invoke `git-xywh`；子 Agent 默认不 commit。组织规范在 skill，项目差异在 `project.git.md`。
 
 ## 可选：Cursor Hooks
 

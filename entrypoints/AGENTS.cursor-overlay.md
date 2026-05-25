@@ -10,8 +10,9 @@
 1. `harness-kit/core/routing.md`（含阶段门禁）
 2. `.cursor/rules/cursor-subagent-routing.mdc`
 3. `harness-kit/project.profile.md`、`harness-kit/context-map.md`
-4. `harness-kit/core/artifacts.md`
-5. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+4. `harness-kit/project.git.md`（Git 任务或提交 / MR 时）
+5. `harness-kit/core/artifacts.md`
+6. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
 
 ## 平台判定
 
@@ -28,6 +29,12 @@
 - `harness-debugger` — 缺陷调查
 
 路由表见 `harness-kit/core/routing.md`（不在此重复）。
+
+## Git
+
+- 组织规范：**`git-xywh` skill**（须 invoke，不复制全文进仓库）
+- 项目差异：`harness-kit/project.git.md`
+- **Leader** 执行 commit / push / MR；`harness-implementer` 默认禁止擅自 Git
 
 ## 强制声明
 

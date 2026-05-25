@@ -11,6 +11,7 @@
   - **Cursor**：使用 `cursor-orchestration:dispatcher-workflow`（`.cursor/agents/` subagent 并行，见 `harness-kit/adapters/cursor/orchestration/`）
 - 小改动和单文件机械修改由当前助手直接处理。
 - 项目级 skill 优先于通用 skill。
+- **Git 协作**：组织级分支、提交、MR、热修、合流默认 invoke **`git-xywh`** skill；本项目差异与 AI 约束见 `harness-kit/project.git.md`（不将 skill 全文复制进仓库）。
 
 ## 用户指定 Skills 的合并规则
 
@@ -38,6 +39,9 @@
 | 架构决策 | architect / critic / planner 组合 | Task `generalPurpose`（只读）× 多轮 + decision 产物 | `.ai-runtime-artifacts/decisions/` |
 | 文章 / 知识沉淀 / 对外文档 | `superpowers:brainstorming` + 写作风格 skill + 文档发布 skill | 同左 | `.ai-runtime-artifacts/retros/` 或用户指定位置 |
 | 小改动 / 单文件机械修改 | 直接处理 | 直接处理 | 无需产物 |
+| 建分支 / 提交 / rebase / 开 MR·PR | `git-xywh` + `project.git.md` | 同左 | 无（或用户要求的 MR 链接） |
+| 热修 / 提测线 `test/v*` / 合流 / 打标签 | `git-xywh` + `project.git.md` | 同左 | 无 |
+| Harness 脚手架变更提交 | `git-xywh`（类型 `chore`，范围 `harness-kit`） | 同左 | 与业务 commit 分离 |
 
 ### "小改动"判定标准
 
@@ -61,6 +65,18 @@
 **已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须记录在产物 front matter 或回复中）。
 
 **Cursor 实现阶段：** 用户说「开始实现」后，Leader 须委派 `.cursor/agents/harness-implementer`，不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
+
+## Git 协作
+
+| 规则 | 说明 |
+| --- | --- |
+| 组织规范来源 | **`git-xywh` skill**（三主干、五类临时分支、Angular 提交、MR 流程） |
+| 项目差异来源 | **`harness-kit/project.git.md`**（MR 平台、commitlint、是否允许 AI push、Harness 独立 commit 等） |
+| 谁执行 Git | **Leader / 主 Agent**；`harness-implementer` 等子 Agent 默认不 commit/push |
+| 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
+| skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；建议运行 `npx skills add` 或团队文档安装 `git-xywh` |
+
+**Harness 声明示例：** `「Harness：git-xywh + project.git.md」`（用户仅说「提交代码」时）
 
 ## 运行约束
 
