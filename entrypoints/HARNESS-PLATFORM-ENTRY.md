@@ -1,6 +1,6 @@
 # Harness Platform Entry（Claude / Gemini 共享）
 
-项目背景：{{PROJECT_BACKGROUND}}
+项目背景：旅行规划助手（travel-assistant）正在重构为基于 nanobot 的聊天式旅游推荐系统：用户端为 React 地图+聊天双面板，管理链路为 FastAPI + admin SPA，聊天链路经 nanobot WebSocket 与 MCP（高德/Unsplash）。仓库含 backend/、frontend/、admin/、nanobot/ 与 harness-kit/；当前分支 feature/architecture-to-chat，根 README 仍描述旧多 Agent 架构。
 
 > 初始化后由 profiler 用 `harness-kit/project.profile.md` 摘要替换 `{{PROJECT_BACKGROUND}}`。Claude/Gemini 会话仍须读根目录 **`AGENTS.md`**（Harness 覆盖层优先）。
 
