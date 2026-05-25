@@ -26,11 +26,21 @@ org_skill: git-xywh
 | MR / PR 平台 | <!-- GitLab / GitHub / 其他 --> |
 | Harness 脚手架提交 | 类型可用 `feat`/`chore`/`docs` 等；**标题与正文须中文**，与业务 commit 分开 |
 
+## 如何调用 git-xywh
+
+| 环境 | 做法 |
+| --- | --- |
+| Cursor / 支持 Skill 工具 | **先** `invoke` / 加载 skill **`git-xywh`**，再读本文件 |
+| 无 Skill 工具 | Read `~/.cursor/skills/git-xywh/SKILL.md`（或 `~/.agents/skills/` 下同路径） |
+| 安装检查 | `bash harness-kit/scripts/install-ai-skills.sh` 会输出 `ok:` 或 `missing:` |
+
+完整步骤见 `harness-kit/core/runbooks.md` § Git 协作。
+
 ## AI 执行约束
 
-1. 提交 / 分支操作前：读本文件 + invoke `git-xywh`。
+1. 提交 / 分支操作前：**已加载 `git-xywh` skill 正文** + 读本文件（仅 delta）。
 2. 禁止（除非用户明确要求）：向 `main`/`develop` 直推；公共分支 force push；子 Agent 擅自 commit。
-3. 用户说「帮我提交」：由 Leader 执行，并声明分支与提交说明。
+3. 用户说「帮我提交」：Leader 声明 `「Harness：git-xywh + project.git.md」` 后执行。
 
 ## 待确认项
 

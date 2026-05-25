@@ -74,9 +74,12 @@
 | 项目差异来源 | **`harness-kit/project.git.md`**（MR 平台、commitlint、是否允许 AI push、Harness 独立 commit 等） |
 | 谁执行 Git | **Leader / 主 Agent**；`harness-implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
-| skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；建议运行 `npx skills add` 或团队文档安装 `git-xywh` |
+| skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
+| **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `core/runbooks.md` § Git 协作 |
 
 **Harness 声明示例：** `「Harness：git-xywh + project.git.md」`（用户仅说「提交代码」时）
+
+**注意：** 路由表中的 `git-xywh` 指**必须先加载该 skill 正文**再执行 git，不是仅阅读 `project.git.md` 或 `routing.md` 即够。
 
 ## 运行约束
 

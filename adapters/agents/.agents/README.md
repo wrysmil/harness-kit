@@ -20,7 +20,7 @@ Harness 脚手架预置 **Cursor 编排** skill（投影后位于 `.agents/skill
 完成后请汇总 oh-my-codex / omx 和基础 skills 的可用状态。
 ```
 
-AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责安装或检查 `oh-my-codex` / `omx`，并检查本机是否已安装 superpowers skills。
+AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责安装或检查 `oh-my-codex` / `omx`，并检查本机是否已安装 superpowers 与组织 skill **`git-xywh`**。
 
 ## 外部通用 Skills
 
@@ -37,9 +37,12 @@ AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责�
 
 ```bash
 npx skills add obra/superpowers -g
+# git-xywh：按组织文档安装（slug: git-xywh），常见路径 ~/.cursor/skills/git-xywh/
 ```
 
-安装后 skills 位于 `~/.claude/skills/` 或 `~/.agents/skills/` 下（由 skills CLI 自动管理）。
+安装后 skills 位于 `~/.cursor/skills/`、`~/.claude/skills/` 或 `~/.agents/skills/` 下（由 skills CLI 或团队流程管理）。
+
+**Git 任务时：** 必须先 invoke / Read **`git-xywh`**，再读 `harness-kit/project.git.md`（见 `core/runbooks.md` § Git 协作）。
 
 其他成员如果尚未安装，AI 应按 `AGENTS.md` 的行为要求使用当前工具中等价的能力。
 

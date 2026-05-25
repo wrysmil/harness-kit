@@ -34,6 +34,21 @@
 3. 决策写入 `.ai-runtime-artifacts/decisions/`。
 4. 决策必须包含接受方案、拒绝方案、约束和风险。
 
+## Git 协作（提交 / 分支 / MR）
+
+**路由：** `git-xywh` + `harness-kit/project.git.md`（见 `harness-kit/core/routing.md` Git 路由行）。
+
+**Leader 必须按序执行（不可跳过 skill 正文）：**
+
+1. 首句声明：`「Harness：git-xywh + project.git.md」`
+2. **调用 `git-xywh` skill** — 有 Skill 工具则 `invoke git-xywh`；否则 Read 本机  
+   `~/.cursor/skills/git-xywh/SKILL.md` 或 `~/.agents/skills/git-xywh/SKILL.md`（路径以 `install-ai-skills.sh` 检测结果为准）
+3. 读取 `harness-kit/project.git.md`（本项目 MR 平台、commitlint、Harness 中文提交约定等）
+4. 按 skill 中分支模型与 Angular 提交规范执行；仅改 `harness-kit/` 时用 `chore(harness-kit):` 且正文中文
+5. 子 Agent（`harness-implementer` 等）默认不 `commit` / `push`，由 Leader 执行
+
+**与 GitHub CLI：** 开 PR / 看 CI _checks 可叠加 `.agents/skills/github`（`gh`），但不替代 `git-xywh` 的分支与提交规范。
+
 ## Harness 迁移到新项目
 
 1. 将 `harness-kit/` 放入新项目。

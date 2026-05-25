@@ -52,7 +52,8 @@ fi
 echo "==> Checking superpowers skills"
 
 SUPERPOWERS_SKILLS=(brainstorming writing-plans systematic-debugging test-driven-development verification-before-completion)
-SEARCH_DIRS=("$HOME/.claude/skills" "$HOME/.agents/skills")
+ORG_SKILLS=(git-xywh)
+SEARCH_DIRS=("$HOME/.cursor/skills" "$HOME/.claude/skills" "$HOME/.agents/skills")
 
 find_skill() {
   local skill="$1"
@@ -84,6 +85,33 @@ Some superpowers skills are missing. Install via:
 oh-my-codex passed setup and doctor, and the project can still use omx workflows.
 MSG
   if [[ "${STRICT_SUPERPOWERS:-0}" == "1" ]]; then
+    exit 2
+  fi
+fi
+
+echo "==> Checking organization skills (git-xywh)"
+
+org_missing=0
+for skill in "${ORG_SKILLS[@]}"; do
+  if path=$(find_skill "$skill"); then
+    echo "ok: $path"
+  else
+    echo "missing: $skill"
+    org_missing=1
+  fi
+done
+
+if [[ "$org_missing" -ne 0 ]]; then
+  cat <<'MSG' >&2
+
+Organization skill git-xywh is missing. Install per team docs (slug: git-xywh), e.g. into:
+  ~/.cursor/skills/git-xywh/SKILL.md
+  ~/.agents/skills/git-xywh/SKILL.md
+
+Until installed, Git tasks must still read harness-kit/project.git.md and follow repo hooks/CI;
+Harness routing expects Leader to invoke git-xywh before commit / branch / MR.
+MSG
+  if [[ "${STRICT_ORG_SKILLS:-0}" == "1" ]]; then
     exit 2
   fi
 fi

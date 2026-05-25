@@ -85,8 +85,8 @@ superpowers:brainstorming → [门禁] → superpowers:writing-plans → [门禁
 
 ## Git（Leader）
 
-- 组织规范：**invoke `git-xywh` skill**（见 `harness-kit/core/routing.md` Git 路由行）
-- 项目差异：`harness-kit/project.git.md`
+- **先** invoke / Read **`git-xywh` skill**（见 `harness-kit/core/runbooks.md` § Git 协作），再读 `project.git.md`
+- 路由声明：`harness-kit/core/routing.md` Git 路由行
 - **Leader** 执行 commit / push / MR；子 Agent 默认禁止（见各 `harness-*.md`）
 - 声明示例：`「Harness：git-xywh + project.git.md」`
 
