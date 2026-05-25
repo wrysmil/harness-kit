@@ -17,6 +17,18 @@ copy_skill() {
   echo "ok: $name"
 }
 
+copy_skill_dir() {
+  local name="$1"
+  local src_dir="$2"
+  if [[ ! -f "$src_dir/SKILL.md" ]]; then
+    echo "skip (missing): $name <- $src_dir" >&2
+    return 0
+  fi
+  mkdir -p "$DEST/$name"
+  rsync -a --delete --exclude '__pycache__' "$src_dir/" "$DEST/$name/"
+  echo "ok: $name (directory)"
+}
+
 echo "==> Syncing vendored skills to $DEST"
 
 copy_skill test-driven-development "$HOME/.agents/skills/test-driven-development/SKILL.md"
@@ -26,5 +38,6 @@ copy_skill requesting-code-review "$HOME/.agents/skills/requesting-code-review/S
 copy_skill receiving-code-review "$HOME/.agents/skills/receiving-code-review/SKILL.md"
 copy_skill frontend-design "$HOME/.cursor/skills/frontend-design/SKILL.md"
 copy_skill agent-browser "$HOME/.agents/skills/agent-browser/SKILL.md"
+copy_skill_dir ui-ux-pro-max "$HOME/.trae/skills/ui-ux-pro-max"
 
 echo "==> Done (skill 偏好清单见 orchestration/skill-preferences.zh.md，非 skill 文件)"

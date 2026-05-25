@@ -76,6 +76,8 @@ required_kit_files=(
   "adapters/cursor/.cursor/agents/harness-test-engineer.md"
   "adapters/cursor/.cursor/skills/test-driven-development/SKILL.md"
   "adapters/cursor/.cursor/skills/verification-before-completion/SKILL.md"
+  "adapters/cursor/.cursor/skills/ui-ux-pro-max/SKILL.md"
+  "adapters/cursor/.cursor/skills/ui-ux-pro-max/scripts/search.py"
   "adapters/cursor/orchestration/skill-preferences.zh.md"
   "adapters/cursor/orchestration/agents/test-engineer.md"
   "scripts/sync-cursor-skills.sh"

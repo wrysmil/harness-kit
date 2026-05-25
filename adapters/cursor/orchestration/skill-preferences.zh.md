@@ -27,7 +27,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | agent_role | wu_type | 建议加载的 skill（按序） |
 | --- | --- | --- |
 | implementer | feature, bugfix, refactor | test-driven-development, verification-before-completion |
-| implementer | ui | frontend-design, test-driven-development, verification-before-completion |
+| implementer | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion |
 | implementer | chore | **无** |
 | implementer | review-fix | receiving-code-review, test-driven-development, verification-before-completion |
 | explorer | explore, * | **无** |
@@ -55,6 +55,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | systematic-debugging | 根因调查 | superpowers（副本） |
 | requesting-code-review | 独立审查 | superpowers（副本） |
 | receiving-code-review | 按审查意见改代码 | superpowers（副本） |
+| ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | ~/.trae/skills（整目录副本） |
 | frontend-design | UI 实现审美 | 全局复制 |
 | agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
 
@@ -74,7 +75,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | 角色 | Subagent | 典型 wu_type | auto 默认 |
 | --- | --- | --- | --- |
 | 实现者 | harness-implementer | feature / bugfix / refactor | TDD + verification |
-| 实现者 | harness-implementer | ui | frontend-design + TDD + verification |
+| 实现者 | harness-implementer | ui | ui-ux-pro-max + frontend-design + TDD + verification |
 | 实现者 | harness-implementer | chore | 无 |
 | 实现者 | harness-implementer | review-fix | receiving-code-review + TDD + verification |
 | 探查者 | harness-explorer | explore | 无 |
