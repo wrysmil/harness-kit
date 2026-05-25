@@ -6,17 +6,67 @@
 
 ---
 
-## 第一部分：什么是 Harness Engineering
+## 目录
 
-**Harness Engineering** 是指围绕 AI Agent（特别是 Coding Agent）设计和构建约束机制、反馈回路、工作流控制和持续改进循环的系统工程实践。它要解决的核心问题是：当 AI Agent 拥有了强大的代码生成能力之后，如何确保其输出的可靠性、一致性和长期可维护性。
-
-**Harness** 的本意是马具——缰绳、鞍具那一套，把马的力气引到正确的方向上。拿来类比 AI Agent 挺合适：LLM 就像一匹蛮力十足但方向感不太行的马，跑得快但容易跑偏。
+- [什么是 Harness Engineering](#什么是-harness-engineering)
+- [与单纯使用 Skill 的区别](#与单纯使用-skill-的区别)
+- [解决什么问题](#解决什么问题)
+- [支持的工具](#支持的工具)
+- [核心能力](#核心能力)
+- [流程图](#流程图)
+- [推荐阅读顺序](#推荐阅读顺序)
+- [目录结构](#目录结构)
+- [新项目接入](#新项目接入)
+- [接入方式建议](#接入方式建议)
+- [更多文档](#更多文档)
 
 ---
 
-## 它解决什么问题
+## 什么是 Harness Engineering
 
-Harness 工程化的难点往往在「起步」：规则散落、各工具各一套、验证标准不统一。Harness Kit 的目标是：
+**Harness Engineering** 是围绕 AI Coding Agent 设计约束机制、反馈回路、工作流控制与持续改进的系统工程实践。核心问题是：当 Agent 具备强代码生成能力后，如何保证输出的**可靠性、一致性与长期可维护性**。
+
+**Harness** 本义是马具——用缰绳与鞍具把马力引到正确方向。LLM 像一匹劲大但易跑偏的马；Harness 负责**定向、限速、验货与交接**，而不是限制能力本身。
+
+---
+
+## 与单纯使用 Skill 的区别
+
+许多团队会从 **harness-engineer**、**superpowers** 等 Agent Skill 起步：能力装在 Skill 里，主要靠对话里临时提醒 AI「按某 skill 做」。  
+**Harness Kit** 把「这个项目怎么干」写进仓库里的 `harness-kit/` 文件夹：换电脑、换同事、换 Cursor/Codex，拉同一份代码就能沿用同一套规则（见下表）。
+
+| 维度 | 仅使用 Skill | Harness Kit |
+|------|-------------|-------------|
+| **交付物与可追溯性** | 方案和结论多在聊天记录里，关掉窗口就难找；换人接手要重新讲一遍 | 重要步骤落成仓库里的 Markdown 文件（如方案、计划、验证报告），放在 `.ai-runtime-artifacts/`，带日期和用了哪些 skill，方便 review 和接着做 |
+| **多 Agent 协同** | 一个大对话里又设计又写代码又自审，容易前后矛盾、重复读仓库 | 主 Agent 负责协调：实现、审查、探查分给不同子 Agent；能并行的任务拆开做，各看各的上下文，省 token、也减少「自己审自己」的幻觉 |
+| **迁移与配置** | Skill 常装在本机用户目录；A 项目和 B 项目各说各话，团队难统一 | **整包跟着 Git 走**：`harness-kit/` 和业务代码一起提交。接入时 AI 会写好「这是什么项目」（`project.profile.md`）、「代码怎么分块读」（`context-map.md`）等。换 Cursor / Codex / Claude 时，从 `adapters/` 投影对应配置，不用重写一套。个人可改 `routing.md` 里的默认路线，团队满意就 commit，变成项目规范 |
+| **软件工程工作流** | 每次靠你口头说「先出方案再写代码」；AI 可能跳过设计直接改代码，或方案和实现混在一起 | **默认走固定阶段**：先写方案 → 你确认 → 再写实施计划 → 你确认 → 再动代码 → 最后验证。写方案和计划后 AI **必须停下来等你点头**（阶段门禁）。改个错别字、改一行配置这类小事可以不走全套流程 |
+
+**一句话：** Skill 教 AI **会哪些招**；Harness Kit 规定 **在这个仓库里、按什么顺序、留下什么文件、谁来做哪一步**。
+
+### 迁移与配置：主要文件是干什么的
+
+| 路径 | 说明 |
+|------|------|
+| `harness-kit/` | Harness 脚手架根目录；随业务仓库一起 clone / submodule，规范与业务代码可分开提交 |
+| `harness-kit/project.profile.md` | **项目画像**：技术栈、主要目录职责、禁区、交付口径；初始化时由 AI 扫描生成，含「推断项 / 待确认项」供人工 review |
+| `harness-kit/context-map.md` | **上下文地图**：模块边界、目录树与读码优先级，减少 Agent 盲目全仓搜索 |
+| `harness-kit/project.verification.md` | **项目验证清单**：本仓库可用的 lint / build / test 命令与最小验证策略 |
+| `harness-kit/core/routing.md` | **默认路由表**（Codex / Cursor 并列）与阶段门禁；个人或团队可在此覆盖任务类型 → skill / subagent 的映射 |
+| `harness-kit/core/harness.md` | Harness 总契约：阅读顺序、与 `AGENTS.md` 覆盖层的关系 |
+| `harness-kit/core/artifacts.md` | 过程产物目录 `.ai-runtime-artifacts/` 的命名与 front matter 规范 |
+| `harness-kit/entrypoints/` | 投影到根目录的入口模板（`AGENTS.md`、`CLAUDE.md`、`GEMINI.md` 等），统一加载 `harness-kit/` |
+| `harness-kit/adapters/cursor/` | Cursor 专用：`.cursor/rules/`、`.cursor/agents/harness-*`、`orchestration/` 编排文档 |
+| `harness-kit/adapters/codex/` | Codex / OMX 适配说明与 omx 工作流对接 |
+| `harness-kit/adapters/agents/` | 通用 `.agents/skills/`（如 `cursor-orchestration`）模板 |
+| `harness-kit/init/` | 接入与画像生成 prompt（`bootstrap.prompt.md`、`project-profiler.prompt.md`） |
+| `harness-kit/artifact-templates/` | spec / plan / verification / execution-log 等产物 Markdown 模板 |
+
+---
+
+## 解决什么问题
+
+Harness 工程化常卡在「起步」：规则散落、各工具各一套、验证标准不统一。Harness Kit 的目标是：
 
 1. **降低接入成本** — 将 `harness-kit/` 放入项目，把初始化话术交给 AI 即可。
 2. **统一多工具入口** — 同一套规范投影到 Cursor、Codex、Claude Code、Gemini 等环境。
@@ -42,12 +92,77 @@ Harness 工程化的难点往往在「起步」：规则散落、各工具各一
 
 ## 核心能力
 
-- **Harness 路由** — 默认 route 为强制基线；`core/routing.md` 提供 Codex 与 Cursor 并列路由表。
-- **Cursor 子 Agent 编排** — `.cursor/agents/harness-*` + `cursor-orchestration` skill，语义等价于 Codex 的 `omx ultrawork`（见 `adapters/cursor/`）。
-- **oh-my-codex / omx** — Codex CLI 多 Agent 运行时编排与高级角色路由。
-- **superpowers** — 结构化思考、计划、调试、TDD、完成前验证等技能链。
+| 能力 | 说明 |
+|------|------|
+| **Harness 路由** | 默认 route 为强制基线；`core/routing.md` 提供 Codex 与 Cursor 并列路由表与阶段门禁 |
+| **过程产物契约** | `.ai-runtime-artifacts/` 统一存放 spec、plan、verification、execution-log；详见 `core/artifacts.md` |
+| **Cursor 子 Agent 编排** | `.cursor/agents/harness-*` + `cursor-orchestration` skill，语义等价于 Codex `omx ultrawork`（见 `adapters/cursor/`） |
+| **oh-my-codex / omx** | Codex CLI 多 Agent 运行时编排与高级角色路由 |
+| **superpowers** | 结构化思考、计划、调试、TDD、完成前验证等技能链 |
 
 更多 Cursor 集成说明见 `adapters/cursor/README.md`。
+
+---
+
+## 流程图
+
+面向业务与管理的两张总览图：说明「第一次怎么接上 AI 协作规范」，以及「日常做需求时 AI 怎么配合人、在哪些环节必须等人确认」。
+
+### 新项目接入（初始化）
+
+```mermaid
+flowchart TD
+    A([开始]) --> B[把协作规范模板放进项目]
+    B --> C[让 AI 按模板完成首次配置]
+    C --> D[AI 了解本项目的基本情况]
+    D --> E[在项目里放好 AI 使用说明入口]
+    E --> F[配置好开发工具里的协作规则]
+    F --> G[建好方案、计划等文档存放位置]
+    G --> H{本机是否需要安装辅助工具？}
+    H -->|需要| I[先说明会改什么，再安装]
+    H -->|不需要| J[AI 通读项目代码与结构]
+    I --> J
+    J --> K[产出三份项目说明]
+    K --> L[做一次配置是否齐全的体检]
+    L --> M{体检是否通过？}
+    M -->|未通过| N[改好后重新体检]
+    N --> L
+    M -->|通过| O[列出 AI 拿不准、需人确认的事项]
+    O --> P[负责人过目并确认项目说明]
+    P --> Q([可以正式用 AI 协作开发])
+```
+
+**三份项目说明：** 项目是什么（技术栈与边界）、代码怎么分块读、改动后怎么验收。
+
+### 日常软件工程运作
+
+```mermaid
+flowchart TD
+    A[同事提出开发需求] --> B[AI 判断：小事还是正式需求]
+    B --> C{只是小修小补？}
+    C -->|是| D[AI 直接改，快速收尾]
+    D --> Z([交付完成])
+    C -->|否| E[先聊清楚要做什么、做到哪一步]
+    E --> F[写出方案文档，供大家查看]
+    F --> G[[等人确认：方案 OK 再继续]]
+    G --> H{改动大、要分多步做？}
+    H -->|是| I[写出分步实施计划]
+    I --> J[计划存档，供后续对照]
+    J --> K[[等人确认：可以开始写代码]]
+    H -->|否| L[把大任务拆成几件可并行的小事]
+    K --> L
+    L --> M[多人/多角色并行开发]
+    M --> N[汇总改动，处理冲突]
+    N --> O[跑测试、编译等验收动作]
+    O --> P[换另一位 AI 专门做代码审查]
+    P --> Q{审查是否通过？}
+    Q -->|未通过| R[按意见返工修改]
+    R --> M
+    Q -->|通过| S[留下过程记录与验收结论]
+    S --> Z
+```
+
+**关键原则：** 方案和计划须负责人点头后再动代码；写代码的人与审查的人分开，避免「自己审自己」。
 
 ---
 
@@ -88,13 +203,15 @@ harness-kit/
 
 ### 目录职责
 
-- `core/` — 通用 Harness 规则，不随业务重写。
-- `init/` — 新项目初始化 prompt 与画像模板。
-- `entrypoints/` — 投影到根目录的 AI 入口模板（含工具中立的 `AGENTS.md` 与 `AGENTS.omx.md` 等）。
-- `adapters/` — 各编程工具的目录模板与编排文档。
-- `scripts/` — 安装、初始化、检查脚本（不投影到根目录）。
-- `artifact-templates/` — spec / plan / verification / execution-log 等产物模板。
-- `project.profile.md`、`context-map.md`、`project.verification.md` — 初始化后由 AI 生成或更新。
+| 目录 / 文件 | 职责 |
+|-------------|------|
+| `core/` | 通用 Harness 规则，不随业务重写 |
+| `init/` | 新项目初始化 prompt 与画像模板 |
+| `entrypoints/` | 投影到根目录的 AI 入口模板（含 `AGENTS.md`、`AGENTS.omx.md` 等） |
+| `adapters/` | 各编程工具的目录模板与编排文档 |
+| `scripts/` | 安装、初始化、检查脚本（不投影到根目录） |
+| `artifact-templates/` | spec / plan / verification / execution-log 等产物模板 |
+| `project.profile.md` 等 | 初始化后由 AI 生成或更新 |
 
 ---
 
@@ -115,9 +232,9 @@ harness-kit/
 8. 汇总推断项、待确认项和验证结果。
 ```
 
-详细步骤（含可选 Cursor hooks、AGENTS 拆分说明）以 `harness-kit/init/bootstrap.prompt.md` 为准。
+详细步骤（含可选 Cursor hooks、AGENTS 拆分说明）以 `init/bootstrap.prompt.md` 为准；流程概览见上文 [新项目接入（初始化）](#新项目接入初始化)。
 
-初始化完成后，AI 应生成或更新：
+**初始化完成后**，AI 应生成或更新：
 
 - `harness-kit/project.profile.md`
 - `harness-kit/context-map.md`
@@ -140,5 +257,9 @@ harness-kit/
 
 ## 更多文档
 
-- Cursor 适配：`adapters/cursor/README.md`
-- Bootstrap 详版：`init/bootstrap.prompt.md`
+| 文档 | 说明 |
+|------|------|
+| `adapters/cursor/README.md` | Cursor 适配与编排 |
+| `init/bootstrap.prompt.md` | Bootstrap 详版流程 |
+| `core/artifacts.md` | 过程产物命名与 front matter |
+| `core/routing.md` | 默认路由与阶段门禁 |
