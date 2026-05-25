@@ -19,7 +19,7 @@ created_at: <YYYY-MM-DD>
 
 > Implementer 每步验收通过后，在本文件中把对应行 `- [ ]` 改为 `- [√]`（见 `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md`）。**不要**只在聊天里输出勾选。
 
-并行实现时，Leader 拆 WU 并为每个 WU 标注 `wu_type` / `wu_skills`（写入执行图或 CHECKLIST；派发 prompt 须抄送「本 WU Skills」）。**按需**选配 skill，无关 skill 不要写进 WU。
+并行实现时，Leader 拆 WU 并标注 `wu_type` / `wu_skills`（推荐 **`auto`**，查 `harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`）。
 
 - [ ] 步骤 1：…
 - [ ] 步骤 2：…
@@ -28,7 +28,7 @@ created_at: <YYYY-MM-DD>
 
 ```markdown
 GROUP-1:
-  WU-01: … | 文件: … | wu_type: feature | wu_skills: verification-before-completion, test-driven-development
+  WU-01: … | 文件: … | wu_type: feature | wu_skills: auto
 ```
 
 ## 验证

@@ -24,13 +24,15 @@ readonly: false
 
 Leader prompt 中的 **「本 WU Skills」** 决定本 WU 要加载的能力；**无列表或写「无」** 时，不 invoke 任何 skill，直接按本文件与 `project.verification.md` 实现。
 
+**`auto`：** Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: implementer` + prompt 中的 `wu_type`），再**按需**加载表中列出的 skill。
+
 **有列表时（实现代码前）：**
 
-1. 第一句声明：`「WU-<id> skills: <列表或 无>」`
-2. 对列表中每一项：有 Skill 工具则 **invoke**；否则 **Read** 本机文件（按名查找）：
+1. 第一句声明：`「WU-<id> skills: <列表或 无或 auto→解析结果>」`
+2. 对列表中每一项：有 Skill 工具则 **invoke**；否则 **Read**（按名查找，**项目优先**）：
+   - `.cursor/skills/<name>/SKILL.md`
    - `~/.cursor/skills/<name>/SKILL.md`
    - `~/.agents/skills/<name>/SKILL.md`
-   - 项目 `.agents/skills/<name>/SKILL.md`
 3. **本机不存在** 的 skill：跳过，在返回摘要 **Skills 使用** 中注明 `skipped: <name> (not found)`，**不要**为凑 skill 硬套无关能力
 4. 加载后**只**将 skill 用于本 WU 范围；skill 与 WU 无关时跳过该条并在返回中说明
 

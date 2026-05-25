@@ -38,9 +38,10 @@ Worker 启动时上下文仅包含：
 
 详细规则见投影文件 `.cursor/agents/harness-implementer.md` § WU Skills。要点：
 
-- **仅**加载 Leader prompt「本 WU Skills」中的项；列表为空或「无」→ 不加载 skill
-- 本机无该 skill 文件 → 跳过并记录，不阻塞 WU（除非 Leader 写明该 skill 为硬性门禁）
-- 禁止：编排 / 需求澄清 / Git 类 skill
+- **`auto`** → Read **`orchestration/skill-preferences.zh.md`** § 默认路由表，再按需加载表中 skill
+- 否则仅加载 Leader 所列项；空或「无」→ 不加载
+- 查找顺序：`.cursor/skills/` → `~/.cursor/skills/` → `~/.agents/skills/`
+- 偏好表：`orchestration/skill-preferences.zh.md`
 
 ---
 
@@ -80,13 +81,18 @@ Worker 启动时上下文仅包含：
 不要重规划，不要派发子 Agent，不要审查自己的代码。
 
 ## 本 WU Skills
-- <skill-slug>   # 按需列出；纯配置/文案 WU 可写：无
+auto
 
-## wu_type（可选）
-feature | bugfix | ui | chore | refactor
+## agent_role
+implementer
+
+## wu_type
+feature
 
 [WU 详情：目标、done criteria、允许修改文件、禁止事项]
 ```
+
+审查 **BLOCK** 后的修复 WU：将 `wu_type` 设为 `review-fix`（`auto` 会加载 `receiving-code-review`，见 `skill-preferences.zh.md`）。
 
 ---
 

@@ -33,14 +33,15 @@
 ## 执行图
 
 GROUP-1（并行）:
-  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | wu_skills: verification-before-completion, test-driven-development
+  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | wu_skills: auto
   WU-02: <描述> | 文件: c.ts | 依赖: 无 | wu_type: chore | wu_skills: 无
 
 GROUP-2（依赖 GROUP-1）:
-  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | wu_skills: test-driven-development
+  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | wu_skills: auto
+  WU-04: API 集成测试 | 文件: tests/api/*.ts | 依赖: WU-01 | wu_type: test | wu_skills: auto
 ```
 
-`wu_skills` 为 Leader 对本 WU **建议加载** 的 skill slug（逗号分隔）；Implementer 本机无文件则跳过，不硬套无关 skill。见下文 § Leader 为 WU 选配 Skills。
+`wu_skills: auto` → 查 **`orchestration/skill-preferences.zh.md`** § 默认路由表。也可手写 slug 覆盖。
 
 ## 步骤 2：并行派发（Subagent）
 
@@ -50,7 +51,8 @@ GROUP-2（依赖 GROUP-1）:
 | --- | --- | --- |
 | 只读探查 | `harness-explorer` 或 Task `explore` | readonly |
 | 代码实现 | **`harness-implementer`** | 每 WU 独立实例 |
-| 测试/构建 | Task `shell` | 仅命令，不做架构决策 |
+| 测试 / E2E | **`harness-test-engineer`** | 只改测试资产；见 `agents/test-engineer.md` |
+| 单次构建命令 | Task `shell` | 无测试设计时使用 |
 
 **禁止** Leader 在主线程直接修改业务代码（routing「小改动」除外）。
 
@@ -59,24 +61,18 @@ GROUP-2（依赖 GROUP-1）:
 1. WU 目标与 done criteria
 2. 允许修改的文件列表
 3. 禁止事项（不改哪些文件、不新增依赖等）
-4. **本 WU Skills**（见 `agents/implementer.md` Task Prompt 前缀）：按需列出；纯机械/配置 WU 可写 `无`
+4. **本 WU Skills**：推荐 `auto`；或手写 slug；纯 chore 可写 `无`。含 `agent_role` + `wu_type`（见各 agent Task 前缀）
 5. 必须返回：变更摘要、命令输出摘要、**Skills 使用**、**计划勾选同步**（路径 + 已勾项标题，见 `runtime/plan-progress-sync.md`）、阻塞项
 6. Implementer 须在 **plan 文件**内同步 `- [ ]` → `- [√]`，不得仅在回复中列出 `[√]`
 
-### Leader 为 WU 选配 Skills（建议，非全量硬套）
+### Leader 为 WU 选配 Skills（第二期）
 
-按 WU 实际需要挑选；plan front matter 的 `skills` 与项目 `.agents/skills/` 可叠加，**无关则不要写进 prompt**。
+1. **推荐** 写 `wu_skills: auto`，并传 `agent_role` + `wu_type`
+2. 派发前 Read **`skill-preferences.zh.md`**，将解析出的 slug 列表抄入 prompt（或保留 `auto`）
+3. **完整偏好表**：`orchestration/skill-preferences.zh.md`
+4. 项目内置能力副本在 **`.cursor/skills/`**（bootstrap 从 `adapters/cursor/.cursor/skills/` 投影）；升级副本：`bash harness-kit/scripts/sync-cursor-skills.sh`
 
-| wu_type | 常配 skill（本机已安装时） | 可不配 |
-| --- | --- | --- |
-| `feature` / `bugfix` / `refactor` | `test-driven-development` | 纯文档/注释 chore |
-| 任何需跑命令验收的 WU | `verification-before-completion` | 仅改 markdown 且无验证命令 |
-| `ui` | `frontend-design`（仅动 UI 时） | 后端-only WU |
-| 项目专有 | plan 或 `.agents/skills/<name>` | — |
-
-**不要**传给 Implementer：`brainstorming`、`writing-plans`、`cursor-orchestration`、`git-xywh`。
-
-检查本机：`bash harness-kit/scripts/install-ai-skills.sh`（缺失 skill 时 Implementer 会 skipped，Leader 整合阶段可补跑验证）。
+**不要**传给子 Agent：`brainstorming`、`writing-plans`、`cursor-orchestration`、`git-xywh`。
 
 ## 步骤 3：整合与门禁
 
@@ -106,6 +102,7 @@ GROUP-2（依赖 GROUP-1）:
 | Implementer | `agents/implementer.md` | `.cursor/agents/harness-implementer.md` |
 | Reviewer | `agents/reviewer.md` | `.cursor/agents/harness-reviewer.md` |
 | Debugger | `agents/debugger.md` | `.cursor/agents/harness-debugger.md` |
+| Test engineer | `agents/test-engineer.md` | `.cursor/agents/harness-test-engineer.md` |
 
 上下文纪律：`context-budget.md`。模型建议：`model-routing.yaml`。
 

@@ -9,6 +9,11 @@ readonly: false
 
 **修根因，不修症状。** 调查阶段不并行做新功能。
 
+## WU Skills（按需）
+
+- `auto` → Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: debugger` + `wu_type`）
+- 加载顺序：`.cursor/skills/` → 全局
+
 ## 停线规则
 
 1. **STOP** 新功能 / 无关重构
@@ -45,6 +50,10 @@ readonly: false
 
 ### 验证
 - pass | fail | 未运行（说明原因）
+
+### Skills 使用
+- 已加载: ... | 无
+- 已跳过: ...
 ```
 
 产物写入 `.ai-runtime-artifacts/specs/`、`verifications/` 或 `execution-logs/`。

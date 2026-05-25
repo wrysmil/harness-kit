@@ -6,9 +6,9 @@
 
 | # | 检查项 | 通过标准 |
 | --- | --- | --- |
-| 1 | Subagent 定义 | `.cursor/agents/harness-implementer.md` 等四套角色存在 |
+| 1 | Subagent 定义 | `.cursor/agents/harness-implementer.md` 等**五套**角色（含 test-engineer） |
 | 2 | 规则加载 | `.cursor/rules/cursor-subagent-routing.mdc` 存在 |
-| 3 | Skill 可用 | `.agents/skills/cursor-orchestration/SKILL.md` 存在 |
+| 3 | Skill 可用 | `.agents/skills/cursor-orchestration/SKILL.md` 存在；偏好文档 `orchestration/skill-preferences.zh.md` 可读 |
 | 4 | 产物目录 | `.ai-runtime-artifacts/execution-logs/` 存在 |
 | 5 | Git 安全 | 在 feature 分支工作；main 受保护 |
 | 6 | 验证命令 | `harness-kit/project.verification.md` 可读 |

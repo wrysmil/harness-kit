@@ -29,6 +29,11 @@ roles:
     subagent: harness-debugger
     model: inherit
 
+  harness_test_engineer:
+    description: 测试与 E2E 资产
+    subagent: harness-test-engineer
+    model: inherit
+
   shell_runner:
     description: 测试、构建、lint
     subagent_type: shell

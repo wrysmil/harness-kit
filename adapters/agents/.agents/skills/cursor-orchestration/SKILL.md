@@ -34,7 +34,7 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。通过 `.cursor/agents/h
 
 声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，然后**按序读完** `dispatcher-workflow.md` 再派发 WU。未读 dispatcher 不得并行 implementer。
 
-派发 `harness-implementer` 时，每个 WU prompt 须含 **「本 WU Skills」**（按需；纯机械 WU 可写 `无`）。详见 `dispatcher-workflow.md` § Leader 为 WU 选配 Skills。
+派发子 Agent 时须含 **「本 WU Skills」**（推荐 `auto`）、`agent_role`、`wu_type`。偏好表：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`。测试 WU 用 `harness-test-engineer`。
 
 ---
 

@@ -36,6 +36,9 @@
 | `harness-reviewer.md` | 独立审查（readonly） |
 | `harness-explorer.md` | 只读探查 |
 | `harness-debugger.md` | 缺陷调查 |
+| `harness-test-engineer.md` | 测试 / E2E 资产 |
+
+内置 skill（`.cursor/skills/`，Cursor 自动发现）：见 `orchestration/skill-preferences.zh.md`。
 
 源模板：`harness-kit/adapters/cursor/.cursor/agents/`（bootstrap 投影到项目根 `.cursor/agents/`）。
 
@@ -78,7 +81,7 @@ monitoring: 轮询后台 Task 与终端输出
 | Cursor 限制 | 缓解 |
 | --- | --- |
 | 无内置 cron | 后台 Task 每 2–3 分钟轮询；可用 `/loop` skill |
-| subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 四套角色 |
+| subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 五套角色 |
 | 无 omx 式模型能力表 | 可选 `model-routing.yaml` |
 | 连续自治循环非原生 | single-pass + `HANDOFF.md` 链接多会话 |
 

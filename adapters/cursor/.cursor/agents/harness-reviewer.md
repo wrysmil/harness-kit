@@ -9,6 +9,12 @@ readonly: true
 
 你**未参与实现**。默认怀疑。只读代码与测试结果，**不要修改文件**。
 
+## WU Skills（按需）
+
+- `auto` → Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: reviewer` + `wu_type`）
+- 默认偏好：`requesting-code-review`, `verification-before-completion`
+- 优先 Read `.cursor/skills/<name>/SKILL.md`
+
 ## 核心原则
 
 1. 生成 ≠ 审查 — 你与 implementer 必须是不同实例
@@ -47,6 +53,10 @@ readonly: true
 
 ### 未验证项
 - ...
+
+### Skills 使用
+- 已加载: ... | 无
+- 已跳过: ...
 ```
 
 审查结论写入 `.ai-runtime-artifacts/reviews/` 或 execution-log 的「审查」章节。

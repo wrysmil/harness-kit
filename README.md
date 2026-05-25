@@ -98,7 +98,7 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 |------|------|
 | **Harness 路由** | 默认 route 为强制基线；`core/routing.md` 提供 Codex 与 Cursor 并列路由表与阶段门禁 |
 | **过程产物契约** | `.ai-runtime-artifacts/` 统一存放 spec、plan、verification、execution-log；详见 `core/artifacts.md` |
-| **Cursor 子 Agent 编排** | `.cursor/agents/harness-*` + `cursor-orchestration` skill，语义等价于 Codex `omx ultrawork`（见 `adapters/cursor/`） |
+| **Cursor 子 Agent 编排** | 五套 `harness-*` subagent + `cursor-orchestration`；`wu_skills: auto` 查 `adapters/cursor/orchestration/skill-preferences.zh.md`（见 `adapters/cursor/`） |
 | **oh-my-codex / omx** | Codex CLI 多 Agent 运行时编排与高级角色路由 |
 | **superpowers** | 结构化思考、计划、调试、TDD、完成前验证等技能链 |
 
@@ -139,8 +139,8 @@ GROUP-2（依赖 GROUP-1）:
 |------|------|
 | 路由 | 首句声明 `「Harness：…」`，多 task 实现走 `cursor-orchestration` |
 | 拆分 | 从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件归属） |
-| 派发 | 并行委派 `harness-implementer`（每 WU 一个子 Agent），完成后委派**独立** `harness-reviewer` |
-| 整合与验证 | 合并 WU 结果、处理冲突、跑 `project.verification.md` |
+| 派发 | 按 WU 委派 subagent（实现 → `harness-implementer`；测试/E2E → `harness-test-engineer` 等）；`wu_skills` 推荐 **`auto`**（查 `skill-preferences.zh.md`） |
+| 整合与验证 | 合并 WU 结果、处理冲突、跑 `project.verification.md`；完成后委派**独立** `harness-reviewer` |
 
 **Leader 不应：** 在用户说「开始实现」后，主线程大规模直接改业务代码（routing 定义的「小改动」除外）；实现与审查不得用同一 subagent 实例。
 
@@ -148,27 +148,37 @@ GROUP-2（依赖 GROUP-1）:
 
 ### Worker（工作者）
 
-文档里的 **Worker** 指被 Leader 派出去执行**单个 WU** 的子 Agent。在 Cursor 上主要是 **`harness-implementer`**（`.cursor/agents/harness-implementer.md`）。
+**Worker** = 被 Leader 派去执行**单个 WU** 的子 Agent（每 WU 通常一个独立实例）。Cursor 上共 **五套**（`.cursor/agents/harness-*.md`）：
 
-| 职责 | 禁止 |
-|------|------|
-| 只实现 Leader 分配的一个 WU | 不重规划、不派子 Agent、不审查自己的代码 |
-| 只改 prompt 中「允许修改」的文件列表 | 不擅自扩 scope；阻塞或范围扩大须**上报 Leader** |
+| Subagent | 典型 WU | 说明 |
+| --- | --- | --- |
+| `harness-implementer` | 业务代码 | 有界实现；`wu_type` 如 feature / ui / bugfix |
+| `harness-test-engineer` | 测试 / E2E | 只改测试资产；`wu_type: test \| e2e` |
+| `harness-explorer` | 只读探查 | 不改文件 |
+| `harness-debugger` | 缺陷调查 | 根因与最小修复 |
+| `harness-reviewer` | 独立审查 | readonly；须与 implementer **不同实例** |
 
-OMX 侧同一套分工（见 `entrypoints/AGENTS.omx.md`）：Leader 选模式、委派有界工作、负责验证；Worker 执行分配切片并向上报告。
+**Skill 按需加载：** 派发 prompt 写 `wu_skills: auto` + `agent_role` + `wu_type`，子 Agent 查 **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表，再加载 `.cursor/skills/` 中能力副本（TDD、verification 等）。无关 skill 不硬套。
 
-> **易混词：** 「work」在 Harness 语境里通常指 **Work Unit（WU）** 或 **Worker（实现者）**；Codex 侧的并行实现工作流名是 **`omx ultrawork`**，在 Cursor 上等价于 **`cursor-orchestration:dispatcher-workflow`**。
+| 通用纪律 | 禁止 |
+| --- | --- |
+| 只做本 WU | 不重规划、不派子 Agent（reviewer 不实现功能） |
+| 只改 prompt 允许的路径 | 擅自扩 scope → 上报 Leader |
+
+OMX 侧同一套分工（见 `entrypoints/AGENTS.omx.md`）。
+
+> **易混词：** **WU** = Work Unit；**Worker** = 执行 WU 的子 Agent（不限于 implementer）。Codex **`omx ultrawork`** ≈ Cursor **`cursor-orchestration:dispatcher-workflow`**。
 
 ### 关系一览
 
 ```text
 用户批准 plan → 「开始实现」
        ↓
-    Leader（主 Agent）— 拆 WU、画 GROUP
+    Leader — 拆 WU（wu_type / wu_skills: auto）
        ↓
-  并行派发 Worker（harness-implementer），每 Worker 只做 1 个 WU
+  并行派发 harness-implementer / harness-test-engineer / …（每 WU 一实例）
        ↓
-    Leader 整合 → harness-reviewer → execution-log
+    Leader 整合 → harness-reviewer（独立实例）→ execution-log
 ```
 
 ---

@@ -28,7 +28,7 @@
 
 1. **路由**：首句 `「Harness：…」`；多 task 实现走 `cursor-orchestration`
 2. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权）
-3. **派发**：并行委派 `harness-implementer` ≤5；每个 prompt 含 **本 WU Skills**（按需，见 `dispatcher-workflow.md` § Leader 为 WU 选配 Skills）；完成后委派独立 `harness-reviewer`
+3. **派发**：并行委派 `harness-implementer` / `harness-test-engineer` ≤5；`wu_skills: auto` + `skill-preferences.zh.md`；完成后委派独立 `harness-reviewer`
 4. **整合**：合并 WU 结果，处理文件冲突
 5. **验证**：运行 project.verification；委派**独立** `harness-reviewer`
 6. **追踪**：append-only 写入 `DISPATCH-TRACK-*.md`；中断时写 `HANDOFF.md`

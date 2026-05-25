@@ -12,7 +12,8 @@
 3. `harness-kit/project.profile.md`、`harness-kit/context-map.md`
 4. `harness-kit/project.git.md`（Git 任务或提交 / MR 时）
 5. `harness-kit/core/artifacts.md`
-6. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+6. 子 Agent skill 偏好：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`
+7. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
 
 ## 平台判定
 
@@ -27,8 +28,9 @@
 - `harness-reviewer` — 独立审查（readonly）
 - `harness-explorer` — 只读探查
 - `harness-debugger` — 缺陷调查
+- `harness-test-engineer` — 测试 / E2E 资产（`wu_type: test | e2e`）
 
-路由表见 `harness-kit/core/routing.md`（不在此重复）。
+Skill 按需加载见 `skill-preferences.zh.md`（`wu_skills: auto` 查表）。路由表见 `harness-kit/core/routing.md`（不在此重复）。
 
 ## Git
 
