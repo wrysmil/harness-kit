@@ -110,7 +110,7 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 
 **需求澄清：** Leader 优先用 **Ask 类工具**（如 Cursor `AskQuestion`）让你点选；没有则用对话，**一次只问一个关键问题**。
 
-### 七个角色各干什么
+### 六个角色各干什么
 
 | 角色 | 对应 Subagent | 干什么 | 不干什么 |
 |------|---------------|--------|----------|
@@ -120,7 +120,6 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | **Test Engineer** | `harness-test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 agent-browser） | 改业务实现 |
 | **Reviewer** | `harness-reviewer` | 独立 code review（只读） | 与写代码的 Agent 同一实例 |
 | **Explorer / Debugger** | 探查 / 排障 | 摸底、查 bug | — |
-| **Web Investigator** | `harness-web-investigator` | 信息搜索、网页浏览、截图取证 | 改代码、编造信息 |
 
 **Leader 汇报（给你看）：** 状态 · 本轮做/不做什么 · 风险 · 怎么验收 · 下一步（是否还要审查）。
 
@@ -132,7 +131,6 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | `review-fix`（审查打回） | **Coder** | 按 Reviewer 意见改，再自检 |
 | `docs` `chore` `config` | **Implementer** | 按 WU 完成即可 |
 | `test` `e2e` | **Test Engineer** | — |
-| `research` | **Web Investigator** | — |
 | 实现后审查 | **Reviewer** | 与 Coder **不同实例** |
 
 ### Coder 交付清单（缺一不可）
@@ -166,7 +164,7 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 |------|------|
 | `wu_type` | 决定派 Coder 还是 Implementer（见上表） |
 | `wu_skills` | 推荐 `auto`；Leader 手写列表则子 Agent **必须照做** |
-| `agent_role` | `coder` / `implementer` / `test-engineer` / `web-investigator` 等 |
+| `agent_role` | `coder` / `implementer` / `test-engineer` 等 |
 
 示例（同一 GROUP 可并行）：
 
@@ -226,7 +224,7 @@ harness-kit/
 | 目录 | 职责 |
 |------|------|
 | `core/` | 通用规则，不随业务重写 |
-| `adapters/cursor/` | Cursor rules、七套 subagent、dispatcher 工作流 |
+| `adapters/cursor/` | Cursor rules、六套 subagent、dispatcher 工作流 |
 | `artifact-templates/` | spec / plan / wu-checklist 等模板 |
 
 ---
@@ -314,7 +312,7 @@ harness-kit/
 4. 更新 `dispatcher-workflow.md` 步骤 2 派发表与委派 prompt 必填项
 5. 更新 `cursor-subagent-routing.mdc` 与 `core/routing.md`（若新任务类型进路由表）
 6. 更新 `skill-preferences.zh.md`（若该角色有默认 skill 链）
-7. 更新本 README「七个角色」表
+7. 更新本 README「六个角色」表
 
 参考实现：`harness-coder`（`orchestration/agents/coder.md` + `.cursor/agents/harness-coder.md` + `docs/superpowers/specs/2026-05-26-coder-role-design.md`）。
 ```
@@ -340,7 +338,7 @@ harness-kit/
 ### 话术 C：调整现有 Agent（不改名、不新增文件）
 
 ```text
-【调整对象】：harness-coder | harness-implementer | harness-reviewer | harness-test-engineer | harness-explorer | harness-debugger | harness-web-investigator | Leader
+【调整对象】：harness-coder | harness-implementer | harness-reviewer | harness-test-engineer | harness-explorer | harness-debugger | Leader
 
 【变更内容】：例如 Coder 返回字段、自检门槛、禁止加载的 skill 列表、Implementer 适用 wu_type
 
@@ -374,7 +372,7 @@ harness-kit/
 
 ```
 WU-<id>：<名称>
-类型：bugfix | feature | refactor | docs | chore | config | test | e2e | research
+类型：bugfix | feature | refactor | docs | chore | config | test | e2e
 目标：<一句话，可验证>
 验收标准：
 - [ ] ...

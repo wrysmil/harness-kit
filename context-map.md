@@ -39,10 +39,16 @@
 | nanobot 集成 | `backend/app/core/nanobot_mgr.py` | 启动/停止网关 |
 | 数据 | `backend/app/database.py`、`backend/data/` | SQLite 与运行时数据 |
 | 用户 UI | `frontend/src/` | 页面、组件、API/WS 封装 |
+| 聊天面板 | `frontend/src/components/chat/ChatPanel.tsx`、`frontend/src/hooks/useChat.ts` | WebSocket → nanobot |
+| 地图 | `frontend/src/components/map/MapPanel.tsx`、`frontend/src/hooks/useAMap.ts` | 高德 JS API |
 | 管理 UI | `admin/src/` | 路由与后台页面 |
 | MCP（遗留） | `backend/mcp_servers/` | amap / unsplash stdio server |
 | Harness 编排 | `harness-kit/adapters/cursor/orchestration/` | dispatcher、WU、skill 偏好 |
 | 重构计划 | `.ai-runtime-artifacts/plans/2026-05-25-travel-assistant-refactor-plan.md` | 分 Phase 实施清单 |
+| 竞品调研 | `.ai-runtime-artifacts/specs/2026-05-26-ctrip-ai-tripplanner-competitive-spec.md` | 携程 AI 行程对标 |
+| Demo 打磨 | `.ai-runtime-artifacts/plans/2026-05-26-demo-polish-amap-integration-plan.md` | LLM Key / 高德 / 聊天冒烟 |
+| 系统设置 | `backend/app/core/system_settings.py` | LLM Key 合并与 gateway 重启 |
+| 网探角色 | `.cursor/agents/harness-web-investigator.md` | 竞品截图与页面取证 |
 
 ## 读码优先级
 

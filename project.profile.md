@@ -16,7 +16,7 @@
 | 聊天 / Agent | **nanobot**（仓库内 `nanobot/` 源码，`pip install -e`） |
 | 工具 / 地理 | MCP（`mcp` 包）、高德 / Unsplash（经 MCP 或配置） |
 | 部署 | 根目录 `Dockerfile` + `docker-compose.yml`（nginx 反代、前后端一体镜像） |
-| Harness | `harness-kit/`、`.ai-runtime-artifacts/`、Cursor `harness-*` subagent |
+| Harness | `harness-kit/`、`.ai-runtime-artifacts/`、Cursor 七套 `harness-*` subagent（含 `web-investigator`） |
 
 ## 主要目录
 
@@ -44,7 +44,8 @@
 ## 交付口径
 
 - 非琐碎需求：先 spec → 人确认 → plan → 人确认 → 实现（Cursor：`cursor-orchestration`；代码 WU → `harness-coder`，docs/chore/config → `harness-implementer`）→ 按规则委派或跳过 `harness-reviewer` → verification 证据。
-- 重构验收：前后端可构建、Docker 可启动、聊天链路可连 nanobot、管理 API 可鉴权；详见 `project.verification.md` 与 `.ai-runtime-artifacts/plans/`。
+- 重构验收：前后端可构建、Docker 可启动、聊天链路可连 nanobot、管理 API 可鉴权、地图（高德）与聊天双面板可用；详见 `project.verification.md` 与 `.ai-runtime-artifacts/plans/`。
+- 竞品对标：`.ai-runtime-artifacts/specs/2026-05-26-ctrip-ai-tripplanner-competitive-spec.md`；网探报告见 `research/2026-05-26-ctrip-ai-tripplanner-research-report.md`。
 - 文档与根 `README.md` 不一致时，以 **已批准 spec/plan** 与当前代码为准，并记待确认项。
 
 ## 推断项
@@ -54,6 +55,7 @@
 - 无 `backend/` 内 pytest 套件；**nanobot/** 含大量测试，业务后端测试策略待团队确认。
 - 无 husky / commitlint；提交格式推断仅依赖团队习惯 + `git-xywh` skill。
 - CI 主要为 **Docker 镜像构建推送**，非 PR 门禁 lint/test。
+- 当前功能分支：`feature/architecture-to-chat`（2026-05-26 profiler 刷新）。
 - `nanobot/` 为 vendored 源码，升级需与上游 nanobot 仓库协调。
 
 ## 待确认项

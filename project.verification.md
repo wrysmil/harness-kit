@@ -22,6 +22,7 @@ bash harness-kit/scripts/harness-check.sh
 | `cd backend && python -c "from main import app; print('ok')"` | FastAPI 应用可导入（需 `.env` 非必须项时） |
 | `docker compose build` | 根目录一体镜像构建 |
 | `docker compose up` | 全栈启动（需根目录 `.env`，见 `.env.example`） |
+| `cd backend && pytest tests/ -q`（若存在 `tests/`） | 后端单元测试（如 `system_settings` 等） |
 
 ## 静态检查
 
