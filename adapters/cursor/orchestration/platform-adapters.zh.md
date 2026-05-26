@@ -5,6 +5,10 @@
 
 ---
 
+## 沟通语言（Cursor）
+
+Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正文使用**中文**。细则见 `harness-kit/core/routing.md` § 沟通语言。
+
 ## 平台检测
 
 | 信号 | 平台 |

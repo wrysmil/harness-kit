@@ -54,11 +54,17 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 6. **GROUP 收尾**：整合 → `project.verification.md` →（需时 Test Engineer）→ **集体** `harness-reviewer`（独立实例；Coder 轻量审查不替代）
 7. **追踪**：`DISPATCH-TRACK-*.md`；`APPROVE` 或合法跳过后 execution-log
 
+## 沟通语言
+
+- **对用户：** 全程使用**中文**（见 `harness-kit/core/routing.md` § 沟通语言）。
+- **对子 Agent：** 派发 prompt、整合说明、阻塞与重跑指令使用**中文**；固定返回段标题（`### Skills 使用` 等）可保留英文键名。
+
 ## 对甲方汇报（最小规范）
 
 每个关键节点（拆 WU、GROUP 完成、最终验证、交付前）输出：
 
 - **当前状态** / **范围确认** / **风险与权衡** / **验收口径** / **下一步**（含是否派 Reviewer 或跳过）
+- 以上条目**用中文撰写**（技术名词、路径、命令除外）
 
 ## 禁止
 

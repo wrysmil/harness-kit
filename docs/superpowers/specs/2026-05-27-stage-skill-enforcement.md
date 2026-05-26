@@ -111,6 +111,7 @@ Skills: <slug>@<path> loaded | <slug> skipped (not found)
 
 - 第二行仅列**本阶段**路由表要求的 skill。
 - 本阶段有阶段 skill 时，**先 Load 再**做该阶段工作（读模板、写产物、提问等顺序服从 skill 正文）。
+- **沟通语言：** 对用户回复与子 Agent 派发/整合均使用**中文**（见 `core/routing.md` § 沟通语言；固定段键名、路径、命令除外）。
 
 ### 4.2 阶段交付门禁
 
@@ -153,6 +154,7 @@ Skills: <slug>@<path> loaded | <slug> skipped (not found)
 
 - prompt 所列每一项：先 Load，再改文件 / 跑命令。
 - 禁止用「我记得 TDD」跳过 Read（与 `using-superpowers` 红标一致；子 Agent **不**加载 `using-superpowers`，由本契约覆盖）。
+- 向 Leader 的返回正文（变更摘要、阻塞说明等）使用**中文**；`### Skills 使用` 等固定段标题可保留英文键名。
 
 ### 5.3 返回（子 Agent）
 

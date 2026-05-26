@@ -15,7 +15,8 @@ alwaysApply: true
 ## 每任务（必做）
 
 1. 首句：`「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill → 次行 `Skills:`，先 Load 再交付（`routing.md` § 阶段指定 skill 必用）
-2. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 追加文件（禁止跳过路由表）
+2. **沟通语言：** 对用户回复与子 Agent 派发/整合使用**中文**（`routing.md` § 沟通语言）
+3. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 追加文件（禁止跳过路由表）
 
 ## 按 routing 判定加载（勿在会话开始预读）
 

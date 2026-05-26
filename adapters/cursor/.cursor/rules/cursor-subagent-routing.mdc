@@ -41,6 +41,10 @@ Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
 
 详细 prompt 与返回格式：各 `.cursor/agents/harness-*.md`（薄壳）→ `orchestration/agents/*.md`（正文）。
 
+## 沟通语言
+
+对用户回复、阶段门禁说明、子 Agent 派发 prompt 与整合反馈均使用**中文**（细则见 **`harness-kit/core/routing.md` § 沟通语言**）。代码标识符、路径、固定段键名（如 `### Skills 使用`）可保留英文。
+
 ## Leader 要点
 
 完整职责、阶段链、汇报规范见 **`orchestration/agents/leader.md`**。此处仅列 Cursor 硬约束：

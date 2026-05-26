@@ -47,6 +47,10 @@
 
 首句 `「Harness：<route>」`；本阶段有 route skill 时次行 `Skills:`（细则 `core/routing.md` § 阶段指定 skill 必用）。
 
+## 沟通语言
+
+对用户回复与子 Agent 协调（派发、整合、追踪）使用**中文**（见 `core/routing.md` § 沟通语言）。
+
 ## 产物
 
 统一写入 `.ai-runtime-artifacts/`（见 `core/artifacts.md`）。

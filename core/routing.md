@@ -115,6 +115,12 @@
 - 子 Agent：prompt「本 WU Skills」所列**必须** Load；返回须 `### Skills 使用`，否则 Leader 不整合。
 - 会话：首句 `「Harness：…」`；本阶段有 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。
 
+## 沟通语言
+
+- **对用户：** 会话回复、阶段门禁暂停说明、方案/计划摘要与验收口径均使用**中文**。
+- **子 Agent 协调：** 派发 prompt、整合反馈、`DISPATCH-TRACK` 与要求子 Agent 返回的正文使用**中文**。
+- **例外：** 代码标识符、文件路径、命令、API 名、固定段键名（如 `### Skills 使用`、`wu_status`）可保留英文；用户明确要求其他语言时从其要求。
+
 ## 运行约束
 
 - **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill 时次行 `Skills:`（见上节）。
