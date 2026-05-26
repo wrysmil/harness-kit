@@ -43,7 +43,7 @@
 
 ## 交付口径
 
-- 非琐碎需求：先 spec → 人确认 → plan → 人确认 → 实现（Cursor：`cursor-orchestration` + `harness-implementer`）→ 独立 `harness-reviewer` → verification 证据。
+- 非琐碎需求：先 spec → 人确认 → plan → 人确认 → 实现（Cursor：`cursor-orchestration`；代码 WU → `harness-coder`，docs/chore/config → `harness-implementer`）→ 按规则委派或跳过 `harness-reviewer` → verification 证据。
 - 重构验收：前后端可构建、Docker 可启动、聊天链路可连 nanobot、管理 API 可鉴权；详见 `project.verification.md` 与 `.ai-runtime-artifacts/plans/`。
 - 文档与根 `README.md` 不一致时，以 **已批准 spec/plan** 与当前代码为准，并记待确认项。
 

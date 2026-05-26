@@ -16,6 +16,7 @@
 - [目录结构](#目录结构)
 - [推荐阅读顺序](#推荐阅读顺序)
 - [新项目接入](#新项目接入)
+- [改造 Harness Kit（编排 / Agent）](#改造-harness-kit编排--agent)
 - [接入方式建议](#接入方式建议)
 - [更多文档](#更多文档)
 
@@ -252,6 +253,105 @@ harness-kit/
 ```
 
 初始化完成后应生成或更新四份 `project.*`，并在回复中说明检查结果与待确认项。
+
+---
+
+## 改造 Harness Kit（编排 / Agent）
+
+当你要**完善编排**、**改路由/门禁/派发流程**，或**新增/调整子 Agent** 时，把下面话术发给 AI（在 `harness-kit/` 仓库内操作，或在已接入项目的 `harness-kit/` 目录下操作）。  
+大改动建议先在 `docs/superpowers/specs/` 写 spec，再改实现。
+
+### 通用话术（编排 + Agent 均可）
+
+```text
+请先读取 harness-kit/README.md § Cursor 编程协作模式，以及：
+- harness-kit/core/harness.md
+- harness-kit/core/routing.md（路由表、阶段门禁、wu_type → subagent）
+- harness-kit/adapters/cursor/README.md
+- harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md
+- harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md
+- harness-kit/adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc
+
+我要改造 Harness Kit，目标如下（请据此实现，不要擅自扩大范围）：
+【在此填写：例如「新增 harness-security 角色」「Coder 自检未通过时自动派 Reviewer」「调整并行 WU 上限」等】
+
+约束与交付要求：
+1. 先输出简短方案（改哪些文件、是否动 routing / 门禁 / 投影层），等我确认后再改文件；若我已在开头说「直接做」，可跳过确认。
+2. 遵守 Harness 双层结构：
+   - 编排深读：`harness-kit/adapters/cursor/orchestration/`（不投影）
+   - 投影层：`harness-kit/adapters/cursor/.cursor/agents/`、`.cursor/rules/` → bootstrap 后到项目根 `.cursor/`
+   深读与投影须一致；改 agent 时同步 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`。
+3. 凡影响「谁来做、何时停、派谁」的变更，必须同步：
+   - `harness-kit/core/routing.md`（Codex / Cursor 并列列）
+   - `harness-kit/entrypoints/AGENTS.md` 路由摘要（如需要）
+   - `harness-kit/adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc`
+   - 本 README § Cursor 编程协作模式（角色表、WU 表、Reviewer 规则等）
+4. 不改 `core/` 里与本次目标无关的文件；不删除阶段门禁，除非我明确要求。
+5. 完成后运行 `bash harness-kit/scripts/harness-check.sh`，在回复中列出：变更文件清单、行为差异、已接入项目是否需要重新投影 `.cursor/`、待我确认项。
+6. 若改动涉及 Git 提交，单独 `chore(harness-kit): ...` 说明，不与业务代码混提。
+```
+
+### 话术 A：新增一个子 Agent
+
+在通用话术后追加（或单独使用）：
+
+```text
+【角色定义】
+- 角色英文名 / harness 文件名：例如 security-auditor → harness-security-auditor
+- 触发场景与 wu_type（若有）：例如 wu_type: security-review
+- 职责（做 / 不做）：...
+- readonly：true | false
+- 与 Leader / Coder / Reviewer 的边界：...
+
+请按现有 harness-coder 模式落地：
+1. 新增 `harness-kit/adapters/cursor/orchestration/agents/<role>.md`（详细 prompt、返回字段、禁止项）
+2. 新增 `harness-kit/adapters/cursor/.cursor/agents/harness-<role>.md`（front matter：name、description、model、readonly）
+3. 更新 `platform-adapters.zh.md` 角色映射表
+4. 更新 `dispatcher-workflow.md` 步骤 2 派发表与委派 prompt 必填项
+5. 更新 `cursor-subagent-routing.mdc` 与 `core/routing.md`（若新任务类型进路由表）
+6. 更新 `skill-preferences.zh.md`（若该角色有默认 skill 链）
+7. 更新本 README「六个角色」表
+
+参考实现：`harness-coder`（`orchestration/agents/coder.md` + `.cursor/agents/harness-coder.md` + `docs/superpowers/specs/2026-05-26-coder-role-design.md`）。
+```
+
+### 话术 B：修改工作编排（派发 / 并行 / 整合）
+
+```text
+【编排变更】
+- 要改的流程：例如 dispatcher 步骤 3 整合规则、GROUP 并行上限、plan 勾选同步、Reviewer 跳过条件、Leader 汇报格式
+- 期望行为（改前 → 改后）：...
+- 是否影响阶段门禁（spec/plan 暂停）：是 / 否
+
+请优先改：
+- `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+- `harness-kit/adapters/agents/.agents/skills/cursor-orchestration/SKILL.md`（与 dispatcher 一致）
+- 若改路由或门禁：`harness-kit/core/routing.md`
+- 若改 Leader 行为：`orchestration/agents/leader.md`
+- 同步 README § Cursor 编程协作模式 中相关表格
+
+不要改 Codex `omx ultrawork` 路径，除非我明确要求 Codex 侧对齐。
+```
+
+### 话术 C：调整现有 Agent（不改名、不新增文件）
+
+```text
+【调整对象】：harness-coder | harness-implementer | harness-reviewer | harness-test-engineer | harness-explorer | harness-debugger | Leader
+
+【变更内容】：例如 Coder 返回字段、自检门槛、禁止加载的 skill 列表、Implementer 适用 wu_type
+
+请只改对应 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`，并检查 dispatcher / routing / README 是否有硬编码引用需要同步。
+```
+
+### 改造后：已接入项目如何生效
+
+| 变更位置 | 业务项目要做的 |
+|----------|----------------|
+| 仅 `orchestration/`、`core/` | 拉取最新 `harness-kit/` 即可；AI 深读路径自动更新 |
+| `.cursor/agents/`、`.cursor/rules/` | 重新投影：把 `harness-kit/adapters/cursor/.cursor/` 同步到项目根 `.cursor/`（或重跑 bootstrap 投影步骤） |
+| `entrypoints/` | 重新投影 `AGENTS.md` 等根入口（合并时保留项目自有段落） |
+
+投影命令可参考 `harness-kit/init/bootstrap.prompt.md` § 投影工具适配。
 
 ---
 
