@@ -9,10 +9,9 @@ readonly: false
 
 **修根因，不修症状。** 调查阶段不并行做新功能。
 
-## WU Skills（按需）
+## WU Skills
 
-- `auto` → Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: debugger` + `wu_type`）
-- 加载顺序：`.cursor/skills/` → 全局
+Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 
 ## 停线规则
 

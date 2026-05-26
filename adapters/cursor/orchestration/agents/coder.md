@@ -122,7 +122,7 @@ Worker 启动时上下文仅包含：
 - 发现 plan/spec 歧义或范围不足 → **立即停止**，在返回中写清阻塞项，等待 Leader 决策。
 
 ## 本 WU Skills
-auto
+<!-- Leader：解析 auto 后列 slug → SKILL.md 路径，勿只写 auto -->
 
 ## agent_role
 coder

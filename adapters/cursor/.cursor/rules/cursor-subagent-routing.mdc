@@ -22,6 +22,7 @@ alwaysApply: true
 
 ```text
 「Harness：<route 或 "小改动，直接处理">」
+Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
 ```
 
 多 task 实现示例：`「Harness：cursor-orchestration:dispatcher-workflow」`
@@ -45,7 +46,7 @@ alwaysApply: true
 完整职责、阶段链、汇报规范见 **`orchestration/agents/leader.md`**。此处仅列 Cursor 硬约束：
 
 1. 路由判定 → 声明 `「Harness：…」`；遵守 **阶段门禁**
-2. 实现阶段委派 subagent（`wu_skills: auto` 时 Read `skill-preferences.zh.md`）；并行 WU ≤5（默认 3）；维护 `tracking/DISPATCH-TRACK-*.md`
+2. 派发 WU：`auto` 由 Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤5；维护 DISPATCH-TRACK
 3. 整合子 Agent 结果并验证后，再委派 **独立** `harness-reviewer` 或按 spec 合法跳过
 4. 多 task 编排：激活 `cursor-orchestration` skill 后 Read `dispatcher-workflow.md`（勿在会话开始预读）
 

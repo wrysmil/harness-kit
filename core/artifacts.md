@@ -40,8 +40,10 @@ YYYY-MM-DD-<topic>-<artifact>.md
 artifact: implementation-plan
 route: superpowers:brainstorming -> superpowers:writing-plans
 skills:
-  - superpowers:brainstorming
-  - superpowers:writing-plans
+  - brainstorming
+  - writing-plans
+skills_evidence:
+  - .cursor/skills/brainstorming/SKILL.md
 source:
   - AGENTS.md
   - harness-kit/core/routing.md
@@ -55,7 +57,8 @@ created_at: 2026-05-14
 | --- | --- |
 | `artifact` | 产物类型 |
 | `route` | 本次任务经过的路由 |
-| `skills` | 实际使用的 skills 或工具能力 |
+| `skills` | 实际使用的 skill slug；route 含阶段 skill 时**禁止空** |
+| `skills_evidence` | 可选；已 Read 的 `SKILL.md` 路径或 `skipped: …` |
 | `source` | 产物依据的入口、规则、需求或上下文 |
 | `created_at` | 创建日期，格式 `YYYY-MM-DD` |
 
@@ -80,7 +83,7 @@ created_at: 2026-05-14
 
 ## 规则
 
-- 过程产物必须写清 route 和 skills。
+- 过程产物必须写清 route 和 skills（有阶段 skill 时 `skills` 非空，与 route 一致）。
 - 如果用户指定了额外 skills，route 和 skills 必须同时包含默认 route 与用户指定 skills。
 - 如果跳过默认 skills，source 或正文必须记录用户明确要求跳过的原因。
 - 过程产物必须写清 source 和 created_at。

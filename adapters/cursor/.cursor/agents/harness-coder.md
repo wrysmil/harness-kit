@@ -15,7 +15,7 @@ readonly: false
 
 ## WU Skills
 
-`auto` → Read `skill-preferences.zh.md`（`agent_role: coder` + `wu_type`），按需加载。Leader 列表为**指令**。
+Leader prompt 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 
 禁止：`brainstorming`、`writing-plans`、`cursor-orchestration`、`using-superpowers`、`git-xywh`、会派子 Agent 做全项目编排的 skill。
 

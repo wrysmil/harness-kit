@@ -15,7 +15,7 @@ readonly: false
 
 ## WU Skills
 
-`auto` → Read `skill-preferences.zh.md`（`agent_role: test-engineer` + `wu_type`）。
+Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 
 ## 禁止
 

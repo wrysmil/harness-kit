@@ -15,7 +15,7 @@ readonly: false
 
 ## WU Skills
 
-`auto` → Read `orchestration/skill-preferences.zh.md`（`agent_role: web-investigator` + `wu_type: research`）。Leader 列表为**指令**。
+Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 
 ## 纪律
 

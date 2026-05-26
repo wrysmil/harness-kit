@@ -45,7 +45,7 @@
 
 ## 强制声明
 
-每个任务第一句：`「Harness：<route>」`
+首句 `「Harness：<route>」`；本阶段有 route skill 时次行 `Skills:`（细则 `core/routing.md` § 阶段指定 skill 必用）。
 
 ## 产物
 

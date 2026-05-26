@@ -1,8 +1,8 @@
 ---
 artifact: verification
-route: <route>
+route: superpowers:verification-before-completion
 skills:
-  - <skill>
+  - verification-before-completion
 source:
   - AGENTS.md
   - harness-kit/core/verification.md

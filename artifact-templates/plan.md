@@ -1,8 +1,8 @@
 ---
 artifact: implementation-plan
-route: <route>
+route: superpowers:writing-plans
 skills:
-  - <skill>
+  - writing-plans
 source:
   - AGENTS.md
   - harness-kit/core/routing.md

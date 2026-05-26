@@ -63,19 +63,18 @@ GROUP-2（依赖 GROUP-1）:
 1. WU 目标与 done criteria
 2. 允许修改的文件列表
 3. 禁止事项（不改哪些文件、不新增依赖等）
-4. **本 WU Skills**：推荐 `auto`；或手写 slug；纯 chore 可写 `无`。含 `agent_role` + `wu_type`（见各 agent Task 前缀）
+4. **本 WU Skills**：Leader 解析 `auto` 后**抄 SKILL 路径**（派发 prompt 禁只写 `auto`）；纯 chore 写 `无`。含 `agent_role` + `wu_type`
 5. 必须返回：变更摘要、**`wu_status`**、**Skills 使用**、阻塞项
 6. **Coder** 还须：`self_check`、`code_review`、测试资产摘要
 7. **子 Agent 不改 plan**；Leader 验证后写 plan / tracking（`runtime/plan-progress-sync.md`）
 
 Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
 
-### Leader 为 WU 选配 Skills（第二期）
+### Leader 为 WU 选配 Skills
 
-1. **推荐** 写 `wu_skills: auto`，并传 `agent_role` + `wu_type`
-2. 派发前 Read **`skill-preferences.zh.md`**，将解析出的 slug 列表抄入 prompt（或保留 `auto`）
-3. **完整偏好表**：`orchestration/skill-preferences.zh.md`
-4. 项目内置能力副本在 **`.cursor/skills/`**（bootstrap 从 `adapters/cursor/.cursor/skills/` 投影）；升级副本：`bash harness-kit/scripts/sync-cursor-skills.sh`
+1. plan 可写 `wu_skills: auto`；派发前 Read **`skill-preferences.zh.md`**，将 **slug + SKILL 路径** 抄入 prompt
+2. 子 Agent 无 `### Skills 使用` → Leader **不整合**
+3. 能力副本：`.cursor/skills/`；升级：`bash harness-kit/scripts/sync-cursor-skills.sh`
 
 **不要**传给子 Agent：`brainstorming`、`writing-plans`、`cursor-orchestration`、`git-xywh`。
 

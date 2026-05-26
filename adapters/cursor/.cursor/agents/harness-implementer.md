@@ -23,7 +23,7 @@ readonly: false
 
 ## WU Skills（按需加载）
 
-Leader prompt 中的 **「本 WU Skills」** 决定本 WU 要加载的能力；**无列表或写「无」** 时，不 invoke 任何 skill。
+有「本 WU Skills」路径 → **必 Load**，返回 `### Skills 使用`；写「无」则跳过。
 
 **`auto`：** Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: implementer` + `wu_type`），再按需加载。
 

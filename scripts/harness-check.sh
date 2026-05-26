@@ -245,6 +245,18 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
         artifact_errors=1
       fi
     done
+
+    if printf '%s\n' "$front_matter" | rg -qi '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
+      skill_items="$(printf '%s\n' "$front_matter" | awk '
+        /^skills:/ { f = 1; next }
+        f && /^[A-Za-z0-9_.-]+:/ { exit }
+        f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+      ')"
+      if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | rg -qx '<skill>'; then
+        echo "empty or placeholder skills (route requires stage skill): $artifact_file" >&2
+        artifact_errors=1
+      fi
+    fi
   done < <(find .ai-runtime-artifacts -type f -name '*.md' ! -name 'README.md' 2>/dev/null | sort)
 
   if [[ "$artifact_errors" -ne 0 ]]; then

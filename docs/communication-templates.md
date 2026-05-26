@@ -94,6 +94,9 @@ WU-<id>：<任务名称>
 3. 单测：新增/变更逻辑须有单测
 4. 自测：实际运行验证命令，禁止未运行就写pass
 
+【本 WU Skills】（有则必填；Leader 解析 auto 后抄路径）
+- `<slug>` → `.cursor/skills/<slug>/SKILL.md`
+
 【验证命令】
 必须执行并回报结果：
 ```bash
@@ -532,5 +535,5 @@ npm test -- harness-kit/adapters/cursor/.cursor/agents/harness-coder.test.ts
 | self_check | 开发者自检 | PASS/FAIL，硬门槛 |
 | Done criteria | 完成标准 | 条目化，可勾选 |
 | wu_type | WU类型 | feature, bugfix, refactor, docs等 |
-| wu_skills | WU技能要求 | auto或显式列表 |
+| wu_skills | WU技能要求 | plan 可写 auto；派发 prompt 须抄 SKILL 路径 |
 | agent_role | 角色标识 | coder, implementer, reviewer等 |

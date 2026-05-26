@@ -41,7 +41,7 @@
 
 ## 强制声明
 
-每个任务第一句：`「Harness：<route 或 "小改动，直接处理">」`  
+每个任务第一句：`「Harness：<route 或 "小改动，直接处理">」`；route 列有 skill 时次行 `Skills:`（见 `routing.md` § 阶段指定 skill 必用）。  
 路由表见 `harness-kit/core/routing.md`（含 Codex / Cursor 并列列）。
 
 ## 路由摘要

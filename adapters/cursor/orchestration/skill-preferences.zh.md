@@ -18,7 +18,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 5. 剔除 **§ 全局禁止**
 6. 对列表中每一项 **按需** invoke / Read `.cursor/skills/<slug>/SKILL.md`（不存在则 `skipped`，不硬套）
 
-Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自查本文档。
+**Leader 派发：** 将解析出的 **slug + 路径** 抄入 prompt（**禁**只写 `auto`）。子 Agent 须返回 `### Skills 使用`。
 
 ---
 

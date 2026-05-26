@@ -1,8 +1,8 @@
 ---
 artifact: spec
-route: <route>
+route: superpowers:brainstorming
 skills:
-  - <skill>
+  - brainstorming
 source:
   - AGENTS.md
   - harness-kit/core/routing.md

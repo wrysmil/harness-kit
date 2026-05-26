@@ -108,9 +108,16 @@
 
 **注意：** 路由表中的 `git-xywh` 指**必须先加载该 skill 正文**再执行 git，不是仅阅读 `project.git.md` 或 `routing.md` 即够。
 
+## 阶段指定 skill 必用
+
+- 路由表 **Route 列**写明的 skill：本阶段**必须** Load（Read `SKILL.md` 或 Skill 工具）并按流程执行；未写明的**不**强制。
+- 有阶段 skill：先 Load → 再交付该阶段产物；`skills` 非空且与 route 一致（见 `artifacts.md`）。
+- 子 Agent：prompt「本 WU Skills」所列**必须** Load；返回须 `### Skills 使用`，否则 Leader 不整合。
+- 会话：首句 `「Harness：…」`；本阶段有 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。
+
 ## 运行约束
 
-- **强制声明（每次任务必须）：** 收到用户任务后，第一句话必须声明 harness 判定结果，格式为 `「Harness：<route 或 "小改动，直接处理">」`。无论任务大小，必须有这一行，证明已经过路由判定。如果判定为小改动，直接打印声明后开始处理。
+- **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill 时次行 `Skills:`（见上节）。
 - **未声明时的用户干预：** 如果 AI 响应第一句不是 `「Harness：...」`，说明规则未被加载或被忽略。用户应发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。

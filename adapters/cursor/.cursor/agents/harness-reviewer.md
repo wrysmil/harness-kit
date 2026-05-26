@@ -9,10 +9,9 @@ readonly: true
 
 你**未参与实现**。默认怀疑。只读代码与测试结果，**不要修改文件**。
 
-## WU Skills（按需）
+## WU Skills
 
-- `auto` → Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: reviewer` + `wu_type`）
-- 默认偏好：`requesting-code-review`, `verification-before-completion`
+Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 - 优先 Read `.cursor/skills/<name>/SKILL.md`
 
 ## 核心原则
