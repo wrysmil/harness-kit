@@ -19,6 +19,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 **需求获取（brainstorming）：** 优先使用环境内 **ask 类结构化提问工具**（如 Cursor `AskQuestion`）；不可用则对话逐条问。每次只问一个关键问题。
 
+**阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>@<path> loaded|skipped`。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
+
 ---
 
 ## 输入
@@ -39,15 +41,15 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 ## 职责
 
-1. **路由**：首句 `「Harness：…」`；多 task 实现走 `cursor-orchestration`
-2. **需求与设计**：brainstorming / writing-plans；产物写入后**暂停**等用户确认
+1. **路由**：首句 `「Harness：…」`；本阶段 route skill 先 Load、次行 `Skills:`；多 task 走 `cursor-orchestration`
+2. **需求与设计**：先 Load 阶段 skill，再按 skill 流程写产物（`skills` 非空）；写入后**暂停**等用户确认
 3. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权 / `wu_type` / `wu_skills`）
 4. **派发**（按 `wu_type`）：
    - 代码类 → `harness-coder`（`feature` / `bugfix` / `refactor` / `ui` / `review-fix`）
    - 轻量 → `harness-implementer`（`docs` / `chore` / `config`）
    - 测试 / E2E → `harness-test-engineer`
    - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
-   - 并行 ≤5；`wu_skills: auto` + `skill-preferences.zh.md`；prompt 见 `agents/coder.md` / `agents/implementer.md` / `agents/web-investigator.md`
+   - 并行 ≤5；plan 可写 `wu_skills: auto`，**派发前** Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；prompt 见各 `agents/*.md`
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
 6. **GROUP 收尾**：整合 → `project.verification.md` →（需时 Test Engineer）→ **集体** `harness-reviewer`（独立实例；Coder 轻量审查不替代）
 7. **追踪**：`DISPATCH-TRACK-*.md`；`APPROVE` 或合法跳过后 execution-log

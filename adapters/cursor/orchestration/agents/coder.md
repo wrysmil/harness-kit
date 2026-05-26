@@ -37,14 +37,13 @@ Worker 启动时上下文仅包含：
 
 ---
 
-## WU Skills（按需，Leader 指定为指令）
+## WU Skills（Leader prompt 为指令）
 
-详细规则见投影文件 `.cursor/agents/harness-coder.md` § WU Skills。要点：
+薄壳：`.cursor/agents/harness-coder.md` § WU Skills。
 
-- **`auto`** → Read **`orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: coder` + prompt 中的 `wu_type`），再按需加载
-- Leader 显式列表 → **必须**逐项加载使用；本机不存在则 `skipped: <name> (not found)`
-- 优先级：Leader 显式指定/追加 > `auto` 默认 > 空
-- 查找顺序：`.cursor/skills/` → `~/.cursor/skills/` → `~/.agents/skills/`
+- Leader prompt 所列 **slug + SKILL.md 路径** → **必 Load**；返回须 `### Skills 使用`。
+- plan 里 `wu_skills: auto` 由 **Leader** 解析后抄入 prompt；子 Agent **不**自行 Read `skill-preferences.zh.md`。
+- 无文件 → `skipped: <slug> (not found)`。路径：`.cursor/skills/` → `~/.cursor/skills/` → `~/.agents/skills/`
 
 ---
 

@@ -36,14 +36,12 @@ Worker 启动时上下文仅包含：
 
 ---
 
-## WU Skills（按需，不硬套）
+## WU Skills
 
-详细规则见投影文件 `.cursor/agents/harness-implementer.md` § WU Skills。要点：
+薄壳：`.cursor/agents/harness-implementer.md` § WU Skills。
 
-- **`auto`** → Read **`orchestration/skill-preferences.zh.md`** § 默认路由表，再按需加载表中 skill
-- 否则仅加载 Leader 所列项；空或「无」→ 不加载
-- 查找顺序：`.cursor/skills/` → `~/.cursor/skills/` → `~/.agents/skills/`
-- 偏好表：`orchestration/skill-preferences.zh.md`
+- Leader 所列路径 → **必 Load**；返回 `### Skills 使用`。写「无」→ 不加载。
+- plan 的 `auto` 仅 **Leader** 解析；子 Agent 不查 `skill-preferences.zh.md`。
 
 ---
 
