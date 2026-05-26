@@ -1,6 +1,6 @@
 ---
 name: cursor-orchestration
-description: Cursor 多 subagent 并行编排，等价于 omx ultrawork。在用户已批准 plan 并说「开始实现」后，通过 harness-coder（代码）与 harness-implementer（轻量）并行派发 WU。触发词：并行实现、多 task、开始实现、cursor 编排、dispatcher。
+description: Cursor 多 subagent 并行编排，等价于 omx ultrawork。在用户已批准 plan 并说「开始实现」后，通过 harness-coder（代码）、harness-implementer（轻量）、harness-test-engineer、harness-web-investigator（research）等并行派发 WU。触发词：并行实现、多 task、开始实现、cursor 编排、dispatcher。
 ---
 
 # Cursor Orchestration

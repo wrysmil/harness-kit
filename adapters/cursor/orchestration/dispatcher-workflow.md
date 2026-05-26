@@ -53,6 +53,7 @@ GROUP-2（依赖 GROUP-1）:
 | 代码实现（feature/bugfix/refactor/ui/review-fix） | **`harness-coder`** | 实现+单测+轻量审查+自检；见 `agents/coder.md` |
 | 轻量（docs/chore/config） | **`harness-implementer`** | 见 `agents/implementer.md` |
 | 测试 / E2E | **`harness-test-engineer`** | 只改测试资产；见 `agents/test-engineer.md` |
+| 信息调研 / 网页搜索 | **`harness-web-investigator`** | 搜索、浏览、截图取证 |
 | 单次构建命令 | Task `shell` | 无测试设计时使用 |
 
 **禁止** Leader 在主线程直接修改业务代码（routing「小改动」除外）。
@@ -111,6 +112,7 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 | Reviewer | `agents/reviewer.md` | `.cursor/agents/harness-reviewer.md` |
 | Debugger | `agents/debugger.md` | `.cursor/agents/harness-debugger.md` |
 | Test engineer | `agents/test-engineer.md` | `.cursor/agents/harness-test-engineer.md` |
+| Web investigator | `agents/web-investigator.md` | `.cursor/agents/harness-web-investigator.md` |
 
 上下文纪律：`context-budget.md`。模型建议：`model-routing.yaml`。
 

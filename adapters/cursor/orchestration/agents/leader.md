@@ -46,7 +46,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
    - 代码类 → `harness-coder`（`feature` / `bugfix` / `refactor` / `ui` / `review-fix`）
    - 轻量 → `harness-implementer`（`docs` / `chore` / `config`）
    - 测试 / E2E → `harness-test-engineer`
-   - 并行 ≤5；`wu_skills: auto` + `skill-preferences.zh.md`；prompt 见 `agents/coder.md` / `agents/implementer.md`
+   - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
+   - 并行 ≤5；`wu_skills: auto` + `skill-preferences.zh.md`；prompt 见 `agents/coder.md` / `agents/implementer.md` / `agents/web-investigator.md`
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
 6. **GROUP 收尾**：整合 → `project.verification.md` →（需时 Test Engineer）→ **集体** `harness-reviewer`（独立实例；Coder 轻量审查不替代）
 7. **追踪**：`DISPATCH-TRACK-*.md`；`APPROVE` 或合法跳过后 execution-log

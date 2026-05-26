@@ -43,7 +43,7 @@ Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.co
 Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存在：
 
 - `.cursor/rules/cursor-subagent-routing.mdc`
-- `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer）
+- `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer / web-investigator）
 - `.cursor/skills/`（能力副本；偏好见 `adapters/cursor/orchestration/skill-preferences.zh.md`）
 - `.agents/skills/cursor-orchestration/SKILL.md`
 
@@ -76,10 +76,12 @@ bash harness-kit/scripts/install-ai-skills.sh
 - `.ai-runtime-artifacts/verifications/`
 - `.ai-runtime-artifacts/decisions/`
 - `.ai-runtime-artifacts/retros/`
+- `.ai-runtime-artifacts/research/`
+- `.ai-runtime-artifacts/research/screenshots/`（网探截图，可选）
 - `.ai-runtime-artifacts/execution-logs/`
 - `.ai-runtime-artifacts/execution-logs/tracking/`（Cursor 并行追踪，可选目录）
 
-产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`）。
+产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`、`research-report.md`）。
 
 完成入口和工具适配投影后，读取 `harness-kit/init/project-profiler.prompt.md`。
 

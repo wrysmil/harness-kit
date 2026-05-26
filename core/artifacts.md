@@ -12,6 +12,7 @@ AI 过程产物统一放在项目根目录 `.ai-runtime-artifacts/`：
 | `.ai-runtime-artifacts/verifications/` | 验证报告、doctor 输出摘要、测试结果 |
 | `.ai-runtime-artifacts/decisions/` | 架构决策、技术取舍 |
 | `.ai-runtime-artifacts/retros/` | 复盘、阶段总结 |
+| `.ai-runtime-artifacts/research/` | 网探调研报告、截图取证（`research/screenshots/`） |
 | `.ai-runtime-artifacts/execution-logs/` | 执行日志、HANDOFF、并行编排摘要 |
 | `.ai-runtime-artifacts/execution-logs/tracking/` | DISPATCH 逐步追踪（append-only） |
 
@@ -27,6 +28,7 @@ YYYY-MM-DD-<topic>-<artifact>.md
 2026-05-14-ai-agent-harness-spec.md
 2026-05-14-ai-agent-harness-plan.md
 2026-05-14-ai-agent-harness-verification.md
+2026-05-26-react-19-research-report.md
 ```
 
 ## Front Matter
@@ -70,6 +72,7 @@ created_at: 2026-05-14
 - `wu-checklist`
 - `decision-record`
 - `retro`
+- `research-report`
 - `article`
 - `runbook`
 - `project-profile`

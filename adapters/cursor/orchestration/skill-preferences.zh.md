@@ -34,6 +34,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | explorer | investigate | systematic-debugging |
 | debugger | bugfix, * | systematic-debugging, verification-before-completion |
 | debugger | ui-bug | systematic-debugging, verification-before-completion, agent-browser |
+| web-investigator | research, * | agent-browser |
 | reviewer | review, * | requesting-code-review, verification-before-completion |
 | test-engineer | test | test-driven-development, verification-before-completion |
 | test-engineer | e2e | agent-browser, verification-before-completion |
@@ -83,6 +84,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | 审查者 | harness-reviewer | review | requesting-code-review + verification |
 | 测试工程师 | harness-test-engineer | test | TDD + verification |
 | 测试工程师 | harness-test-engineer | e2e | agent-browser + verification |
+| 网探 | harness-web-investigator | research | agent-browser |
 
 ---
 
@@ -106,6 +108,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | 实现后审查 | harness-reviewer | reviewer |
 | 补测试 / 集成测试 | harness-test-engineer | test-engineer + test |
 | E2E 验收 | harness-test-engineer | test-engineer + e2e |
+| 信息调研 / 网页搜索 | harness-web-investigator | web-investigator + research |
 | 只跑一条命令 | Task shell | 无 |
 | 提交 / MR | Leader | git-xywh（禁止子 Agent） |
 
@@ -115,9 +118,9 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | 字段 | 含义 |
 | --- | --- |
-| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| docs \| config \| test \| e2e \| explore \| review \| investigate \| ui-bug |
+| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| docs \| config \| test \| e2e \| explore \| review \| investigate \| ui-bug \| **research** |
 | wu_skills | 逗号分隔 slug，或 **`auto`**（查本文档 § 默认路由表） |
-| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| test-engineer |
+| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| test-engineer \| **web-investigator** |
 
 ---
 

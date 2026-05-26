@@ -52,6 +52,7 @@
 | 计划 | `superpowers:writing-plans` | 同左 |
 | 多 task 实现 | `omx ultrawork` | `cursor-orchestration:dispatcher-workflow` |
 | 验证 | `superpowers:verification-before-completion` | 同左 |
+| 信息调研 / 网页搜索 | `harness-web-investigator` | `harness-web-investigator` |
 | Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 |
 
 涉及提交、分支、MR 时由 **Leader** invoke `git-xywh`；子 Agent 默认不 commit。组织规范在 skill，项目差异在 `project.git.md`。

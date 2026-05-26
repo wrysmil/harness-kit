@@ -30,8 +30,11 @@
 - `harness-explorer` — 只读探查
 - `harness-debugger` — 缺陷调查
 - `harness-test-engineer` — 测试 / E2E 资产（`wu_type: test | e2e`）
+- `harness-web-investigator` — 信息调研 / 网页搜索 / 截图取证（`wu_type: research`）
 
 Skill 按需加载见 `skill-preferences.zh.md`（`wu_skills: auto` 查表）。路由表见 `harness-kit/core/routing.md`（不在此重复）。
+
+调研报告产物：`.ai-runtime-artifacts/research/`（见 `harness-kit/core/artifacts.md`）。
 
 ## Git
 

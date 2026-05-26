@@ -37,6 +37,7 @@
 | 缺陷调查 | `superpowers:systematic-debugging` 或 `omx` debugger 路由 | `superpowers:systematic-debugging` + `harness-debugger` 或 `harness-explorer` | `.ai-runtime-artifacts/specs/` 或 `.ai-runtime-artifacts/verifications/` |
 | 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立 `harness-reviewer` | `.ai-runtime-artifacts/verifications/` |
 | 架构决策 | architect / critic / planner 组合 | Task `generalPurpose`（只读）× 多轮 + decision 产物 | `.ai-runtime-artifacts/decisions/` |
+| 信息调研 / 网页搜索 / 截图取证 | `harness-web-investigator` | `harness-web-investigator` | `.ai-runtime-artifacts/research/` |
 | 文章 / 知识沉淀 / 对外文档 | `superpowers:brainstorming` + 写作风格 skill + 文档发布 skill | 同左 | `.ai-runtime-artifacts/retros/` 或用户指定位置 |
 | 小改动 / 单文件机械修改 | 直接处理 | 直接处理 | 无需产物 |
 | 建分支 / 提交 / rebase / 开 MR·PR | `git-xywh` + `project.git.md` | 同左 | 无（或用户要求的 MR 链接） |

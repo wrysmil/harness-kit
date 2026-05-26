@@ -39,6 +39,11 @@ roles:
     subagent: harness-test-engineer
     model: inherit
 
+  harness_web_investigator:
+    description: 信息调研、网页浏览、截图取证
+    subagent: harness-web-investigator
+    model: inherit
+
   shell_runner:
     description: 测试、构建、lint
     subagent_type: shell

@@ -56,6 +56,7 @@ alwaysApply: true
 - 实现后的审查（→ `harness-reviewer`，不同实例）
 - 跨 3+ 模块只读探索（→ `harness-explorer`）
 - 缺陷调查（→ `harness-debugger`）
+- 信息调研/网页搜索/截图取证（→ `harness-web-investigator`）
 
 **主 Agent 直接做：**
 
