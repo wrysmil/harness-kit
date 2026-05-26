@@ -8,18 +8,23 @@ alwaysApply: true
 
 ## 规范优先级
 
-1. `harness-kit/core/routing.md` — 路由、**阶段门禁**、产物（强制）
+1. `harness-kit/core/routing.md` — 路由、阶段门禁、按判定加载（强制）
 2. `.cursor/rules/cursor-subagent-routing.mdc` — subagent 委派
 3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX 专章忽略
 
-## 会话开始
+## 每任务（必做）
 
-1. 读取 `harness-kit/core/routing.md`（含阶段门禁）
-2. 多 task 实现：`harness-coder`（代码 WU）/ `harness-implementer`（docs/chore）+ `cursor-orchestration` skill
-3. 子 Agent skill 偏好（文档）：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`
-4. Git 任务：**先 invoke / Read `git-xywh` skill**，再读 `harness-kit/project.git.md`；步骤见 `harness-kit/core/runbooks.md` § Git 协作
-5. 编排步骤：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+1. 首句：`「Harness：<route 或 "小改动，直接处理">」`
+2. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 追加文件（禁止跳过路由表）
 
-## 声明
+## 按 routing 判定加载（勿在会话开始预读）
 
-每个任务第一句：`「Harness：<route 或 "小改动，直接处理">」`
+| 判定 | 再读 |
+| --- | --- |
+| 多 task / 已批准 plan | `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md` |
+| 派发 WU（`wu_skills: auto`） | `orchestration/skill-preferences.zh.md` |
+| 写 spec / plan / decision | `core/artifacts.md` + 对应 `artifact-templates/` |
+| Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
+| 改代码 / 验证 | `project.profile.md`、`context-map.md`（涉及模块时）、`project.verification.md`、`core/verification.md` |
+
+委派与禁止项：见 `cursor-subagent-routing.mdc`（本文件不重复）。

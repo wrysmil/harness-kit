@@ -23,7 +23,7 @@ Cursor 适配分两层：
 | `orchestration/runtime/plan-progress-sync.md` | plan 内 `- [ ]`→`- [√]` |
 | `orchestration/skill-preferences.zh.md` | **任务 ↔ 内置 skill 偏好表** |
 | `../../entrypoints/AGENTS.cursor-overlay.md` | Cursor 深读契约 |
-| `../../core/routing.md` | 路由与阶段门禁（权威） |
+| `../../core/routing.md` | 路由、阶段门禁、**§ 按判定加载**（权威） |
 
 上游改编来源见 `orchestration/VENDOR.md`。
 

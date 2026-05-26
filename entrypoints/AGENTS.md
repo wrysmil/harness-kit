@@ -7,18 +7,18 @@
 <!-- omx:generated:agents-md -->
 
 <!-- 项目 Harness 覆盖层 — 请勿删除 -->
-在开展任务专项工作之前，加载 `harness-kit/` 中的项目 harness。
+在开展任务专项工作之前，按 **Route-first** 加载 `harness-kit/`（勿预读全集）。
 
-项目 harness 阅读顺序：
-1. `harness-kit/core/harness.md`
-2. `harness-kit/project.profile.md`
-3. `harness-kit/context-map.md`
-4. `harness-kit/project.git.md`（Git 任务或用户要求提交 / 开 MR 时）
-5. `harness-kit/core/routing.md`
-6. `harness-kit/core/artifacts.md`
-7. `harness-kit/project.verification.md`
-8. `harness-kit/core/verification.md`
-9. 当任务匹配 runbook 时，阅读 `harness-kit/core/runbooks.md`
+## 加载规则
+
+1. **始终**：`harness-kit/core/routing.md`（路由判定、阶段门禁、§ 按判定加载）
+2. **按 routing 判定追加**：
+   - 写产物 → `core/artifacts.md` + `artifact-templates/`
+   - 改代码前 → `project.profile.md`、`context-map.md`（涉及模块时）
+   - 验证 / 完成声明 → `project.verification.md`、`core/verification.md`
+   - Git → `project.git.md`（须叠加 **`git-xywh` skill**）
+   - runbook 任务 → `core/runbooks.md` 对应节
+3. **架构总览（可选）**：`core/harness.md`
 
 `harness-kit/` 层负责项目边界、产物契约、验证门禁与迁移可移植性。  
 默认 harness 路由是强制基线。若用户指定技能或工具，将其视为对 `harness-kit/core/routing.md` 的附加项，除非用户明确要求跳过、禁用或仅使用其他路由。

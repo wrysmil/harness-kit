@@ -174,6 +174,41 @@ if [[ "$missing" -ne 0 ]]; then
   exit 1
 fi
 
+echo "==> Checking harness subagent projection shells"
+agent_errors=0
+agents_dir="$(kit_path adapters/cursor/.cursor/agents)"
+orch_dir="$(kit_path adapters/cursor/orchestration/agents)"
+max_projection_lines=80
+
+for projected in "$agents_dir"/harness-*.md; do
+  [[ -f "$projected" ]] || continue
+  rel_projected="${projected#"$ROOT_DIR"/}"
+  rel_projected="${rel_projected#./}"
+  lines="$(wc -l < "$projected" | tr -d ' ')"
+  base="$(basename "$projected" .md)"
+  canonical_name="${base#harness-}"
+  canonical="$orch_dir/${canonical_name}.md"
+  if [[ -f "$canonical" ]]; then
+    if ! grep -q 'orchestration/agents/' "$projected" 2>/dev/null; then
+      echo "missing orchestration/agents/ reference: $rel_projected" >&2
+      agent_errors=1
+    fi
+    canon_lines="$(wc -l < "$canonical" | tr -d ' ')"
+    max_allowed=$(( canon_lines * 12 / 10 ))
+    if [[ "$lines" -gt "$max_allowed" ]]; then
+      echo "projection too fat ($lines > $max_allowed vs canonical $canon_lines): $rel_projected" >&2
+      agent_errors=1
+    fi
+  elif [[ "$lines" -gt "$max_projection_lines" ]]; then
+    echo "projection exceeds ${max_projection_lines} lines ($lines): $rel_projected" >&2
+    agent_errors=1
+  fi
+done
+
+if [[ "$agent_errors" -ne 0 ]]; then
+  exit 1
+fi
+
 echo "==> Checking unfinished markers"
 scan_paths=()
 if [[ "$LAYOUT" == "deployed" ]]; then

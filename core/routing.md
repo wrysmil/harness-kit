@@ -1,5 +1,7 @@
 # Harness Routing
 
+路由判定与阶段门禁的**单一真相源**。入口文件（`AGENTS.md`、`.cursor/rules/`）只保留指针，细则以本文件为准。
+
 ## 总原则
 
 - 默认 route 是强制基线。用户指定 skills 或工具时，默认理解为追加要求，不替代本文件的默认 route。
@@ -43,6 +45,26 @@
 | 建分支 / 提交 / rebase / 开 MR·PR | `git-xywh` + `project.git.md` | 同左 | 无（或用户要求的 MR 链接） |
 | 热修 / 提测线 `test/v*` / 合流 / 打标签 | `git-xywh` + `project.git.md` | 同左 | 无 |
 | Harness 脚手架变更提交 | `git-xywh`（类型 `chore`，范围 `harness-kit`） | 同左 | 与业务 commit 分离 |
+
+## 按判定加载
+
+完成路由判定后，**仅**加载下表对应文件（小改动：声明后直接处理，无需读本表）。
+
+| 判定（路由表 / 用户任务） | 再读 |
+| --- | --- |
+| 小改动 / 单文件机械修改 | 无（可选：`project.profile.md` 若需项目上下文） |
+| 需求澄清 / 方案设计 | `artifacts.md` + `artifact-templates/spec.md`；涉及模块时 `project.profile.md`、`context-map.md` |
+| 实施计划 | `artifacts.md` + `artifact-templates/plan.md` |
+| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `adapters/cursor/orchestration/dispatcher-workflow.md`；派发 WU 时 `skill-preferences.zh.md` |
+| 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流文档 |
+| 代码审查 / 验证 | `project.verification.md`、`core/verification.md` |
+| 缺陷调查 | `project.profile.md`；Cursor 委派时各 subagent 正文见 `orchestration/agents/` |
+| 信息调研 / 网页搜索 | 委派 `harness-web-investigator` → `orchestration/agents/web-investigator.md` |
+| Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
+| 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
+| runbook 明示任务 | `runbooks.md` 对应节 |
+
+**禁止：** 在未判定 route 前预读 `dispatcher-workflow.md`、`skill-preferences.zh.md` 或全套 `project.*`。
 
 ### "小改动"判定标准
 

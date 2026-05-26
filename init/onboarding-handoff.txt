@@ -1,4 +1,4 @@
-请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
+请先读取 harness-kit/core/routing.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
 1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
 2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。

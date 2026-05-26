@@ -3,17 +3,18 @@
 
 # Cursor 执行契约（Harness Kit）
 
-本文件是 **Cursor Agent** 的补充契约。路由与阶段门禁以 `harness-kit/core/routing.md` 与 `.cursor/rules/cursor-subagent-routing.mdc` 为准。
+本文件是 **Cursor Agent** 的补充契约。路由、阶段门禁与按判定加载以 `harness-kit/core/routing.md` 为准；委派以 `.cursor/rules/cursor-subagent-routing.mdc` 为准。
 
-## 阅读顺序（Cursor 会话）
+## 加载规则（Route-first）
 
-1. `harness-kit/core/routing.md`（含阶段门禁）
-2. `.cursor/rules/cursor-subagent-routing.mdc`
-3. `harness-kit/project.profile.md`、`harness-kit/context-map.md`
-4. `harness-kit/project.git.md`（Git 任务或提交 / MR 时）
-5. `harness-kit/core/artifacts.md`
-6. 子 Agent skill 偏好：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`
-7. 任务相关：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+1. **始终**：`harness-kit/core/routing.md`（含 § 按判定加载）
+2. **按 routing 判定追加**（见 routing 表；勿在会话开始预读 dispatcher / skill-preferences）：
+   - Cursor 委派细则 → `.cursor/rules/cursor-subagent-routing.mdc`
+   - 改代码前 → `project.profile.md`、`context-map.md`
+   - 写产物 → `core/artifacts.md`
+   - Git → `project.git.md` + **`git-xywh` skill**
+   - 多 task 已实现 → `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md`
+   - 派发 WU（`wu_skills: auto`）→ `orchestration/skill-preferences.zh.md`
 
 ## 平台判定
 
@@ -24,23 +25,23 @@
 
 项目 subagent 位于 `.cursor/agents/`（bootstrap 从 `harness-kit/adapters/cursor/.cursor/agents/` 投影）：
 
-- `harness-coder` — 代码类 WU（实现+单测+自测+自检；plan 批准后）
+- `harness-coder` — 代码类 WU（plan 批准后）
 - `harness-implementer` — 轻量 WU（docs/chore/config）
 - `harness-reviewer` — 独立审查（readonly）
 - `harness-explorer` — 只读探查
 - `harness-debugger` — 缺陷调查
-- `harness-test-engineer` — 测试 / E2E 资产（`wu_type: test | e2e`）
-- `harness-web-investigator` — 信息调研 / 网页搜索 / 截图取证（`wu_type: research`）
+- `harness-test-engineer` — 测试 / E2E（`wu_type: test | e2e`）
+- `harness-web-investigator` — 信息调研（`wu_type: research`）
 
-Skill 按需加载见 `skill-preferences.zh.md`（`wu_skills: auto` 查表）。路由表见 `harness-kit/core/routing.md`（不在此重复）。
+薄壳 → 正文：`orchestration/agents/*.md`。路由表见 `core/routing.md`（不在此重复）。
 
-调研报告产物：`.ai-runtime-artifacts/research/`（见 `harness-kit/core/artifacts.md`）。
+调研产物：`.ai-runtime-artifacts/research/`（见 `core/artifacts.md`）。
 
 ## Git
 
-- 组织规范：**`git-xywh` skill**（须 invoke，不复制全文进仓库）
-- 项目差异：`harness-kit/project.git.md`
-- **Leader** 执行 commit / push / MR；`harness-coder` / `harness-implementer` 默认禁止擅自 Git
+- 组织规范：**`git-xywh` skill**（须 invoke）
+- 项目差异：`project.git.md`
+- **Leader** 执行 commit / push / MR
 
 ## 强制声明
 
@@ -48,6 +49,6 @@ Skill 按需加载见 `skill-preferences.zh.md`（`wu_skills: auto` 查表）。
 
 ## 产物
 
-统一写入 `.ai-runtime-artifacts/`（见 `harness-kit/core/artifacts.md`）。
+统一写入 `.ai-runtime-artifacts/`（见 `core/artifacts.md`）。
 
 Cursor 规则 `ai-entry.mdc` 会在会话中加载；本文件供深读与人工审计。

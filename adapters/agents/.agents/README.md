@@ -15,7 +15,7 @@ Harness 脚手架预置 **Cursor 编排** skill（投影后位于 `.agents/skill
 团队成员不需要自己照着命令逐条执行。把下面这段话交给 AI：
 
 ```text
-请先读取 AGENTS.md 和 harness-kit/README.md。
+请先读取 AGENTS.md 和 harness-kit/core/routing.md。
 如果当前环境需要安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
 完成后请汇总 oh-my-codex / omx 和基础 skills 的可用状态。
 ```

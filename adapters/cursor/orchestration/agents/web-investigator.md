@@ -61,6 +61,38 @@ Front matter 见 `harness-kit/core/artifacts.md`（`artifact: research-report`�
 
 ---
 
+## 调研报告正文模板
+
+写入 `research/YYYY-MM-DD-<topic>-research-report.md` 时可用：
+
+```markdown
+## 网探调研报告
+
+### 调研主题
+{用户的问题或需求}
+
+### 搜索结果摘要
+| # | 来源 | 标题 | 关键信息 |
+|---|------|------|----------|
+| 1 | {搜索引擎} | {标题} | {摘要} |
+
+### 详细发现
+#### {主题 1}
+- 来源: {URL}
+- 内容: {提取的关键信息}
+
+### 截图证据
+- {描述}: {文件路径}
+
+### 结论
+- {核心发现}
+
+### 建议
+- {基于调研的建议}
+```
+
+---
+
 ## Task Prompt 前缀（Leader 委派时）
 
 ```text
