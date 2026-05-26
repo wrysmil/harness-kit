@@ -24,7 +24,7 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 ## 执行前读取（按序）
 
 1. `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md` — **唯一完整步骤**
-2. `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md` — plan 内 `- [ ]`→`- [√]`，禁止仅在回复里勾选
+2. `plan-progress-sync.md` — **Leader** 写 plan/tracking；子 Agent 返回 `wu_status`
 3. `harness-kit/adapters/cursor/orchestration/tracking/schema.md`
 4. 已批准 plan + `harness-kit/project.verification.md`
 

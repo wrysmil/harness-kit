@@ -11,7 +11,7 @@
 | 文件 | 用途 | 写入者 |
 | --- | --- | --- |
 | `DISPATCH-TRACK-<YYYY-MM-DD>-<topic>.md` | 并行 WU / ITR 逐步追踪 | Leader |
-| `CHECKLIST-<topic>-WU-<id>.md` | 单 WU done criteria | Leader 创建，Implementer 在文件内 `- [ ]`→`- [√]`（见 `runtime/plan-progress-sync.md`） |
+| `CHECKLIST-<topic>-WU-<id>.md` | 单 WU done criteria | Leader 创建；勾选由 **Leader** 更新（见 `runtime/plan-progress-sync.md`） |
 | `../HANDOFF.md` | 上下文重置检查点（覆盖写） | Leader |
 | `../PROGRESS.md` | 周期级紧凑摘要（可选） | Leader |
 

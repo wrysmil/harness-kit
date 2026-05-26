@@ -19,7 +19,7 @@ route: cursor-orchestration:dispatcher-workflow
 
 ## 目标
 
-- 为代码类 WU 引入“资深开发者”职责：实现 + 单测（或明确豁免）+ 自测 + 开发者自检（硬门槛）。
+- 为代码类 WU 引入“资深开发者”职责：实现 + 单测 + 轻量审查 + 自检；E2E/集成由 Test Engineer；plan 勾选由 Leader。
 - 保持 `Leader` 的定位为“技术主管/编排者”：与用户交互、拆 WU、资料传递、整合与验证。
 - 强化 `Leader` 的“对甲方汇报”能力：将用户视为甲方，提供阶段性进展、风险与变更沟通、验收口径与下一步安排。
 - 保留现有角色分工：`test-engineer`、`reviewer`、`debugger`、`explorer`。
@@ -75,13 +75,14 @@ Leader 在 `superpowers:brainstorming` 阶段向用户澄清需求时：
 **必须完成的闭环步骤：**
 1. 读取本 WU 的 plan/spec 片段与目标文件现状。
 2. 仅在允许修改文件范围内实现功能与必要的工程化配套（日志、错误处理、边界处理，按项目既有规范）。
-3. 编写/补齐单元测试（或在 plan 明确豁免时写明理由与风险）。
-4. 运行验证命令（至少包含 `project.verification.md` 要求的相关命令）并给出真实结果摘要。
-5. 填写“开发者自检”（见下文），**自检未通过不得返回完成**。
+3. 单元测试（或豁免说明）；**不负责** E2E / 集成 / 前端组件测试。
+4. 运行 Leader 指定的单测/lint 验证命令。
+5. `requesting-code-review`：独立 reviewer 实例轻量审本 WU 变更。
+6. 开发者自检（见下文）；**未 PASS 不得返回完成**。
 
 **禁止：**
 - 重规划/扩大 WU；发现 plan 歧义或范围过大必须上报 Leader。
-- 派发子 Agent（避免形成二级编排者）。
+- 修改 plan / tracking；轻量审查外的子 Agent 派发。
 - Git commit/push（除非 Leader 明确要求）。
 
 ### Implementer（现有角色，轻量执行者）
@@ -129,6 +130,7 @@ Coder 在 WU 返回时必须包含：
 - `self_check: PASS | FAIL`
 - `open_items: 无 | <列表>`（列出未关闭的 Critical/Important）
 - `skip_reviewer_eligible: yes | no`（按“小 WU 判定”自填，Leader 复核）
+- `code_review: PASS | FAIL`；`review_issues` / `review_fix_status`（轻量审查，不替代 Leader 终审）
 
 **规则：**
 - `self_check: FAIL` 时不得向 Leader 声称“完成”，必须说明阻塞原因与下一步。
@@ -251,10 +253,8 @@ coder
 <!-- 例：npm test -- path/to/a.test.ts -->
 ```
 
-## 计划进度同步
-- 完成后在 **plan 文件**（及可选 `CHECKLIST-<topic>-WU-<id>.md`）将对应项 `- [ ]` → `- [√]`。
-- 遵循：`harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md`
-- **禁止**仅在聊天回复里打 `[√]`。
+## 完成状态
+- 返回 `wu_status: done | blocked`；**不**改 plan（Leader 验证后勾选，见 `plan-progress-sync.md`）。
 
 ## 开发者自检（硬门槛 — 未 PASS 不得声称完成）
 对照 Done criteria 与 spec，填写：
@@ -267,6 +267,7 @@ coder
 - [ ] 错误路径与日志符合项目规范
 - [ ] 单测已更新且本地通过（或已声明豁免）
 - [ ] 验证命令已运行（附命令与输出摘要）
+- [ ] `code_review: PASS`
 - [ ] 无未关闭 Critical/Important
 
 ## 返回格式（必须严格遵循）
@@ -289,10 +290,12 @@ coder
 - open_items: ...
 - skip_reviewer_eligible: yes | no
 - test_exempt: 无 | <理由>
+- code_review: PASS | FAIL
+- review_issues: ...
+- review_fix_status: ...
 
-### 计划勾选同步
-- 文件: ...
-- 已勾选项: <!-- 仅标题或行号 -->
+### 完成状态
+- wu_status: done | blocked
 
 ### Skills 使用
 - 已加载: ...

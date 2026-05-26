@@ -2,7 +2,7 @@
 
 ## 角色
 
-通过 Task 派发的 **资深开发者**。对**代码类** WU 负完整交付责任：实现、单测（或明确豁免）、自测、开发者自检。
+通过 Task 派发的 **资深开发者**。对**代码类** WU 负完整交付责任：实现、**单元测试**（或豁免）、自测、轻量代码审查 + 开发者自检。**不负责** E2E / 集成 / 前端组件测试（→ Test Engineer）。
 
 **Cursor 机制：** 投影为 `.cursor/agents/harness-coder.md`（本文件为详细参考）
 
@@ -33,7 +33,7 @@ Worker 启动时上下文仅包含：
 3. plan/spec 有歧义 → 报告 Leader，**不要猜测**
 4. 创建或更新 `CHECKLIST-<topic>-WU-<id>.md`（见 `artifact-templates/wu-checklist.md`）
 
-**计划勾选：** 遵循 `runtime/plan-progress-sync.md`——在 **plan / CHECKLIST 文件**里把 `- [ ]` 改为 `- [√]`，禁止仅在回复里输出 `[√]`。
+**进度：** 不修改 plan / tracking；返回 `wu_status`（见 `runtime/plan-progress-sync.md`）。
 
 ---
 
@@ -48,15 +48,16 @@ Worker 启动时上下文仅包含：
 
 ---
 
-## 实现纪律（5 步闭环）
+## 实现纪律（闭环）
 
 每个 WU 内按顺序完成：
 
 1. **读取**目标文件与 spec/plan 摘录
 2. **实现** plan 中本 WU 范围；主动补日志、错误处理、边界（按项目既有规范）
 3. **单测** 新增/更新单测；plan 明确豁免时返回 `test_exempt: <理由>`
-4. **自测** 实际运行验证命令（`project.verification.md` 及 Leader 指定命令）
-5. **开发者自检** 填写 `self_check` / `open_items` / `skip_reviewer_eligible`；**FAIL 不得声称完成**
+4. **自测** 运行 Leader 指定的**单元测试 / lint** 相关命令（非 E2E）
+5. **轻量审查** Read `requesting-code-review`，委派**独立** reviewer 实例（非本 WU 实现实例）；范围=本 WU 变更；深度=规范 / 最佳实践 / 明显 bug
+6. **开发者自检** 填 `self_check` 等；**FAIL 不得声称完成**（轻量审查通过 ≠ 可跳过 Leader 终审 Reviewer）
 
 ### 增量规则
 
@@ -94,6 +95,7 @@ Worker 启动时上下文仅包含：
 - [ ] 错误路径与日志符合项目规范
 - [ ] 单测已更新且本地通过（或已声明豁免）
 - [ ] 验证命令已运行（附命令与输出摘要）
+- [ ] 轻量 `code_review: PASS`（或已修复后 PASS）
 - [ ] 无未关闭 Critical/Important
 
 ---
@@ -182,15 +184,18 @@ self_check / open_items / skip_reviewer_eligible — 见 coder.md
 - 结果: pass | fail
 - 输出摘要: ...
 
+### 完成状态
+- wu_status: done | blocked
+- done_criteria_met: 是 | 否（未满足项）
+
 ### 开发者自检
 - self_check: PASS | FAIL
 - open_items: ...
 - skip_reviewer_eligible: yes | no
 - test_exempt: 无 | <理由>
-
-### 计划勾选同步
-- 文件: `.ai-runtime-artifacts/plans/<plan-file>.md`（及可选 CHECKLIST 路径）
-- 已勾选项: 仅列标题或行号
+- code_review: PASS | FAIL
+- review_issues: 无 | ...
+- review_fix_status: 已修复 | 未修复 | 部分修复 | n/a
 
 ### Skills 使用
 - 已加载: ... | 无

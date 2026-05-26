@@ -50,7 +50,7 @@ GROUP-2（依赖 GROUP-1）:
 | WU 类型 | Subagent | 说明 |
 | --- | --- | --- |
 | 只读探查 | `harness-explorer` 或 Task `explore` | readonly |
-| 代码实现（feature/bugfix/refactor/ui/review-fix） | **`harness-coder`** | 实现+单测+自测+开发者自检；见 `agents/coder.md` |
+| 代码实现（feature/bugfix/refactor/ui/review-fix） | **`harness-coder`** | 实现+单测+轻量审查+自检；见 `agents/coder.md` |
 | 轻量（docs/chore/config） | **`harness-implementer`** | 见 `agents/implementer.md` |
 | 测试 / E2E | **`harness-test-engineer`** | 只改测试资产；见 `agents/test-engineer.md` |
 | 单次构建命令 | Task `shell` | 无测试设计时使用 |
@@ -63,9 +63,9 @@ GROUP-2（依赖 GROUP-1）:
 2. 允许修改的文件列表
 3. 禁止事项（不改哪些文件、不新增依赖等）
 4. **本 WU Skills**：推荐 `auto`；或手写 slug；纯 chore 可写 `无`。含 `agent_role` + `wu_type`（见各 agent Task 前缀）
-5. 必须返回：变更摘要、命令输出摘要、**Skills 使用**、**计划勾选同步**（路径 + 已勾项标题，见 `runtime/plan-progress-sync.md`）、阻塞项
-6. **Coder** 还须返回：`self_check`、`open_items`、`skip_reviewer_eligible`、测试资产摘要
-7. Coder/Implementer 须在 **plan 文件**内同步 `- [ ]` → `- [√]`，不得仅在回复中列出 `[√]`
+5. 必须返回：变更摘要、**`wu_status`**、**Skills 使用**、阻塞项
+6. **Coder** 还须：`self_check`、`code_review`、测试资产摘要
+7. **子 Agent 不改 plan**；Leader 验证后写 plan / tracking（`runtime/plan-progress-sync.md`）
 
 Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
 
@@ -80,15 +80,15 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 
 ## 步骤 3：整合与门禁
 
-1. 收集所有 WU 结果
-2. 对照 `.ai-runtime-artifacts/plans/` 中勾选是否与实现一致（`runtime/plan-progress-sync.md`）
-3. 检查文件冲突 — 有冲突则顺序合并或开修复 WU
-4. 运行 `harness-kit/project.verification.md` 中的最小验证集
-5. **审查门禁（条件性）**
-   - **可跳过** `harness-reviewer`：当全部 Coder WU 满足「小 WU」条件（允许修改文件 ≤5、无安全/API/DB/跨模块硬条件、Coder `self_check: PASS`、无 open Critical/Important、本步验证通过）。详见 `docs/superpowers/specs/2026-05-26-coder-role-design.md` § 小 WU 跳过 Reviewer。
-   - **必须委派** `harness-reviewer`：触发任一硬条件（安全敏感、公共 API、DB 迁移、跨模块架构、用户/plan 要求 review、自检 FAIL、验证失败）或 Leader 手动要求。
-   - 委派时不得与执行该 WU 的 **coder/implementer** 同实例。
-6. 审查通过（或合法跳过）后写 execution-log；跳过须在 log 中记录理由与 `skip_reviewer_eligible` 依据。
+**单 WU 返回后：** 验证 → plan / tracking 由 Leader 更新（`plan-progress-sync.md`）。
+
+**GROUP 收尾：**
+
+1. 收集 WU 结果；处理冲突
+2. 跑 `project.verification.md`；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
+3. **审查门禁**：委派 `harness-reviewer` 审**本批次整合面**（与任一实现 Coder **不同实例**）；`code_review: PASS` 不替代本步。可跳过条件见 `docs/superpowers/specs/2026-05-26-coder-role-design.md` § 小 WU 跳过 Reviewer
+4. `BLOCK` → `review-fix` WU 派 Coder；`APPROVE` 或合法跳过 → execution-log（跳过记理由）
+5. 未过步骤 3 不得声称 GROUP 交付完成
 
 ## 步骤 4：追踪（并行编排时**必须**）
 

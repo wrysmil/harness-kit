@@ -26,9 +26,9 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | agent_role | wu_type | 建议加载的 skill（按序） |
 | --- | --- | --- |
-| coder | feature, bugfix, refactor | test-driven-development, verification-before-completion |
-| coder | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion |
-| coder | review-fix | receiving-code-review, test-driven-development, verification-before-completion |
+| coder | feature, bugfix, refactor | test-driven-development, verification-before-completion, requesting-code-review |
+| coder | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion, requesting-code-review |
+| coder | review-fix | receiving-code-review, test-driven-development, verification-before-completion, requesting-code-review |
 | implementer | docs, config, chore | **无** |
 | explorer | explore, * | **无** |
 | explorer | investigate | systematic-debugging |
@@ -36,7 +36,7 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | debugger | ui-bug | systematic-debugging, verification-before-completion, agent-browser |
 | reviewer | review, * | requesting-code-review, verification-before-completion |
 | test-engineer | test | test-driven-development, verification-before-completion |
-| test-engineer | e2e | verification-before-completion；（浏览器见 § 测试工程师 E2E） |
+| test-engineer | e2e | agent-browser, verification-before-completion |
 
 ---
 
@@ -82,19 +82,15 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 | 调试者 | harness-debugger | bugfix | systematic-debugging + verification |
 | 审查者 | harness-reviewer | review | requesting-code-review + verification |
 | 测试工程师 | harness-test-engineer | test | TDD + verification |
-| 测试工程师 | harness-test-engineer | e2e | verification + § E2E |
+| 测试工程师 | harness-test-engineer | e2e | agent-browser + verification |
 
 ---
 
-## 测试工程师 E2E（文档约定，非单独 skill）
+## 测试工程师 E2E
 
-`harness-test-engineer` 只改测试资产；E2E 浏览器优先级：
+`wu_type: e2e` 且 `auto` 时：**必须先 Read** `.cursor/skills/agent-browser/SKILL.md`（再按 skill 执行）。
 
-1. **Playwright MCP**（Cursor 已启用时）
-2. **`agent-browser`**（`.cursor/skills/agent-browser/`，需 `infsh`）
-3. **项目 CLI**（`npm run e2e`、`npx playwright test` 等）
-
-返回摘要注明 `e2e_via: playwright-mcp | agent-browser | cli | n/a`。
+执行优先级：Playwright MCP → `agent-browser`（`infsh`）→ 项目 CLI。返回 `e2e_via: playwright-mcp | agent-browser | cli | n/a`。
 
 ---
 

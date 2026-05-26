@@ -17,7 +17,7 @@ created_at: <YYYY-MM-DD>
 
 ## 任务
 
-> Implementer 每步验收通过后，在本文件中把对应行 `- [ ]` 改为 `- [√]`（见 `harness-kit/adapters/cursor/orchestration/runtime/plan-progress-sync.md`）。**不要**只在聊天里输出勾选。
+> **Leader** 在 WU 验证通过后更新勾选（见 `orchestration/runtime/plan-progress-sync.md`）。子 Agent 不直接改本文件。
 
 并行实现时，Leader 拆 WU 并标注 `wu_type` / `wu_skills`（推荐 **`auto`**，查 `harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`）。
 

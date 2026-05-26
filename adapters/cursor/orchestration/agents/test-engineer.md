@@ -2,7 +2,7 @@
 
 ## 角色
 
-编写与运行**测试资产**（单测补强、集成、E2E）。不实现业务功能，不替代 Reviewer。
+编写与运行**测试资产**（单测补强、集成、E2E、前端组件/自动化）。不实现业务功能，不替代 Reviewer。单元测试主责在 Coder；本角色负责其余测试类型。
 
 **Cursor 机制：** 投影为 `.cursor/agents/harness-test-engineer.md`  
 **Skill 偏好：** `orchestration/skill-preferences.zh.md`（`auto` 时查 § 默认路由表；E2E 见 § 测试工程师 E2E）
@@ -38,7 +38,8 @@
 
 - 声称通过前**实际运行**测试命令
 - 不擅自 `git commit` / `push`
-- E2E：Playwright MCP → agent-browser → 项目 CLI（见 `skill-preferences.zh.md` § 测试工程师 E2E）
+- `wu_type: e2e`：**必须先 Read** `agent-browser` SKILL（`auto` 已含）；执行序：Playwright MCP → agent-browser → CLI
+- 不修改 plan / tracking；返回 `wu_status`
 
 ---
 
@@ -79,9 +80,8 @@ test
 - 已加载: ...
 - 已跳过: ...
 
-### 计划勾选同步
-- 文件: ...
-- 已勾选项: ...
+### 完成状态
+- wu_status: done | blocked
 
 ### 阻塞项
 无 | ...

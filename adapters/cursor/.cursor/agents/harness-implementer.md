@@ -34,8 +34,7 @@ Leader prompt 中的 **「本 WU Skills」** 决定本 WU 要加载的能力；*
 1. 读取目标文件当前状态
 2. 只实现 plan 中本 WU 范围
 3. 运行 Leader 指定的验证（如有）
-4. **编辑 plan 文件**（及可选 CHECKLIST）：`- [ ]` → `- [√]`
-5. 返回结构化摘要
+4. 返回摘要（`wu_status`；**不**改 plan / tracking）
 
 ## 禁止
 
@@ -53,9 +52,8 @@ Leader prompt 中的 **「本 WU Skills」** 决定本 WU 要加载的能力；*
 - 命令: ... | n/a
 - 结果: pass | fail | n/a
 
-### 计划勾选同步
-- 文件: ...
-- 已勾选项: ...
+### 完成状态
+- wu_status: done | blocked
 
 ### Skills 使用
 - 已加载: ... | 无

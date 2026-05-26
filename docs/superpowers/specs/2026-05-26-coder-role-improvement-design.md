@@ -2,7 +2,7 @@
 artifact: spec
 title: "Coder角色改进：自检机制、测试分工与进度管理"
 date: 2026-05-26
-status: draft
+status: approved
 platform: cursor
 route: cursor-orchestration:dispatcher-workflow
 ---
@@ -22,6 +22,7 @@ route: cursor-orchestration:dispatcher-workflow
 - 改进Coder自检机制，引入轻量级代码审查
 - 明确测试分工，Coder只负责单元测试，Test Engineer负责所有其他测试
 - 优化进度管理流程，Leader统一更新进度文件
+- **保留并写清 Leader 收尾步骤**：任务（WU / GROUP）整合验证通过后，由 Leader 协调 `harness-reviewer` 做**集体独立审查**（与 Coder 自检审查分层，不互相替代）
 
 ## 非目标
 
@@ -145,11 +146,44 @@ route: cursor-orchestration:dispatcher-workflow
    - Leader更新plan文件（打勾）
    - Leader更新tracking文件
 
-**新流程：**
-1. Coder/Implementer完成WU，返回完成状态
-2. Leader验证完成状态（检查代码、测试结果等）
-3. Leader更新plan文件（将对应项`- [ ]`改为`- [√]`）
-4. Leader更新tracking文件（append状态行）
+**单 WU 进度（Leader 写入）：**
+1. Coder/Implementer 完成 WU，返回完成状态（**不**改 plan）
+2. Leader 验证该 WU（代码、单测/验证摘要、Coder 轻量审查结果）
+3. Leader 将 plan 中**本 WU 对应项** `- [ ]` → `- [√]`，并 append `tracking/DISPATCH-TRACK-*.md`
+
+**GROUP / 交付批次收尾（须含集体审查，见 §4）：** plan 勾选与 tracking 可在单 WU 验证后逐步更新，但**不得**在集体审查未通过（或未合法跳过）前对外声称本 GROUP / 本批次交付完成。
+
+### 4. Leader 收尾：整合验证与 Reviewer 集体审查
+
+**有，且必须保留。** 本改进**不取消**原 `2026-05-26-coder-role-design.md` 与 `dispatcher-workflow.md` 中的审查门禁；仅与 Coder 轻量自检**分层**。
+
+| 层级 | 时机 | 执行方 | 深度 | 作用 |
+| --- | --- | --- | --- | --- |
+| **WU 自检审查** | 单 WU 完成前 | Coder（`requesting-code-review` + 独立 reviewer 实例） | 轻量：规范、最佳实践、明显 bug | 开发者自检硬门槛；**不能**替代终审 |
+| **集体独立审查** | WU 整合 + 最小验证集之后 | Leader 委派 **`harness-reviewer`**（与实现 Coder **不同实例**） | 五轴 / spec+plan done criteria | 交付前质量门禁；`APPROVE` \| `BLOCK` |
+
+**Leader 在任务（通常为一个 GROUP 或 plan 中一批相关 WU）完成后的顺序：**
+
+1. **收集** 本批次所有 WU 返回（含 Coder `self_check`、`code_review`、Test Engineer 验证摘要）。
+2. **整合**：处理文件冲突；对照 plan 与实现是否一致。
+3. **验证**：运行 `harness-kit/project.verification.md` 最小验证集；若 plan 要求集成/E2E，先完成或委派 `harness-test-engineer` 对应 WU，再进入审查。
+4. **审查门禁**（Leader 协调 Reviewer）：
+   - 满足「小 WU 跳过 Reviewer」**全部**条件时，Leader 可跳过 `harness-reviewer`，须在 execution-log 记录理由与依据（沿用原 spec）。
+   - 否则 Leader **必须**委派 `harness-reviewer`，prompt 覆盖**本批次整合后的变更面**（非仅最后一个 WU），对照 spec/plan done criteria + 各 WU 验证摘要；结论仅 `APPROVE` \| `BLOCK`。
+5. **`BLOCK`**：开 `review-fix` WU 派 Coder 修复，修复后回到步骤 1–4（无需重复已通过 WU 的实现，除非冲突）。
+6. **`APPROVE` 或合法跳过**：Leader 确认 plan / CHECKLIST 与验收一致；写 execution-log；对甲方汇报（含是否经 Reviewer、跳过理由）。
+
+**与 Coder 轻量审查的关系：**
+
+- Coder `code_review: PASS` **不**等于可跳过步骤 4 的集体审查（除非同时满足原 spec 全部「可跳过 Reviewer」条件）。
+- 集体审查实例**不得**与执行该批次任一 Coder WU 的 subagent 为同一实例。
+
+**集体审查 Prompt 要点（Leader 派发，摘要）：**
+
+- 声明：未参与本批次实现；只读。
+- 范围：本 GROUP / 批次涉及的文件与 done criteria（可附 git 范围或文件列表）。
+- 输入：spec/plan 摘录、各 WU 返回、最小验证集结果、Test Engineer 摘要（如有）。
+- 输出：`APPROVE` \| `BLOCK`；BLOCK 须列未关闭 Critical/Important。
 
 ## 需要的变更清单
 
@@ -171,10 +205,13 @@ route: cursor-orchestration:dispatcher-workflow
    - 增加前端组件测试等职责
 
 4. **更新`orchestration/dispatcher-workflow.md`**：
-   - 修改Leader整合流程
-   - 增加Leader更新进度文件的步骤
+   - 修改 Leader 整合流程（单 WU 进度由 Leader 写 plan / tracking）
+   - **显式保留**步骤 3 审查门禁与 Leader 委派 `harness-reviewer` 集体审查（与 Coder 轻量自检分层说明）
 
-5. **更新`orchestration/runtime/plan-progress-sync.md`**：
+5. **更新`orchestration/agents/leader.md`**：
+   - 增加收尾链：整合 → 验证 →（可选 Test Engineer）→ Reviewer 集体审查 → 更新 execution-log / 对甲方汇报
+
+6. **更新`orchestration/runtime/plan-progress-sync.md`**：
    - 修改进度同步流程
    - 明确Leader的职责
 
@@ -214,10 +251,10 @@ route: cursor-orchestration:dispatcher-workflow
 
 ## 验收标准
 
-- 文档明确：Coder自检机制、测试分工、进度管理流程
-- 提示词可落地：含Leader→Coder/Implementer标准模板、派发前自检表
+- 文档明确：Coder自检机制、测试分工、进度管理流程、**Leader 收尾集体审查门禁**（含与 Coder 轻量审查的分层、跳过规则、BLOCK 后 review-fix 回路）
+- 提示词可落地：含 Leader→Coder/Implementer 标准模板、Leader→Reviewer 集体审查要点、派发前自检表
 - 给出实现需要改动的文件清单（可直接转为实现计划）
-- 流程清晰：Coder自检流程、测试分工流程、进度管理流程
+- 流程清晰：Coder 自检审查 → 单 WU Leader 写进度 → 批次整合验证 → Reviewer 集体审查 → 交付
 
 ## 后续步骤
 

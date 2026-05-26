@@ -47,9 +47,9 @@ superpowers:brainstorming → [门禁：用户确认 spec]
    - 轻量 → `harness-implementer`（`docs` / `chore` / `config`）
    - 测试 / E2E → `harness-test-engineer`
    - 并行 ≤5；`wu_skills: auto` + `skill-preferences.zh.md`；prompt 见 `agents/coder.md` / `agents/implementer.md`
-5. **整合**：合并 WU 结果，处理文件冲突；运行 `project.verification.md`
-6. **审查门禁**：满足「小 WU」全部条件且 Coder `self_check: PASS` 时可**跳过** `harness-reviewer`；否则**必须**委派独立 reviewer（见 spec `docs/superpowers/specs/2026-05-26-coder-role-design.md`）
-7. **追踪**：append-only 写入 `DISPATCH-TRACK-*.md`；中断时写 `HANDOFF.md`
+5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
+6. **GROUP 收尾**：整合 → `project.verification.md` →（需时 Test Engineer）→ **集体** `harness-reviewer`（独立实例；Coder 轻量审查不替代）
+7. **追踪**：`DISPATCH-TRACK-*.md`；`APPROVE` 或合法跳过后 execution-log
 
 ## 对甲方汇报（最小规范）
 

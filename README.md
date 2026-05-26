@@ -18,6 +18,7 @@
 - [新项目接入](#新项目接入)
 - [改造 Harness Kit（编排 / Agent）](#改造-harness-kit编排--agent)
 - [接入方式建议](#接入方式建议)
+- [技术负责人沟通模板](#技术负责人沟通模板)
 - [更多文档](#更多文档)
 
 ---
@@ -114,9 +115,9 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | 角色 | 对应 Subagent | 干什么 | 不干什么 |
 |------|---------------|--------|----------|
 | **Leader** | 主会话 | 和你对接、拆任务、派活、整合结果、**对甲方汇报**、Git 提交 | 大规模亲自写业务代码 |
-| **Coder** | `harness-coder` | 写代码 + 单测 + 跑验证 + **开发者自检** | 扩需求、派子 Agent、自己当终审 |
-| **Implementer** | `harness-implementer` | 改文档、配置、chore 类小活 | 承担完整「资深开发」闭环 |
-| **Test Engineer** | `harness-test-engineer` | 补测试 / E2E | 改业务实现 |
+| **Coder** | `harness-coder` | 写代码 + **单测** + 轻量审查 + 自检 | E2E/集成测试、改 plan、终审 |
+| **Implementer** | `harness-implementer` | 文档 / 配置 / chore | 代码闭环、改 plan |
+| **Test Engineer** | `harness-test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 agent-browser） | 改业务实现 |
 | **Reviewer** | `harness-reviewer` | 独立 code review（只读） | 与写代码的 Agent 同一实例 |
 | **Explorer / Debugger** | 探查 / 排障 | 摸底、查 bug | — |
 
@@ -139,10 +140,11 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | 实现 | 只改 Leader 允许的文件（通常 ≤5 个） |
 | 日志 / 错误处理 | 按项目既有规范 |
 | 单测 | 有新增逻辑就要测；豁免须在返回里说明 |
-| 自测 | **真实运行**验证命令，不能口头说 pass |
-| 开发者自检 | `self_check: PASS` 才能报完成；否则 `FAIL` + 阻塞说明 |
+| 自测 | 跑 Leader 指定的**单测/lint** 命令（非 E2E） |
+| 轻量审查 | `requesting-code-review` + 独立 reviewer；`code_review: PASS` |
+| 开发者自检 | `self_check: PASS` 才能报完成 |
 
-自检返回字段：`self_check` · `open_items` · `skip_reviewer_eligible`（Leader 决定是否可免审查）。
+返回含 `wu_status`；**plan 勾选由 Leader 写**。批次收尾 Leader 派 **Reviewer** 集体审查（见 `dispatcher-workflow.md`）。
 
 ### 还要不要 Reviewer？
 
@@ -364,6 +366,24 @@ harness-kit/
 
 ---
 
+## 技术负责人沟通模板
+
+向技术负责人派发任务时，按以下模板填写，避免模糊表述：
+
+```
+WU-<id>：<名称>
+类型：bugfix | feature | refactor | docs | chore | config | test | e2e
+目标：<一句话，可验证>
+验收标准：
+- [ ] ...
+- [ ] ...
+允许修改：`path/to/file1.ts`, `path/to/file2.ts`
+禁止：修改范围外文件 / 新增依赖 / git commit
+验证命令：`npm test -- ...`
+```
+
+---
+
 ## 更多文档
 
 | 文档 | 说明 |
@@ -372,3 +392,4 @@ harness-kit/
 | `adapters/cursor/orchestration/dispatcher-workflow.md` | 派发与整合步骤（AI 深读） |
 | `init/bootstrap.prompt.md` | 新项目接入详版 |
 | `core/artifacts.md` | 过程产物规范 |
+| `docs/communication-templates.md` | 完整沟通话术模板集 |
