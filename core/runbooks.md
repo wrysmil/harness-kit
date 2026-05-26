@@ -2,7 +2,7 @@
 
 ## 新功能
 
-1. 使用 `superpowers:brainstorming` 产出 spec。
+1. 使用 `superpowers:brainstorming` 产出 spec。澄清需求时**优先**用环境内的 ask 类工具（如 Cursor `AskQuestion`）提问；不可用则用对话逐条问。
 2. 将 spec 保存到 `.ai-runtime-artifacts/specs/`。
 3. **Plan 判定（条件分支）：**
    - spec 涉及多模块协调 / 有先后依赖 / 需要分步编排 → 使用 `superpowers:writing-plans` 产出实施计划
@@ -57,6 +57,6 @@
 完整步骤见 `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`。要点：
 
 1. 遵守 **阶段门禁**（spec/plan 写入后暂停，见 `harness-kit/core/routing.md` § 阶段门禁）
-2. plan 批准后声明 `cursor-orchestration`，拆 WU，委派 `harness-implementer`
+2. plan 批准后声明 `cursor-orchestration`，拆 WU；代码类委派 `harness-coder`，docs/chore/config 委派 `harness-implementer`
 3. 整合后委派 **独立** `harness-reviewer`
 4. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）

@@ -32,7 +32,8 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| `harness-implementer.md` | 有界 WU 实现 |
+| `harness-coder.md` | 代码类 WU：实现、单测、自测、开发者自检 |
+| `harness-implementer.md` | 轻量 WU（docs/chore/config） |
 | `harness-reviewer.md` | 独立审查（readonly） |
 | `harness-explorer.md` | 只读探查 |
 | `harness-debugger.md` | 缺陷调查 |
@@ -81,7 +82,7 @@ monitoring: 轮询后台 Task 与终端输出
 | Cursor 限制 | 缓解 |
 | --- | --- |
 | 无内置 cron | 后台 Task 每 2–3 分钟轮询；可用 `/loop` skill |
-| subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 五套角色 |
+| subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 六套角色 |
 | 无 omx 式模型能力表 | 可选 `model-routing.yaml` |
 | 连续自治循环非原生 | single-pass + `HANDOFF.md` 链接多会话 |
 

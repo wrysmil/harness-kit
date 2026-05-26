@@ -43,7 +43,7 @@ Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.co
 Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存在：
 
 - `.cursor/rules/cursor-subagent-routing.mdc`
-- `.cursor/agents/harness-implementer.md`（及 reviewer / explorer / debugger / test-engineer）
+- `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer）
 - `.cursor/skills/`（能力副本；偏好见 `adapters/cursor/orchestration/skill-preferences.zh.md`）
 - `.agents/skills/cursor-orchestration/SKILL.md`
 

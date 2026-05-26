@@ -10,13 +10,14 @@ platform: cursor
 wu_id: WU-<id>
 wu_type: feature
 wu_skills: []
+agent_role: coder
 ---
 
 # CHECKLIST — <topic> / WU-<id>
 
-Implementer 在**本文件**（及 plan）里把 `- [ ]` 改为 `- [√]`；Reviewer 对照验收。禁止仅在 Agent 回复里复述 `[√]`。
+Coder 或 Implementer 在**本文件**（及 plan）里把 `- [ ]` 改为 `- [√]`；Reviewer 对照验收。禁止仅在 Agent 回复里复述 `[√]`。
 
-`wu_skills`：Leader 写入本 WU 建议加载的 skill slug 列表；空数组表示不加载 skill。Implementer 本机无文件则 skipped。
+`wu_skills`：Leader 写入本 WU 建议加载的 skill slug 列表；空数组表示不加载 skill。`agent_role`：`coder` | `implementer`。
 
 ## Done criteria
 
@@ -31,7 +32,19 @@ Implementer 在**本文件**（及 plan）里把 `- [ ]` 改为 `- [√]`；Revi
 
 - [ ] 
 
+## 开发者自检（仅 Coder）
+
+- [ ] Done criteria 逐项满足
+- [ ] 错误路径与日志符合项目规范
+- [ ] 单测已更新且通过（或已声明 test_exempt）
+- [ ] verification 命令已运行
+
+- self_check: PASS | FAIL
+- open_items: 无 | ...
+- skip_reviewer_eligible: yes | no
+
 ## 完成签名
 
-- Implementer 完成时间: 
-- Reviewer 结论: APPROVE | BLOCK
+- Worker 完成时间: 
+- agent_role: coder | implementer
+- Reviewer 结论: APPROVE | BLOCK | skipped（小 WU）

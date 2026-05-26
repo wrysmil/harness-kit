@@ -8,7 +8,7 @@ Cursor 适配分两层：
 ## 投影后应具备
 
 - `.cursor/rules/ai-entry.mdc`、`cursor-subagent-routing.mdc`
-- `.cursor/agents/harness-implementer.md`（及 reviewer / explorer / debugger / **test-engineer**）
+- `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / **test-engineer**）
 - `.cursor/skills/` 能力副本（TDD、verification 等）；偏好清单见 `orchestration/skill-preferences.zh.md`
 - `.agents/skills/cursor-orchestration/SKILL.md`
 

@@ -15,7 +15,7 @@ alwaysApply: true
 ## 会话开始
 
 1. 读取 `harness-kit/core/routing.md`（含阶段门禁）
-2. 多 task 实现：`.cursor/agents/harness-implementer` + `cursor-orchestration` skill
+2. 多 task 实现：`harness-coder`（代码 WU）/ `harness-implementer`（docs/chore）+ `cursor-orchestration` skill
 3. 子 Agent skill 偏好（文档）：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`
 4. Git 任务：**先 invoke / Read `git-xywh` skill**，再读 `harness-kit/project.git.md`；步骤见 `harness-kit/core/runbooks.md` § Git 协作
 5. 编排步骤：`harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`

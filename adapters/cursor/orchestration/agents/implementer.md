@@ -2,7 +2,9 @@
 
 ## 角色
 
-通过 Task 派发的 **实现者 Worker**。只执行分配 WU，不重规划，不派发子 Agent。
+通过 Task 派发的 **轻量执行 Worker**。用于文档、模板、纯配置等 WU，**不**承担代码类 WU 的完整工程闭环。
+
+**适用 `wu_type`：** `docs`、`chore`、`config`（代码类 → `harness-coder`，见 `agents/coder.md`）
 
 **Cursor 机制：** 投影为 `.cursor/agents/harness-implementer.md`（本文件为详细参考）  
 **改编来源：** harness-engineer `agents/implementer.md`
@@ -78,21 +80,22 @@ Worker 启动时上下文仅包含：
 ```markdown
 你正在以 Implementer Worker 执行 WU-<id>。
 遵循 harness-kit/adapters/cursor/orchestration/agents/implementer.md。
-不要重规划，不要派发子 Agent，不要审查自己的代码。
+不要重规划，不要派发子 Agent。
 
 ## 本 WU Skills
-auto
+无
 
 ## agent_role
 implementer
 
 ## wu_type
-feature
+docs
 
 [WU 详情：目标、done criteria、允许修改文件、禁止事项]
 ```
 
-审查 **BLOCK** 后的修复 WU：将 `wu_type` 设为 `review-fix`（`auto` 会加载 `receiving-code-review`，见 `skill-preferences.zh.md`）。
+**代码类 WU（feature/bugfix 等）** 须委派 `harness-coder`，不要用本模板。  
+审查 **BLOCK** 后的代码修复：委派 **`harness-coder`**，`wu_type: review-fix`。
 
 ---
 

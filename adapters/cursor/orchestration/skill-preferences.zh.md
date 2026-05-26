@@ -26,10 +26,10 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | agent_role | wu_type | 建议加载的 skill（按序） |
 | --- | --- | --- |
-| implementer | feature, bugfix, refactor | test-driven-development, verification-before-completion |
-| implementer | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion |
-| implementer | chore | **无** |
-| implementer | review-fix | receiving-code-review, test-driven-development, verification-before-completion |
+| coder | feature, bugfix, refactor | test-driven-development, verification-before-completion |
+| coder | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion |
+| coder | review-fix | receiving-code-review, test-driven-development, verification-before-completion |
+| implementer | docs, config, chore | **无** |
 | explorer | explore, * | **无** |
 | explorer | investigate | systematic-debugging |
 | debugger | bugfix, * | systematic-debugging, verification-before-completion |
@@ -74,10 +74,10 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | 角色 | Subagent | 典型 wu_type | auto 默认 |
 | --- | --- | --- | --- |
-| 实现者 | harness-implementer | feature / bugfix / refactor | TDD + verification |
-| 实现者 | harness-implementer | ui | ui-ux-pro-max + frontend-design + TDD + verification |
-| 实现者 | harness-implementer | chore | 无 |
-| 实现者 | harness-implementer | review-fix | receiving-code-review + TDD + verification |
+| Coder | harness-coder | feature / bugfix / refactor | TDD + verification |
+| Coder | harness-coder | ui | ui-ux-pro-max + frontend-design + TDD + verification |
+| Coder | harness-coder | review-fix | receiving-code-review + TDD + verification |
+| 轻量执行 | harness-implementer | docs / chore / config | 无 |
 | 探查者 | harness-explorer | explore | 无 |
 | 调试者 | harness-debugger | bugfix | systematic-debugging + verification |
 | 审查者 | harness-reviewer | review | requesting-code-review + verification |
@@ -102,8 +102,9 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | 任务 | Subagent | auto 查表 |
 | --- | --- | --- |
-| 并行写业务代码 | harness-implementer | implementer + wu_type |
-| 审查 BLOCK 后按意见改代码 | harness-implementer | implementer + **review-fix** |
+| 并行写业务代码 | harness-coder | coder + wu_type |
+| 审查 BLOCK 后按意见改代码 | harness-coder | coder + **review-fix** |
+| 文档 / 配置 / chore | harness-implementer | implementer + docs/chore/config |
 | 只读摸底 | harness-explorer | explorer |
 | 调查 bug | harness-debugger | debugger |
 | 实现后审查 | harness-reviewer | reviewer |
@@ -118,9 +119,9 @@ Leader 可将解析结果抄进派发 prompt，或保留 `auto` 让子 Agent 自
 
 | 字段 | 含义 |
 | --- | --- |
-| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| test \| e2e \| explore \| review \| investigate \| ui-bug |
+| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| docs \| config \| test \| e2e \| explore \| review \| investigate \| ui-bug |
 | wu_skills | 逗号分隔 slug，或 **`auto`**（查本文档 § 默认路由表） |
-| agent_role | implementer \| explorer \| debugger \| reviewer \| test-engineer |
+| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| test-engineer |
 
 ---
 

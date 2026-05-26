@@ -4,7 +4,7 @@
 
 - 默认 route 是强制基线。用户指定 skills 或工具时，默认理解为追加要求，不替代本文件的默认 route。
 - 只有当用户明确说“不要使用默认 skills / 只使用某个 skill / 禁用某个 route”时，才允许跳过默认 route，并必须在回复或产物 front matter 中说明原因。
-- 方案设计优先使用 `superpowers:brainstorming`。
+- 方案设计优先使用 `superpowers:brainstorming`；该阶段向用户提问时**优先**使用环境内 ask 类结构化工具（无则对话提问）。
 - 已批准设计后的实施计划使用 `superpowers:writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
   - **Codex CLI**：使用 `oh-my-codex` 的 `omx` 工作流（如 `omx ultrawork`）
@@ -68,7 +68,7 @@
 
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
-**Cursor 实现阶段：** 用户说「开始实现」后，Leader 须委派 `.cursor/agents/harness-implementer`，不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
+**Cursor 实现阶段：** 用户说「开始实现」后，Leader 须按 `wu_type` 委派：代码类 WU → `.cursor/agents/harness-coder`；`docs`/`chore`/`config` → `harness-implementer`。不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
 
 ## Git 协作
 
@@ -76,7 +76,7 @@
 | --- | --- |
 | 组织规范来源 | **`git-xywh` skill**（三主干、五类临时分支、Angular 提交、MR 流程） |
 | 项目差异来源 | **`harness-kit/project.git.md`**（MR 平台、commitlint、是否允许 AI push、Harness 独立 commit 等） |
-| 谁执行 Git | **Leader / 主 Agent**；`harness-implementer` 等子 Agent 默认不 commit/push |
+| 谁执行 Git | **Leader / 主 Agent**；`harness-coder` / `harness-implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
 | skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
 | **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `harness-kit/core/runbooks.md` § Git 协作 |

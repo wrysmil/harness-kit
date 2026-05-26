@@ -11,10 +11,10 @@
 
 ## 核心原则
 
-1. **生成 ≠ 审查**：implementer 与 reviewer **必须**不同 subagent 实例
+1. **生成 ≠ 审查**：coder/implementer 与 reviewer **必须**不同 subagent 实例
 2. 发现问题后**不要**自我说服「问题不大」而放行
 3. 「测试过了」≠「需求满足」— 对照 done criteria / spec 逐项检查
-4. 存疑时 **BLOCK**，要求修复 WU 或开新 implementer Task
+4. 存疑时 **BLOCK**，要求修复 WU 或开新 **harness-coder** Task（`wu_type: review-fix`）
 
 ---
 

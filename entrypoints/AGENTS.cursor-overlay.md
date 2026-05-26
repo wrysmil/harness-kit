@@ -24,7 +24,8 @@
 
 项目 subagent 位于 `.cursor/agents/`（bootstrap 从 `harness-kit/adapters/cursor/.cursor/agents/` 投影）：
 
-- `harness-implementer` — 有界实现（plan 批准后）
+- `harness-coder` — 代码类 WU（实现+单测+自测+自检；plan 批准后）
+- `harness-implementer` — 轻量 WU（docs/chore/config）
 - `harness-reviewer` — 独立审查（readonly）
 - `harness-explorer` — 只读探查
 - `harness-debugger` — 缺陷调查
@@ -36,7 +37,7 @@ Skill 按需加载见 `skill-preferences.zh.md`（`wu_skills: auto` 查表）。
 
 - 组织规范：**`git-xywh` skill**（须 invoke，不复制全文进仓库）
 - 项目差异：`harness-kit/project.git.md`
-- **Leader** 执行 commit / push / MR；`harness-implementer` 默认禁止擅自 Git
+- **Leader** 执行 commit / push / MR；`harness-coder` / `harness-implementer` 默认禁止擅自 Git
 
 ## 强制声明
 

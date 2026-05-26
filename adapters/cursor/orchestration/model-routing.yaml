@@ -14,8 +14,13 @@ roles:
     model: fast
 
   harness_implementer:
-    description: 有界 WU 实现
+    description: 轻量 WU（docs/chore/config）
     subagent: harness-implementer
+    model: inherit
+
+  harness_coder:
+    description: 代码类 WU：实现、单测、自测、开发者自检
+    subagent: harness-coder
     model: inherit
 
   harness_reviewer:

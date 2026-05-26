@@ -1,11 +1,11 @@
 ---
 name: cursor-orchestration
-description: Cursor 多 subagent 并行编排，等价于 omx ultrawork。在用户已批准 plan 并说「开始实现」后，通过 harness-implementer 并行派发 WU。触发词：并行实现、多 task、开始实现、cursor 编排、dispatcher。
+description: Cursor 多 subagent 并行编排，等价于 omx ultrawork。在用户已批准 plan 并说「开始实现」后，通过 harness-coder（代码）与 harness-implementer（轻量）并行派发 WU。触发词：并行实现、多 task、开始实现、cursor 编排、dispatcher。
 ---
 
 # Cursor Orchestration
 
-Cursor 平台的 **omx ultrawork 语义等价** skill。通过 `.cursor/agents/harness-implementer` 并行派发有界 work unit（WU）。
+Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `harness-coder`；轻量 WU 委派 `harness-implementer`。
 
 **前置：** 用户已批准 plan（说过「开始实现」或等价指令）。未批准前**不得**激活本 skill。
 
@@ -32,9 +32,9 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。通过 `.cursor/agents/h
 
 ## 激活后
 
-声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，然后**按序读完** `dispatcher-workflow.md` 再派发 WU。未读 dispatcher 不得并行 implementer。
+声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，然后**按序读完** `dispatcher-workflow.md` 再派发 WU。未读 dispatcher 不得并行派发。
 
-派发子 Agent 时须含 **「本 WU Skills」**（推荐 `auto`）、`agent_role`、`wu_type`。偏好表：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`。测试 WU 用 `harness-test-engineer`。
+派发子 Agent 时须含 **「本 WU Skills」**（推荐 `auto`）、`agent_role`、`wu_type`。偏好表：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`。代码 WU → `harness-coder`；测试 WU → `harness-test-engineer`。
 
 ---
 
