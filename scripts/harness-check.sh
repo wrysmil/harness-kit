@@ -49,6 +49,9 @@ required_kit_files=(
   "init/templates/project.git.md"
   "artifact-templates/spec.md"
   "artifact-templates/plan.md"
+  "artifact-templates/spec.harness-overlay.md"
+  "artifact-templates/plan.harness-overlay.md"
+  "artifact-templates/dispatch.harness-overlay.md"
   "artifact-templates/verification.md"
   "artifact-templates/decision.md"
   "artifact-templates/dispatch-track.md"
@@ -254,6 +257,15 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
       ')"
       if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | rg -qx '<skill>'; then
         echo "empty or placeholder skills (route requires stage skill): $artifact_file" >&2
+        artifact_errors=1
+      fi
+      evidence_items="$(printf '%s\n' "$front_matter" | awk '
+        /^skills_evidence:/ { f = 1; next }
+        f && /^[A-Za-z0-9_.-]+:/ { exit }
+        f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+      ')"
+      if [[ -z "$evidence_items" ]] || printf '%s\n' "$evidence_items" | rg -q '^(<path|<skill>|\.{3})'; then
+        echo "missing or placeholder skills_evidence (P1 required for stage-skill route): $artifact_file" >&2
         artifact_errors=1
       fi
     fi

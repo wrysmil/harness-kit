@@ -12,11 +12,13 @@
 ## 加载规则
 
 1. **始终**：`harness-kit/core/routing.md`（路由判定、阶段门禁、§ 按判定加载）
-2. **按 routing 判定追加**：
-   - 写产物 → `core/artifacts.md` + `artifact-templates/`
+2. **按 routing 判定追加**（见 `routing.md` § 按判定加载；**先 stage skill，再 artifacts 契约**）：
+   - 设计 / spec → Load **`brainstorming`** → `artifacts.md`（勿用 `artifact-templates/spec.md` 作正文）
+   - 计划 → Load **`writing-plans`** → `artifacts.md` + `plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md`
+   - 验证 → Load **`verification-before-completion`** → `project.verification.md`、`core/verification.md`
+   - 编排产物（execution-log、track 等）→ `artifact-templates/` 对应文件
    - 改代码前 → `project.profile.md`、`context-map.md`（涉及模块时）
-   - 验证 / 完成声明 → `project.verification.md`、`core/verification.md`
-   - Git → `project.git.md`（须叠加 **`git-xywh` skill**）
+   - Git → **`git-xywh` skill** + `project.git.md`
    - runbook 任务 → `core/runbooks.md` 对应节
 3. **架构总览（可选）**：`core/harness.md`
 

@@ -3,6 +3,8 @@ artifact: verification
 route: superpowers:verification-before-completion
 skills:
   - verification-before-completion
+skills_evidence:
+  - ~/.agents/skills/verification-before-completion/SKILL.md
 source:
   - AGENTS.md
   - harness-kit/core/verification.md
@@ -10,6 +12,8 @@ created_at: <YYYY-MM-DD>
 ---
 
 # <Topic> Verification
+
+> **纪律：** 先 Load **verification-before-completion** skill；**先跑命令、再给结论**（禁止「应该通过」）。
 
 ## 命令
 

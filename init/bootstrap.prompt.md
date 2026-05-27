@@ -81,7 +81,7 @@ bash harness-kit/scripts/install-ai-skills.sh
 - `.ai-runtime-artifacts/execution-logs/`
 - `.ai-runtime-artifacts/execution-logs/tracking/`（Cursor 并行追踪，可选目录）
 
-产物模板位于 `harness-kit/artifact-templates/`（含 `dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`、`research-report.md`）。
+产物模板位于 `harness-kit/artifact-templates/`：**编排类**（`dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`、`research-report.md`）；**stage skill 契约**（`spec.harness-overlay.md`、`plan.harness-overlay.md`、`dispatch.harness-overlay.md`）；`spec.md`/`plan.md` 仅为 redirect stub。
 
 完成入口和工具适配投影后，读取 `harness-kit/init/project-profiler.prompt.md`。
 

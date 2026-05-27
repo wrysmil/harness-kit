@@ -2,10 +2,10 @@
 
 ## 新功能
 
-1. 使用 `superpowers:brainstorming` 产出 spec。澄清需求时**优先**用环境内的 ask 类工具（如 Cursor `AskQuestion`）提问；不可用则用对话逐条问。
-2. 将 spec 保存到 `.ai-runtime-artifacts/specs/`。
+1. 先 Read/invoke **`brainstorming`** skill（`SKILL.md`），再按 skill 流程产出 spec；澄清需求时**优先**用 ask 类工具（如 Cursor `AskQuestion`）；不可用则对话逐条问。
+2. 将 spec 保存到 `.ai-runtime-artifacts/specs/`（勿默认写入 `docs/superpowers/`）；契约见 `artifact-templates/spec.harness-overlay.md`。
 3. **Plan 判定（条件分支）：**
-   - spec 涉及多模块协调 / 有先后依赖 / 需要分步编排 → 使用 `superpowers:writing-plans` 产出实施计划
+   - spec 涉及多模块协调 / 有先后依赖 / 需要分步编排 → 先 Read **`writing-plans`** skill，再写 plan 至 `.ai-runtime-artifacts/plans/`；并行时另写同 stem `*-dispatch.md`
    - spec 已确认后被修改（范围扩大或方向变化）→ 触发 plan（重新编排）
    - 变更范围单一模块内、无依赖序 → 跳过 plan，直接实现（在 spec front matter route 中记录 `skip:plan(reason)`）
    - 用户显式说"不需要计划"/"直接做" → 跳过 plan

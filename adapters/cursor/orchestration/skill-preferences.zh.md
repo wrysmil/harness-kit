@@ -1,4 +1,6 @@
-# Skill 使用偏好说明（按需加载）
+# Skill 使用偏好说明（WU 级，按需加载）
+
+> **范围：** 本文档仅 **子 Agent / WU**（`wu_skills: auto`）。**Leader 阶段 skill**（`brainstorming`、`writing-plans`、`verification-before-completion`、`git-xywh`）见 `harness-kit/core/routing.md` § 阶段指定 skill 必用 — **必 Load**，不适用下文「按需」。
 
 本文档是 Harness **子 Agent 应加载哪些 skill** 的**唯一维护入口**（文档维护，**不是** skill 文件）。
 
@@ -134,6 +136,6 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 ## 维护
 
-- 改路由：**只改本文档** § 默认路由表，并同步 `artifact-templates/plan.md` 示例（如有）。
+- 改路由：**只改本文档** § 默认路由表；plan 执行图见 `artifact-templates/dispatch.harness-overlay.md`。
 - 升级能力副本：`bash harness-kit/scripts/sync-cursor-skills.sh`。
 - 项目专有 skill：放在 `.cursor/skills/<name>/`，在 plan 的 `wu_skills` 手写或 `overrides` 追加。

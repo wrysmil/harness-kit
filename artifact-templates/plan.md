@@ -1,44 +1,11 @@
----
-artifact: implementation-plan
-route: superpowers:writing-plans
-skills:
-  - writing-plans
-source:
-  - AGENTS.md
-  - harness-kit/core/routing.md
-created_at: <YYYY-MM-DD>
----
+# 已迁移 — 勿作 plan 正文模板
 
-# <Topic> Implementation Plan
+**正文：** 先 Load **`writing-plans`** skill（Read `SKILL.md`），按 skill 撰写实施计划。
 
-## 目标
+**Harness 契约（front matter、`## Next`、`dispatch:`）：** `harness-kit/artifact-templates/plan.harness-overlay.md`
 
-## 文件结构
+**执行图（并行）：** 同 stem 的 `*-dispatch.md`，模板 `harness-kit/artifact-templates/dispatch.harness-overlay.md`
 
-## 任务
+**落盘路径：** `.ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`
 
-> **Leader** 在 WU 验证通过后更新勾选（见 `orchestration/runtime/plan-progress-sync.md`）。子 Agent 不直接改本文件。
-
-并行实现时，Leader 拆 WU 并标注 `wu_type` / `wu_skills`（推荐 **`auto`**，查 `harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`）。
-
-- [ ] 步骤 1：…
-- [ ] 步骤 2：…
-
-## 执行图（并行时由 Leader 填写，可选）
-
-```markdown
-GROUP-1:
-  WU-01: … | 文件: … | wu_type: feature | wu_skills: auto
-```
-
-## 验证
-
-## 风险
-
-## Next
-
-**（写入后须暂停，等用户明确继续 — 见 `harness-kit/core/routing.md` § 阶段门禁）**
-
-- 计划确认 → 说「开始实现」或「执行」
-- 需要调整 → 直接说修改意见
-- 想拆分并行 → 说「并行执行」
+详见 `harness-kit/core/artifacts.md` § Skill 产物 vs Harness 模板。

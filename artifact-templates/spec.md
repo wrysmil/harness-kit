@@ -1,32 +1,9 @@
----
-artifact: spec
-route: superpowers:brainstorming
-skills:
-  - brainstorming
-source:
-  - AGENTS.md
-  - harness-kit/core/routing.md
-created_at: <YYYY-MM-DD>
----
+# 已迁移 — 勿作 spec 正文模板
 
-# <Topic> Spec
+**正文：** 先 Load **`brainstorming`** skill（Read `SKILL.md`），按 skill 流程撰写。
 
-## 背景
+**Harness 契约（front matter、`## Next`）：** `harness-kit/artifact-templates/spec.harness-overlay.md`
 
-## 目标
+**落盘路径：** `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-spec.md`
 
-## 非目标
-
-## 方案
-
-## 风险
-
-## 验收
-
-## Next
-
-**（写入后须暂停，等用户明确继续 — 见 `harness-kit/core/routing.md` § 阶段门禁）**
-
-- 确认方案无误 → 说「写计划」或「制定实施计划」
-- 变更范围小、无需计划 → 说「直接实现」或「直接做」
-- 需要调整方案 → 直接说修改意见
+详见 `harness-kit/core/artifacts.md` § Skill 产物 vs Harness 模板。

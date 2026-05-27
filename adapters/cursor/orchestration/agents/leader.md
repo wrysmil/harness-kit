@@ -9,7 +9,7 @@
 
 ---
 
-## 阶段链（推荐 skill）
+## 阶段链（阶段 skill，必用）
 
 ```text
 superpowers:brainstorming → [门禁：用户确认 spec]

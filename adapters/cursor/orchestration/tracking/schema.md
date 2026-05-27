@@ -15,7 +15,7 @@
 | `../HANDOFF.md` | 上下文重置检查点（覆盖写） | Leader |
 | `../PROGRESS.md` | 周期级紧凑摘要（可选） | Leader |
 
-模板见 `harness-kit/artifact-templates/dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`。
+模板见 `dispatch-track.md`、`handoff.md`、`progress.md`、`wu-checklist.md`；plan 配对执行图见 `dispatch.harness-overlay.md`（`.ai-runtime-artifacts/plans/*-dispatch.md`）。
 
 ---
 

@@ -58,7 +58,8 @@ created_at: 2026-05-14
 | `artifact` | 产物类型 |
 | `route` | 本次任务经过的路由 |
 | `skills` | 实际使用的 skill slug；route 含阶段 skill 时**禁止空** |
-| `skills_evidence` | 可选；已 Read 的 `SKILL.md` 路径或 `skipped: …` |
+| `skills_evidence` | P0 可选（overlay 有示例）；**P1 起** route 含 stage skill 时**必填**至少一条 path 或 `skipped: <slug> (not found)` |
+| `dispatch` | 仅 `implementation-plan`：指向同 stem 的 `*-dispatch.md`；单 WU 可 `n/a` |
 | `source` | 产物依据的入口、规则、需求或上下文 |
 | `created_at` | 创建日期，格式 `YYYY-MM-DD` |
 
@@ -66,6 +67,7 @@ created_at: 2026-05-14
 
 - `spec`
 - `implementation-plan`
+- `implementation-dispatch`
 - `review`
 - `verification`
 - `execution-log`
@@ -80,6 +82,21 @@ created_at: 2026-05-14
 - `runbook`
 - `project-profile`
 - `context-map`
+
+## Skill 产物 vs Harness 模板
+
+| 类型 | 正文从哪来 | Harness 提供 |
+| --- | --- | --- |
+| spec（`brainstorming`） | **SKILL.md** 流程与结构 | `spec.harness-overlay.md`（FM + `## Next`） |
+| plan（`writing-plans`） | **SKILL.md**（Task 细步等） | `plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md` |
+| verification 等 stage skill | skill 纪律 + 简短记录 | `verification.md` 或 overlay 示例 |
+| execution-log、track、handoff、wu-checklist 等 | **artifact-templates/** 全文 | 无对应 stage skill |
+
+**路径覆盖：** 接入 Harness 的项目，brainstorming / writing-plans 产物写入 `.ai-runtime-artifacts/`，不默认写入 `docs/superpowers/`（除非用户要求双份）。
+
+**禁止：** 用 `artifact-templates/spec.md` / `plan.md` 短提纲代替 skill 正文（二者已为 redirect stub）。
+
+**plan + dispatch 命名：** `YYYY-MM-DD-<topic>-plan.md` 与 `YYYY-MM-DD-<topic>-dispatch.md` 同 stem；plan FM 含 `dispatch:` 指针。
 
 ## 规则
 

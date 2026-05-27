@@ -1,8 +1,8 @@
 ---
 artifact: execution-log
-route: <实际使用的路由>
+route: cursor-orchestration:dispatcher-workflow
 skills:
-  - <skill>
+  - cursor-orchestration
 source:
   - <对应的 spec 或 plan 路径>
 created_at: <YYYY-MM-DD>

@@ -7,13 +7,16 @@ platform: cursor | codex
 route: harness-kit:internal
 ---
 
+> **部分条款已由下文覆盖（实施以新 spec 为准，本文 status 保持 approved）：**  
+> [`2026-05-27-skill-native-artifacts-and-routing-alignment.md`](./2026-05-27-skill-native-artifacts-and-routing-alignment.md) — Skill 原生产物、按判定加载顺序、`*-dispatch.md`、`artifact-templates` stub，**禁止**用短模板代替 skill 正文。
+
 # 阶段指定 Skill 必用 — 完整方案
 
 ## 1. 背景与问题
 
 ### 1.1 现象
 
-- Leader 声明 `「Harness：superpowers:brainstorming」`，但未 Read / invoke `brainstorming`，直接读 `routing.md`、`artifact-templates/spec.md` 后写 spec。
+- Leader 声明 `「Harness：superpowers:brainstorming」`，但未 Read / invoke `brainstorming`，直接读 `routing.md`、~~`artifact-templates/spec.md`~~（已废弃为正文模板，见 skill-native-artifacts spec）后写 spec。
 - 产物 front matter 中 `skills:` 为空，与 `route` 不一致。
 - 子 Agent 收到 `wu_skills: auto` 后未查 `skill-preferences.zh.md`，或未在返回中报告 `Skills 使用`。
 

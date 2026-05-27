@@ -14,18 +14,21 @@ alwaysApply: true
 
 ## 每任务（必做）
 
-1. 首句：`「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill → 次行 `Skills:`，先 Load 再交付（`routing.md` § 阶段指定 skill 必用）
+1. 首句：`「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill → 次行 `Skills:`，**先 Load SKILL.md 再交付**（`routing.md` § 阶段指定 skill 必用）
 2. **沟通语言：** 对用户回复与子 Agent 派发/整合使用**中文**（`routing.md` § 沟通语言）
-3. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 追加文件（禁止跳过路由表）
+3. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 **追加**（先 stage skill，再 artifacts 契约）
 
 ## 按 routing 判定加载（勿在会话开始预读）
 
-| 判定 | 再读 |
+| 判定 | 再读（按序） |
 | --- | --- |
+| 设计 / spec | `brainstorming` skill → `core/artifacts.md`（勿用 `artifact-templates/spec.md` 作正文） |
+| 计划 | `writing-plans` skill → `artifacts.md` → `artifact-templates/plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md` |
+| 验证 | `verification-before-completion` → `project.verification.md`、`core/verification.md` |
+| 决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | 多 task / 已批准 plan | `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md` |
 | 派发 WU（`wu_skills: auto`） | `orchestration/skill-preferences.zh.md` |
-| 写 spec / plan / decision | `core/artifacts.md` + 对应 `artifact-templates/` |
 | Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
-| 改代码 / 验证 | `project.profile.md`、`context-map.md`（涉及模块时）、`project.verification.md`、`core/verification.md` |
+| 改代码 / 验证（实现阶段） | `project.profile.md`、`context-map.md`（涉及模块时） |
 
 委派与禁止项：见 `cursor-subagent-routing.mdc`（本文件不重复）。

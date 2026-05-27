@@ -50,21 +50,23 @@
 
 完成路由判定后，**仅**加载下表对应文件（小改动：声明后直接处理，无需读本表）。
 
-| 判定（路由表 / 用户任务） | 再读 |
+| 判定（路由表 / 用户任务） | 再读（按序） |
 | --- | --- |
 | 小改动 / 单文件机械修改 | 无（可选：`project.profile.md` 若需项目上下文） |
-| 需求澄清 / 方案设计 | `artifacts.md` + `artifact-templates/spec.md`；涉及模块时 `project.profile.md`、`context-map.md` |
-| 实施计划 | `artifacts.md` + `artifact-templates/plan.md` |
+| 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
+| 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
 | 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `adapters/cursor/orchestration/dispatcher-workflow.md`；派发 WU 时 `skill-preferences.zh.md` |
 | 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流文档 |
-| 代码审查 / 验证 | `project.verification.md`、`core/verification.md` |
-| 缺陷调查 | `project.profile.md`；Cursor 委派时各 subagent 正文见 `orchestration/agents/` |
+| 代码审查 / 验证 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
+| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `orchestration/agents/` |
 | 信息调研 / 网页搜索 | 委派 `harness-web-investigator` → `orchestration/agents/web-investigator.md` |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
 
 **禁止：** 在未判定 route 前预读 `dispatcher-workflow.md`、`skill-preferences.zh.md` 或全套 `project.*`。
+
+**Skill 产物：** 上表中带 stage skill 的阶段，正文以已 Load 的 `SKILL.md` 为准；`artifact-templates/spec.md` / `plan.md` 仅为 redirect stub。契约与门禁见 `spec.harness-overlay.md`、`plan.harness-overlay.md`；执行图见 `dispatch.harness-overlay.md`。无 stage skill 的编排产物仍用 `artifact-templates/`（execution-log、track、handoff 等）。
 
 ### "小改动"判定标准
 
@@ -111,6 +113,7 @@
 ## 阶段指定 skill 必用
 
 - 路由表 **Route 列**写明的 skill：本阶段**必须** Load（Read `SKILL.md` 或 Skill 工具）并按流程执行；未写明的**不**强制。
+- Load 后**不得**用 `artifact-templates` 同名 stub/旧提纲的正文替代 skill；Harness 仅提供 overlay（FM、`## Next`、dispatch 指针，见 `artifacts.md`）。
 - 有阶段 skill：先 Load → 再交付该阶段产物；`skills` 非空且与 route 一致（见 `artifacts.md`）。
 - 子 Agent：prompt「本 WU Skills」所列**必须** Load；返回须 `### Skills 使用`，否则 Leader 不整合。
 - 会话：首句 `「Harness：…」`；本阶段有 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。

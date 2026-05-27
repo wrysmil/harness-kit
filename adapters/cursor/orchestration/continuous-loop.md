@@ -48,7 +48,7 @@ brainstorming → writing-plans → cursor-orchestration → verification-before
 | 阶段 | Cursor 映射 | 产物 |
 | --- | --- | --- |
 | 0 初始化 | Leader 读 routing + PROGRESS | `execution-logs/PROGRESS.md`（可选） |
-| 1 调研 | Task explore（只读） | `specs/` 或 research 摘要 |
+| 1 需求/设计 | Load **brainstorming** → spec（勿仅用 Task explore 代替） | `specs/` 或 research 摘要 |
 | 2 计划 | writing-plans | `plans/` |
 | 3 实现 | cursor-orchestration | `execution-logs/` + 代码 |
 | 4 验证 | verification + reviewer Task | `verifications/` |

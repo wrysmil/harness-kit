@@ -27,7 +27,7 @@
 - **可验证**：有 done criteria（测试、lint 或手工检查点）
 - **所有权清晰**：并行 WU 不修改同一文件
 
-产出简易 worktree（可写在 execution-log 正文或 tracking 文件）：
+产出简易 worktree（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）：
 
 ```markdown
 ## 执行图

@@ -1,8 +1,7 @@
 ---
 artifact: decision-record
-route: <route>
-skills:
-  - <skill>
+route: harness-kit:architecture-decision
+skills: []
 source:
   - AGENTS.md
   - harness-kit/core/routing.md

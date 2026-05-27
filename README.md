@@ -72,7 +72,7 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 | `adapters/codex/` | Codex / OMX 适配 |
 | `adapters/agents/` | 通用 `.agents/skills/`（如 `cursor-orchestration`） |
 | `init/` | 接入与 bootstrap 话术 |
-| `artifact-templates/` | spec / plan / execution-log 等模板 |
+| `artifact-templates/` | 编排模板 + `*-harness-overlay.md`（stage skill 契约）；`spec.md`/`plan.md` 为 stub |
 
 ---
 
@@ -101,8 +101,8 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 
 | 顺序 | 阶段 | 谁 | 你要做什么 | 产物 |
 |:---:|------|-----|------------|------|
-| 1 | 需求与设计 | Leader | 确认范围与验收标准 | `.ai-runtime-artifacts/specs/` |
-| 2 | 实施计划（可选） | Leader | 大改动时确认步骤 | `.ai-runtime-artifacts/plans/` |
+| 1 | 需求与设计 | Leader | 确认范围与验收标准 | `brainstorming` → `.ai-runtime-artifacts/specs/` |
+| 2 | 实施计划（可选） | Leader | 大改动时确认步骤 | `writing-plans` → `plans/` + 并行时 `*-dispatch.md` |
 | 3 | 编码 | Leader 派子 Agent | 说「开始实现」 | 代码 + `execution-logs/` |
 | 4 | 收尾验证 | Leader | 看验收结论 | 验证通过 / execution-log |
 

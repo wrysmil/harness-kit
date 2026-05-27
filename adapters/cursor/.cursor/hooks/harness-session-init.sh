@@ -8,7 +8,7 @@ cat >/dev/null
 
 cat <<'EOF'
 {
-  "additional_context": "Harness Kit：首句声明「Harness：<route>」。spec/plan 写入后须暂停等用户审查（阶段门禁）。实现阶段委派 .cursor/agents/harness-implementer，审查用 harness-reviewer。详见 harness-kit/core/routing.md 与 .cursor/rules/cursor-subagent-routing.mdc。"
+  "additional_context": "Harness Kit：首句「Harness：<route>」；本阶段有 route skill 时次行 Skills: <slug>@<path> loaded。先 Load SKILL.md 再写产物；禁止用 artifact-templates/spec|plan 短模板代替 skill。spec/plan 写入后须暂停（阶段门禁）。详见 harness-kit/core/routing.md。"
 }
 EOF
 exit 0
