@@ -2,7 +2,7 @@
 artifact: spec
 title: "文档审查与质量改进方案"
 date: 2026-05-27
-status: proposed
+status: approved
 platform: cursor | codex
 route: harness-kit:internal
 ---

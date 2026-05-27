@@ -21,6 +21,39 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 
 If you haven't run the verification command in this message, you cannot claim it passes.
 
+## TDD Compliance Gate (MANDATORY)
+
+**When production code was written**, you MUST prove TDD compliance **before** claiming done:
+
+1. **IDENTIFY** files with production code changes
+2. **CHECK** git history for test-first pattern:
+   - Test commit hash: `[hash]`
+   - Code commit hash: `[hash]`
+   - Test commit is **before** code commit: YES/NO
+3. **VERIFY** test quality (read test files, not assumptions):
+   - Happy path covered: YES/NO
+   - Edge cases (null/empty/boundary): YES/NO
+   - Error cases: YES/NO
+4. **RUN** full test suite; confirm 0 failures
+
+**If ANY check fails:**
+- State `TDD compliance FAILED` with evidence
+- **DO NOT** claim completion
+- Fix (delete code and restart with TDD, or add missing tests with red-green proof)
+
+**Evidence format (include in completion message):**
+
+```text
+TDD Compliance:
+- Test commit: abc1234
+- Code commit: def5678
+- Test-first: YES
+- Happy path: YES | Edge cases: YES | Error cases: YES
+- All tests pass: YES (42/42)
+```
+
+**Docs-only / chore-only changes:** State `TDD gate: N/A (no production code)`.
+
 ## The Gate Function
 
 ```
@@ -48,6 +81,7 @@ Skip any step = lying, not verifying
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| TDD compliance | Git log shows test commit before code commit; quality checklist | Code commit without prior test commit; tests added after implementation |
 
 ## Red Flags - STOP
 
@@ -59,6 +93,7 @@ Skip any step = lying, not verifying
 - Thinking "just this once"
 - Tired and wanting work over
 - **ANY wording implying success without having run verification**
+- Git log shows code before tests (TDD violation)
 
 ## Rationalization Prevention
 
@@ -72,6 +107,8 @@ Skip any step = lying, not verifying
 | "I'm tired" | Exhaustion ≠ excuse |
 | "Partial check is enough" | Partial proves nothing |
 | "Different words so rule doesn't apply" | Spirit over letter |
+| "Tests after achieve same goals" | Git log must prove test-first. Tests-after = implementation bias. |
+| "Already spent X hours, deleting is wasteful" | Sunk cost. Unverified code is technical debt. |
 
 ## Key Patterns
 
@@ -103,6 +140,12 @@ Skip any step = lying, not verifying
 ```
 ✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
 ❌ Trust agent report
+```
+
+**TDD compliance:**
+```
+✅ git log --oneline shows: test commit → code commit → verify
+❌ git log shows: code commit → test commit (tests after)
 ```
 
 ## Why This Matters

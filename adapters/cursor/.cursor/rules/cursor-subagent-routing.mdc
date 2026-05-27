@@ -53,6 +53,7 @@ Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
 2. 派发 WU：`auto` 由 Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤5；维护 DISPATCH-TRACK
 3. 整合子 Agent 结果并验证后，再委派 **独立** `harness-reviewer` 或按 spec 合法跳过
 4. 多 task 编排：激活 `cursor-orchestration` skill 后 Read `dispatcher-workflow.md`（勿在会话开始预读）
+5. 文档审查：Load `document-review` skill；代码审查用 `requesting-code-review`（非 document-review）
 
 ## 何时委派 vs 主 Agent 直接做
 

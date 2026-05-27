@@ -45,6 +45,7 @@
 | 建分支 / 提交 / rebase / 开 MR·PR | `git-xywh` + `project.git.md` | 同左 | 无（或用户要求的 MR 链接） |
 | 热修 / 提测线 `test/v*` / 合流 / 打标签 | `git-xywh` + `project.git.md` | 同左 | 无 |
 | Harness 脚手架变更提交 | `git-xywh`（类型 `chore`，范围 `harness-kit`） | 同左 | 与业务 commit 分离 |
+| 文档审查 | `superpowers:document-review` | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
 
 ## 按判定加载
 
@@ -63,6 +64,7 @@
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
+| 文档审查 | **①** Load `document-review` → **②** 根据文档类型加载 `review-rules/*.md` |
 
 **禁止：** 在未判定 route 前预读 `dispatcher-workflow.md`、`skill-preferences.zh.md` 或全套 `project.*`。
 

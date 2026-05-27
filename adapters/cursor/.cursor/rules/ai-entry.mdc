@@ -29,6 +29,7 @@ alwaysApply: true
 | 多 task / 已批准 plan | `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md` |
 | 派发 WU（`wu_skills: auto`） | `orchestration/skill-preferences.zh.md` |
 | Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
+| 文档审查 | `document-review` skill → `artifact-templates/document-review.md` |
 | 改代码 / 验证（实现阶段） | `project.profile.md`、`context-map.md`（涉及模块时） |
 
 委派与禁止项：见 `cursor-subagent-routing.mdc`（本文件不重复）。
