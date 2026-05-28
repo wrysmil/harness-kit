@@ -53,12 +53,13 @@
 
 ## 产物
 
-审查结论写入：
+**你只返回**审查正文（格式见 § 返回格式）；**不要** Write `.ai-runtime-artifacts/`（`harness-reviewer` 为 readonly）。
 
-- `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-review.md`，或
-- execution-log 的「审查」章节（小 WU）
+**Leader** 收到返回后落盘：
 
-front matter 中 `artifact: review`，route 含 `cursor-orchestration`。
+- `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（模板 `artifact-templates/code-review.md`）
+
+front matter 中 `artifact: review`，route 含 `cursor-orchestration` → `batch-closeout`。
 
 ---
 

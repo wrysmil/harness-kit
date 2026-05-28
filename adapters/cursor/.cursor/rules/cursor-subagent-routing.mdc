@@ -51,9 +51,10 @@ Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
 
 1. 路由判定 → 声明 `「Harness：…」`；遵守 **阶段门禁**
 2. 派发 WU：`auto` 由 Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤5；维护 DISPATCH-TRACK
-3. 整合子 Agent 结果并验证后，再委派 **独立** `harness-reviewer` 或按 spec 合法跳过
-4. 多 task 编排：激活 `cursor-orchestration` skill 后 Read `dispatcher-workflow.md`（勿在会话开始预读）
-5. 文档审查：Load `document-review` skill；代码审查用 `requesting-code-review`（非 document-review）
+3. **GROUP 尾盘**：先集体测试（Write `*-collective-test.md`）→ 再集体审查（委派 `harness-reviewer`，Leader Write `*-code-review.md`）；未过禁止声称批次完成
+4. 整合子 Agent 结果后进入尾盘；`code_review: PASS` 不替代集体审查；可按 spec 合法 `SKIPPED`
+5. 多 task 编排：激活 `cursor-orchestration` skill 后 Read `dispatcher-workflow.md`（勿在会话开始预读）
+6. 文档审查：Load `document-review`；**代码**审查用 `requesting-code-review`（非 document-review）
 
 ## 何时委派 vs 主 Agent 直接做
 
@@ -81,3 +82,5 @@ Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
 - 主 Agent 在实现阶段直接改代码（非小改动）
 - 实现与审查同一 subagent 实例
 - 调用 omx CLI；无验证证据声称完成
+- 跳过尾盘集体测试或集体审查（routing「小改动」除外）
+- 未 Write `collective-test` / `code-review` 产物即写 execution-log「批次完成」

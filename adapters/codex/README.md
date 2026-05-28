@@ -7,6 +7,8 @@ Codex 适配分两层：
 
 不要把完整 `.codex/` 作为手写脚手架源头提交。`.codex/agents/`、`.codex/prompts/`、`.codex/skills/` 可由 `omx setup` 生成或刷新；`harness-kit/` 只负责说明如何接入和校验。
 
+**批次收尾（尾盘）：** Cursor 侧见 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`（集体测试 + 集体审查产物）。Codex/OMX 用 `omx` verify/fix 与 reviewer 路由时，同样须在声称批次完成前保留验证证据与审查记录（`verifications/`、`reviews/`）。
+
 新项目接入时，AI 应：
 
 1. 先发送 `harness-kit/init/onboarding-handoff.txt` 全文（或 `bash harness-kit/scripts/harness-init.sh`）；详版见 `harness-kit/init/bootstrap.prompt.md`。

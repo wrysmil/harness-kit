@@ -12,8 +12,9 @@ skills:
     source: ~/.agents/skills/systematic-debugging/SKILL.md
     upstream: obra/superpowers
   requesting-code-review:
-    source: ~/.agents/skills/requesting-code-review/SKILL.md
+    source: ~/.agents/skills/requesting-code-review/
     upstream: obra/superpowers
+    note: "sync copies SKILL.md + code-reviewer.md (copy_skill_dir)"
   receiving-code-review:
     source: ~/.agents/skills/receiving-code-review/SKILL.md
     upstream: obra/superpowers

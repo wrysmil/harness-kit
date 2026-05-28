@@ -77,9 +77,9 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | 角色 | Subagent | 典型 wu_type | auto 默认 |
 | --- | --- | --- | --- |
-| Coder | harness-coder | feature / bugfix / refactor | TDD + verification |
-| Coder | harness-coder | ui | ui-ux-pro-max + frontend-design + TDD + verification |
-| Coder | harness-coder | review-fix | receiving-code-review + TDD + verification |
+| Coder | harness-coder | feature / bugfix / refactor | TDD + verification + requesting-code-review |
+| Coder | harness-coder | ui | ui-ux-pro-max + frontend-design + TDD + verification + requesting-code-review |
+| Coder | harness-coder | review-fix | receiving-code-review + TDD + verification + requesting-code-review |
 | 轻量执行 | harness-implementer | docs / chore / config | 无 |
 | 探查者 | harness-explorer | explore | 无 |
 | 调试者 | harness-debugger | bugfix | systematic-debugging + verification |

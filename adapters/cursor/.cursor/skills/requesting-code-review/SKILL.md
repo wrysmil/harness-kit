@@ -101,3 +101,30 @@ You: [Fix progress indicators]
 - Request clarification
 
 See template at: requesting-code-review/code-reviewer.md
+
+---
+
+## Harness / Cursor 覆盖（强制）
+
+在 **Harness Kit + Cursor** 下，本节优先于上文「Task general-purpose」：
+
+### 委派谁
+
+| 场景 | 机制 |
+| --- | --- |
+| WU 轻量审查 | Coder Load 本 skill → 委派 **`harness-reviewer`**（与实现 **不同实例**） |
+| 尾盘集体审查 | Leader Load 本 skill → 委派 **`harness-reviewer`** |
+| **禁止** | 无 `harness-reviewer` 约束的裸 `generalPurpose` Task |
+
+Prompt 正文：`harness-kit/adapters/cursor/orchestration/agents/reviewer.md`；可选占位符见同目录 `code-reviewer.md`。
+
+### 落盘（禁止仅对话输出）
+
+| 角色 | 职责 |
+| --- | --- |
+| `harness-reviewer` | readonly；**只返回** `APPROVE` \| `BLOCK` + Findings |
+| **Leader** | 收到返回后 **Write** `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（`artifact-templates/code-review.md`） |
+
+### 与尾盘集体测试的顺序
+
+GROUP 收尾：**先**集体测试（`collective-test.md`）**再**本 skill 集体审查。细则：`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。

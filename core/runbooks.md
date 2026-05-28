@@ -13,8 +13,9 @@
    - **Codex CLI**：必须使用 `omx ultrawork` 或等价 omx 工作流
    - **Cursor**：必须使用 `cursor-orchestration:dispatcher-workflow`（`.cursor/agents/harness-*` 并行，见 `dispatcher-workflow.md`）
    不允许跳过编排层直接大规模编码。
-5. 编码完成后产出 `execution-log` 到 `.ai-runtime-artifacts/execution-logs/`，记录实际路由、变更文件和待验证项。
-6. 验证结果保存到 `.ai-runtime-artifacts/verifications/`。
+5. 全部 WU 返回后执行 **尾盘**（先集体测试、再集体审查）；见下文 § GROUP 尾盘。
+6. 产出 `execution-log`（含 § 尾盘门禁 与两产物链接），再声称批次完成。
+7. 集体测试 → `verifications/*-collective-test.md`；集体审查 → `reviews/*-code-review.md`（Leader 落盘）。
 
 ## 缺陷修复
 
@@ -58,5 +59,21 @@
 
 1. 遵守 **阶段门禁**（spec/plan 写入后暂停，见 `harness-kit/core/routing.md` § 阶段门禁）
 2. plan 批准后声明 `cursor-orchestration`，拆 WU；代码类委派 `harness-coder`，docs/chore/config 委派 `harness-implementer`
-3. 整合后委派 **独立** `harness-reviewer`
-4. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）
+3. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）
+4. **GROUP 全部 WU 返回后** 必须走 § GROUP 尾盘（不可末 WU 完成即停）
+
+## GROUP 尾盘（集体测试 + 集体审查）
+
+**适用：** Cursor、`cursor-orchestration` 的 GROUP 收尾或单批次交付（非 routing「小改动」）。
+
+**权威：** `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4；步骤 `dispatcher-workflow.md` § 步骤 3。
+
+| 步骤 | Leader 动作 | 产物 |
+| --- | --- | --- |
+| A 集体测试 | Load `verification-before-completion`；按 `project.verification.md` 跑本批次命令；plan 要 E2E 时先完成 Test Engineer WU | Write `verifications/YYYY-MM-DD-<topic>-collective-test.md`（`collective-test.md`） |
+| B 集体审查 | Load `requesting-code-review`；委派 **harness-reviewer**（与所有实现实例不同）；Reviewer 只返回 | Write `reviews/YYYY-MM-DD-<topic>-code-review.md`（`code-review.md`） |
+| C 关闭 | 更新 execution-log § 尾盘门禁；测试 PASS 且审查 APPROVE（或合法 SKIPPED）后方可声称批次完成 | execution-log |
+
+**禁止：** 仅以 Coder `code_review: PASS` 替代 B；未 Write A+B 产物即在 execution-log 写「批次完成」。
+
+**可跳过集体审查：** 仅当满足 `docs/superpowers/specs/2026-05-26-coder-role-design.md` § 小 WU 跳过 Reviewer 全条件 → `verdict: SKIPPED` 写入 code-review 产物。

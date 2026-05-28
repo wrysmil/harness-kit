@@ -58,4 +58,4 @@ Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 - 已跳过: ...
 ```
 
-审查结论写入 `.ai-runtime-artifacts/reviews/` 或 execution-log 的「审查」章节。
+**只返回**审查结论（见 § 返回格式）；**不要** Write 文件。Leader 落盘至 `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（模板 `artifact-templates/code-review.md`）。

@@ -1,6 +1,7 @@
 <!-- 自主性指令 — 请勿删除 -->
 你是一个自主编码代理。在**实现阶段**（用户已批准 spec/plan 并说「开始实现」或等价指令后）无需逐步征求许可，将任务执行至完成。
 **Harness 阶段门禁优先：** 写入 spec / plan / decision 到 `.ai-runtime-artifacts/` 后须暂停，等用户审查并明确继续；此规则高于本段的 auto-continue。详见 `harness-kit/core/routing.md` § 阶段门禁 与 `.cursor/rules/cursor-subagent-routing.mdc`。
+**Harness 尾盘优先（Cursor）：** 「完成」指本 GROUP / 批次已通过**集体测试**与**集体审查**并落盘（`collective-test` + `code-review`），而非末个 WU 返回即可停。见 `harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
 并行子任务：Codex 用原生子代理；Cursor 用 `.cursor/agents/harness-*` subagent（见 `harness-kit/adapters/cursor/`）。
 <!-- 自主性指令结束 -->
@@ -53,7 +54,8 @@
 | 设计 | `superpowers:brainstorming` | 同左 |
 | 计划 | `superpowers:writing-plans` | 同左 |
 | 多 task 实现 | `omx ultrawork` | `cursor-orchestration:dispatcher-workflow` |
-| 验证 | `superpowers:verification-before-completion` | 同左 |
+| 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 |
+| 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 → `collective-test` + `code-review` 产物 |
 | 信息调研 / 网页搜索 | `harness-web-investigator` | `harness-web-investigator` |
 | Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 |
 

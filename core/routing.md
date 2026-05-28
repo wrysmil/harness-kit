@@ -35,9 +35,11 @@
 | 需求澄清 / 方案设计 / 行为变更 | `superpowers:brainstorming` | `superpowers:brainstorming` | `.ai-runtime-artifacts/specs/` |
 | 实施计划 | `superpowers:writing-plans` | `superpowers:writing-plans` | `.ai-runtime-artifacts/plans/` |
 | 多 task 编码 / 并行实现 | `omx ultrawork` 或等价 omx 工作流 | `cursor-orchestration:dispatcher-workflow` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
-| 代码审查 / 验证 | `superpowers:verification-before-completion` | `superpowers:verification-before-completion` | `.ai-runtime-artifacts/verifications/` |
+| 验证 / 跑命令证据 | `superpowers:verification-before-completion` | `superpowers:verification-before-completion` | `.ai-runtime-artifacts/verifications/` |
+| 代码审查（尾盘/批次） | `requesting-code-review` | `requesting-code-review` + `cursor-orchestration` | `.ai-runtime-artifacts/reviews/` |
+| **批次收尾（尾盘）** | `verification-before-completion` → `requesting-code-review` | 先 `verification-before-completion`，再 `requesting-code-review` | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
 | 缺陷调查 | `superpowers:systematic-debugging` 或 `omx` debugger 路由 | `superpowers:systematic-debugging` + `harness-debugger` 或 `harness-explorer` | `.ai-runtime-artifacts/specs/` 或 `.ai-runtime-artifacts/verifications/` |
-| 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立 `harness-reviewer` | `.ai-runtime-artifacts/verifications/` |
+| 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立 `harness-reviewer` | `.ai-runtime-artifacts/verifications/` + `.ai-runtime-artifacts/reviews/` |
 | 架构决策 | architect / critic / planner 组合 | Task `generalPurpose`（只读）× 多轮 + decision 产物 | `.ai-runtime-artifacts/decisions/` |
 | 信息调研 / 网页搜索 / 截图取证 | `harness-web-investigator` | `harness-web-investigator` | `.ai-runtime-artifacts/research/` |
 | 文章 / 知识沉淀 / 对外文档 | `superpowers:brainstorming` + 写作风格 skill + 文档发布 skill | 同左 | `.ai-runtime-artifacts/retros/` 或用户指定位置 |
@@ -58,7 +60,9 @@
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
 | 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `adapters/cursor/orchestration/dispatcher-workflow.md`；派发 WU 时 `skill-preferences.zh.md` |
 | 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流文档 |
-| 代码审查 / 验证 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
+| 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
+| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；Cursor 委派 `harness-reviewer`（Leader 落盘） |
+| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** `requesting-code-review` → `artifact-templates/code-review.md` **③** `dispatcher-workflow.md` § 步骤 3 **④** `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` |
 | 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `orchestration/agents/` |
 | 信息调研 / 网页搜索 | 委派 `harness-web-investigator` → `orchestration/agents/web-investigator.md` |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
@@ -96,6 +100,8 @@
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
 **Cursor 实现阶段：** 用户说「开始实现」后，Leader 须按 `wu_type` 委派：代码类 WU → `.cursor/agents/harness-coder`；`docs`/`chore`/`config` → `harness-implementer`。不得在主线程直接改业务代码（「小改动」除外）。详见 `.cursor/rules/cursor-subagent-routing.mdc`。
+
+**Cursor 交付完成：** 本 GROUP / 批次全部 WU 返回后，**默认进入尾盘**（集体测试 → 集体审查 → Leader 落盘两产物 → 更新 execution-log）。**完成** ≠ 末个 WU 返回；须满足 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4（小改动除外）。
 
 ## Git 协作
 

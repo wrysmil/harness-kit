@@ -8,8 +8,8 @@ AI 过程产物统一放在项目根目录 `.ai-runtime-artifacts/`：
 | --- | --- |
 | `.ai-runtime-artifacts/specs/` | 需求理解、方案设计、设计说明 |
 | `.ai-runtime-artifacts/plans/` | 实施计划、任务拆解 |
-| `.ai-runtime-artifacts/reviews/` | 代码审查、方案审查 |
-| `.ai-runtime-artifacts/verifications/` | 验证报告、doctor 输出摘要、测试结果 |
+| `.ai-runtime-artifacts/reviews/` | 代码审查（`*-code-review.md`）、文档审查（`*-document-review.md`） |
+| `.ai-runtime-artifacts/verifications/` | 验证报告、**集体测试**（`*-collective-test.md`）、doctor 摘要 |
 | `.ai-runtime-artifacts/decisions/` | 架构决策、技术取舍 |
 | `.ai-runtime-artifacts/retros/` | 复盘、阶段总结 |
 | `.ai-runtime-artifacts/research/` | 网探调研报告、截图取证（`research/screenshots/`） |
@@ -28,8 +28,18 @@ YYYY-MM-DD-<topic>-<artifact>.md
 2026-05-14-ai-agent-harness-spec.md
 2026-05-14-ai-agent-harness-plan.md
 2026-05-14-ai-agent-harness-verification.md
+2026-05-28-auth-batch-collective-test.md
+2026-05-28-auth-batch-code-review.md
 2026-05-26-react-19-research-report.md
 ```
+
+**尾盘命名约定：**
+
+| 后缀 | 目录 | 模板 |
+| --- | --- | --- |
+| `-collective-test.md` | `verifications/` | `artifact-templates/collective-test.md` |
+| `-code-review.md` | `reviews/` | `artifact-templates/code-review.md` |
+| `-document-review.md` | `reviews/` | `artifact-templates/document-review.md` |
 
 ## Front Matter
 
@@ -89,7 +99,8 @@ created_at: 2026-05-14
 | --- | --- | --- |
 | spec（`brainstorming`） | **SKILL.md** 流程与结构 | `spec.harness-overlay.md`（FM + `## Next`） |
 | plan（`writing-plans`） | **SKILL.md**（Task 细步等） | `plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md` |
-| verification 等 stage skill | skill 纪律 + 简短记录 | `verification.md` 或 overlay 示例 |
+| verification 等 stage skill | skill 纪律 + 简短记录 | `verification.md`、`collective-test.md` |
+| 尾盘集体审查 | Reviewer 返回 + Leader 落盘 | `code-review.md` |
 | execution-log、track、handoff、wu-checklist 等 | **artifact-templates/** 全文 | 无对应 stage skill |
 
 **路径覆盖：** 接入 Harness 的项目，brainstorming / writing-plans 产物写入 `.ai-runtime-artifacts/`，不默认写入 `docs/superpowers/`（除非用户要求双份）。

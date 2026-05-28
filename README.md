@@ -144,17 +144,31 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | 轻量审查 | `requesting-code-review` + 独立 reviewer；`code_review: PASS` |
 | 开发者自检 | `self_check: PASS` 才能报完成 |
 
-返回含 `wu_status`；**plan 勾选由 Leader 写**。批次收尾 Leader 派 **Reviewer** 集体审查（见 `dispatcher-workflow.md`）。
+返回含 `wu_status`；**plan 勾选由 Leader 写**。末个 WU 返回 **≠ 批次完成**，须走 **尾盘**（见下）。
 
-### 还要不要 Reviewer？
+### GROUP 尾盘（集体测试 → 集体审查）
 
-| 情况 | 要不要派 `harness-reviewer` |
-|------|---------------------------|
+本 GROUP 全部 WU 返回后，Leader **必须**（细则 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`）：
+
+| 顺序 | 动作 | 落盘 |
+| --- | --- | --- |
+| 1 | 按 `project.verification.md` 跑本批次验证（先测后审） | `verifications/*-collective-test.md` |
+| 2 | 委派 **harness-reviewer**（独立实例）；Reviewer 只返回，Leader Write | `reviews/*-code-review.md` |
+| 3 | 更新 execution-log § 尾盘门禁 | 两产物链接 + 结论 |
+
+**完成** = 上表 1–3 通过，不是末个 Coder 报 `done`。
+
+### 还要不要集体 Reviewer？（尾盘 B）
+
+| 情况 | 尾盘 `harness-reviewer` |
+|------|-------------------------|
 | 改文件 >5，或动到安全/鉴权/支付 | **必须** |
 | 公共 API、DB 迁移、跨模块架构 | **必须** |
 | 你明确要求审查 | **必须** |
 | Coder 自检 FAIL 或有未关 Important | **必须** |
-| 改文件 ≤5、无上面风险、自检 PASS、验证过 | **可跳过**（Leader 在 log 里记原因） |
+| 改文件 ≤5、无上面风险、自检 PASS、集体测试 PASS | **可 SKIPPED**（写入 `code-review` 产物 + 依据） |
+
+WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B。
 
 ### 并行：WU 怎么拆
 

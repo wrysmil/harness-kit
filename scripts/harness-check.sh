@@ -53,6 +53,9 @@ required_kit_files=(
   "artifact-templates/plan.harness-overlay.md"
   "artifact-templates/dispatch.harness-overlay.md"
   "artifact-templates/verification.md"
+  "artifact-templates/collective-test.md"
+  "artifact-templates/code-review.md"
+  "artifact-templates/document-review.md"
   "artifact-templates/decision.md"
   "artifact-templates/dispatch-track.md"
   "artifact-templates/handoff.md"
@@ -276,6 +279,46 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
   fi
 else
   echo "skip: .ai-runtime-artifacts (not initialized)"
+fi
+
+# P2: warn when execution-log looks like a Cursor batch run but omits batch-closeout artifacts (non-fatal)
+if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
+  echo "==> Checking execution-log batch-closeout links (warn only)"
+  closeout_warn=0
+  while IFS= read -r elog; do
+    [[ -f "$elog" ]] || continue
+    base="$(basename "$elog")"
+    [[ "$base" == "HANDOFF.md" ]] && continue
+    [[ "$base" == README.md ]] && continue
+    content="$(<"$elog")"
+    if ! printf '%s' "$content" | rg -q 'cursor-orchestration|dispatcher-workflow'; then
+      continue
+    fi
+    missing=()
+    if ! printf '%s' "$content" | rg -q '尾盘门禁|collective-test'; then
+      missing+=("尾盘门禁或 collective-test 链接")
+    fi
+    if ! printf '%s' "$content" | rg -q 'code-review'; then
+      missing+=("code-review 链接")
+    fi
+    if [[ ${#missing[@]} -gt 0 ]]; then
+      echo "warn: $elog — Cursor 编排 execution-log 建议含尾盘产物引用（${missing[*]}）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+      closeout_warn=1
+    fi
+    if printf '%s' "$content" | rg -qi '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
+      if ! printf '%s' "$content" | rg -q 'collective-test.*PASS|verdict: PASS'; then
+        echo "warn: $elog — 声称批次完成但未引用 collective-test PASS" >&2
+        closeout_warn=1
+      fi
+      if ! printf '%s' "$content" | rg -q 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
+        echo "warn: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED" >&2
+        closeout_warn=1
+      fi
+    fi
+  done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort)
+  if [[ "$closeout_warn" -eq 0 ]]; then
+    echo "ok: execution-log batch-closeout (no warnings)"
+  fi
 fi
 
 if [[ -f package.json ]]; then

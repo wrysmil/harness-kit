@@ -79,17 +79,28 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 
 **不要**传给子 Agent：`brainstorming`、`writing-plans`、`cursor-orchestration`、`git-xywh`。
 
-## 步骤 3：整合与门禁
+## 步骤 3：整合与尾盘门禁
 
-**单 WU 返回后：** 验证 → plan / tracking 由 Leader 更新（`plan-progress-sync.md`）。
+**单 WU 返回后：** 验证返回字段 → plan / tracking 由 Leader 更新（`plan-progress-sync.md`）。**不在此写批次完成态。**
 
-**GROUP 收尾：**
+**GROUP 收尾（先测后审，Leader 落盘）：** 细则 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4。
 
 1. 收集 WU 结果；处理冲突
-2. 跑 `project.verification.md`；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
-3. **审查门禁**：委派 `harness-reviewer` 审**本批次整合面**（与任一实现 Coder **不同实例**）；`code_review: PASS` 不替代本步。可跳过条件见 `docs/superpowers/specs/2026-05-26-coder-role-design.md` § 小 WU 跳过 Reviewer
-4. `BLOCK` → `review-fix` WU 派 Coder；`APPROVE` 或合法跳过 → execution-log（跳过记理由）
-5. 未过步骤 3 不得声称 GROUP 交付完成
+2. **步骤 A — 集体测试**
+   - Leader Load `verification-before-completion` + `project.verification.md`
+   - 按本批次 diff 跑最小验证集；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
+   - **Write** `.ai-runtime-artifacts/verifications/YYYY-MM-DD-<topic>-collective-test.md`（模板 `artifact-templates/collective-test.md`）
+   - 任一必跑项 **FAIL** → STOP，开 bugfix WU；**不得**进入步骤 B
+3. **步骤 B — 集体代码审查**
+   - Leader Load `requesting-code-review`；委派 **`harness-reviewer`**（与所有 Coder/Implementer **不同实例**；禁无约束 `generalPurpose`）
+   - Reviewer **只返回**（readonly，不 Write）；`code_review: PASS` **不替代**本步
+   - Leader 将返回 **Write** `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（模板 `artifact-templates/code-review.md`）
+   - 可跳过条件：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 小 WU 跳过 Reviewer → `verdict: SKIPPED` + 依据写入 review 产物
+4. **步骤 C — 批次关闭**
+   - 更新 execution-log § 尾盘门禁（链接上述两产物路径）
+   - `BLOCK` → `review-fix` WU → 回到步骤 A（至少重跑受影响验证）
+   - `APPROVE` 或合法 `SKIPPED` 且集体测试 PASS → 方可声称 GROUP 交付完成
+5. 未过步骤 A+B（及 C 落盘）**不得**声称 GROUP 交付完成
 
 ## 步骤 4：追踪（并行编排时**必须**）
 
@@ -125,7 +136,9 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 | 需求 / 设计 | `superpowers:brainstorming` |
 | 计划 | `superpowers:writing-plans` |
 | **本工作流** | `cursor-orchestration` |
-| 完成前验证 | `superpowers:verification-before-completion` |
+| 尾盘集体测试 | `superpowers:verification-before-completion` |
+| 尾盘集体审查 | `requesting-code-review` |
+| 单点验证（非尾盘） | `superpowers:verification-before-completion` |
 
 ---
 
@@ -135,3 +148,8 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 - 一个 Task 包整个 epic（范围过大 → 超时/ killed）
 - 实现与审查同一 Task
 - 跳过 execution-log 声称完成
+- 末个 WU 返回后直接「批次 / GROUP 完成」（须先尾盘 A 集体测试 + B 集体审查）
+- 跳过集体测试或未 Write `*-collective-test.md` 即进入审查或声称完成
+- 仅以 Coder `code_review: PASS` 替代尾盘 `harness-reviewer` 集体审查
+- 未 Write `*-code-review.md` 即在 execution-log 写批次交付完成
+- Reviewer 会话内 Write `.ai-runtime-artifacts/`（应由 Leader 落盘）

@@ -36,6 +36,8 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 
 派发子 Agent 时须含 **「本 WU Skills」**（推荐 `auto`）、`agent_role`、`wu_type`。偏好表：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`。代码 WU → `harness-coder`；测试 WU → `harness-test-engineer`。
 
+**GROUP 全部 WU 返回后：** 进入 **尾盘**（先集体测试 → 再集体审查 → Leader 落盘两产物 → 更新 execution-log）。见 `dispatcher-workflow.md` § 步骤 3 与 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
+
 ---
 
 ## 禁止
@@ -45,3 +47,6 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 - 实现与审查同一 subagent 实例
 - `omx` CLI；无 tracking 的并行 WU；无 execution-log 完成声明
 - 仅在聊天回复里输出 `[√]` 而不改 plan / CHECKLIST 文件
+- 末个 WU 完成即停（须尾盘 collective-test + code-review 落盘）
+- 跳过集体测试或未 Write `*-collective-test.md` 即派集体审查或声称 GROUP 完成
+- 未 Write `*-code-review.md` 即在 execution-log 声称批次交付完成

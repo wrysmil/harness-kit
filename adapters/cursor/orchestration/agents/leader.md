@@ -14,7 +14,10 @@
 ```text
 superpowers:brainstorming → [门禁：用户确认 spec]
 → superpowers:writing-plans → [门禁：用户确认 plan]
-→ cursor-orchestration → superpowers:verification-before-completion
+→ cursor-orchestration（实现 / 派发 WU）
+→ [尾盘] verification-before-completion（集体测试，Leader 落盘 collective-test）
+→ [尾盘] requesting-code-review（集体审查，Leader 落盘 code-review）
+→ execution-log 关闭
 ```
 
 **需求获取（brainstorming）：** 优先使用环境内 **ask 类结构化提问工具**（如 Cursor `AskQuestion`）；不可用则对话逐条问。每次只问一个关键问题。
@@ -36,6 +39,9 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 - 对甲方的阶段性汇报（见下文）
 - `.ai-runtime-artifacts/execution-logs/` 中 execution-log
 - `.ai-runtime-artifacts/execution-logs/tracking/` 中追踪日志（并行编排时**必须**）
+- **尾盘（批次/GROUP 收尾）：**
+  - `.ai-runtime-artifacts/verifications/YYYY-MM-DD-<topic>-collective-test.md`（Leader Write）
+  - `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（Leader Write；Reviewer 只返回）
 
 ---
 
@@ -51,8 +57,11 @@ superpowers:brainstorming → [门禁：用户确认 spec]
    - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
    - 并行 ≤5；plan 可写 `wu_skills: auto`，**派发前** Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；prompt 见各 `agents/*.md`
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
-6. **GROUP 收尾**：整合 → `project.verification.md` →（需时 Test Engineer）→ **集体** `harness-reviewer`（独立实例；Coder 轻量审查不替代）
-7. **追踪**：`DISPATCH-TRACK-*.md`；`APPROVE` 或合法跳过后 execution-log
+6. **GROUP 尾盘**（`dispatcher-workflow.md` § 步骤 3；spec `2026-05-28-batch-closeout-review-and-collective-test.md`）：
+   - **A 集体测试**：跑 `project.verification.md` → Write `*-collective-test.md`
+   - **B 集体审查**：委派 `harness-reviewer` → 将返回 Write `*-code-review.md`
+   - **C** 更新 execution-log § 尾盘门禁；`APPROVE`/`SKIPPED` + 测试 PASS 后方可声称批次完成
+7. **追踪**：`DISPATCH-TRACK-*.md`
 
 ## 沟通语言
 
@@ -71,6 +80,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 - 与 coder/implementer 共用同一 subagent 实例做审查
 - 未写 tracking 就并行派发多个 WU
 - 跳过 execution-log 完成声明
+- 未落盘 collective-test / code-review 即声称 GROUP 交付完成
+- 末个 WU 返回后直接「完成」（须先尾盘 A+B）
 - 调用 omx / spawn_agent / tmux
 
 ---
