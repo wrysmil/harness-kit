@@ -20,7 +20,7 @@ created_at: <YYYY-MM-DD>
 
 ```markdown
 GROUP-1:
-  WU-01: … | 文件: … | wu_type: feature | wu_skills: auto
+  WU-01: … | 标题: <wu_title_zh> | 文件: … | 依赖: 无 | wu_type: feature | agent_role: coder|implementer|test-engineer | workspace_scope: wu|none | worktree_path: <path or n/a> | branch: <branch or n/a> | wu_skills: auto
 ```
 
 ## 变更记录（可选）

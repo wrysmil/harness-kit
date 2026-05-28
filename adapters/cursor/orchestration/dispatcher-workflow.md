@@ -27,18 +27,38 @@
 - **可验证**：有 done criteria（测试、lint 或手工检查点）
 - **所有权清晰**：并行 WU 不修改同一文件
 
-产出简易 worktree（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）：
+产出执行图（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）。
+
+### Git worktree（物理隔离，可回滚）
+
+这里的 “worktree” 同时包含：
+
+- **逻辑 worktree**：WU 拆分/执行图（一直存在）
+- **Git worktree**：可选的物理隔离工作区（本节新增）
+
+**默认规则：**
+
+- 默认仅 `agent_role=coder` 的 WU 会启用 Git worktree 隔离（`implementer/reviewer/explorer/web-investigator` 默认不启用）
+- Leader **同一轮并行派发（dispatch_batch）中 `coder` WU 数量 ≥ 2** 时：这些 `coder` WU **必须**启用 Git worktree
+- 若该轮只有 1 个 `coder` WU：默认不启用（除非 WU 显式 `workspace_scope: wu`）
+
+**启用时 Leader 必写字段：**
+
+- `标题: <wu_title_zh>`（中文短标题，必须）
+- `workspace_scope: wu`
+- `worktree_path: .worktrees/<...>`
+- `branch: wu/<date>/<topic>/WU-<id>-<wu_type>`
 
 ```markdown
 ## 执行图
 
 GROUP-1（并行）:
-  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | wu_skills: auto
-  WU-02: <描述> | 文件: c.ts | 依赖: 无 | wu_type: chore | wu_skills: 无
+  WU-01: <描述> | 标题: <wu_title_zh> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | agent_role: coder | workspace_scope: wu | worktree_path: .worktrees/<...> | branch: wu/<...> | wu_skills: auto
+  WU-02: <描述> | 标题: <wu_title_zh> | 文件: c.ts | 依赖: 无 | wu_type: chore | agent_role: implementer | workspace_scope: none | worktree_path: n/a | branch: n/a | wu_skills: 无
 
 GROUP-2（依赖 GROUP-1）:
-  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | wu_skills: auto
-  WU-04: API 集成测试 | 文件: tests/api/*.ts | 依赖: WU-01 | wu_type: test | wu_skills: auto
+  WU-03: <描述> | 标题: <wu_title_zh> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | agent_role: coder | workspace_scope: wu | worktree_path: .worktrees/<...> | branch: wu/<...> | wu_skills: auto
+  WU-04: API 集成测试 | 标题: <wu_title_zh> | 文件: tests/api/*.ts | 依赖: WU-01 | wu_type: test | agent_role: test-engineer | workspace_scope: none | worktree_path: n/a | branch: n/a | wu_skills: auto
 ```
 
 `wu_skills: auto` → 查 **`orchestration/skill-preferences.zh.md`** § 默认路由表。也可手写 slug 覆盖。
@@ -68,6 +88,11 @@ GROUP-2（依赖 GROUP-1）:
 5. 必须返回：变更摘要、**`wu_status`**、**Skills 使用**、阻塞项
 6. **Coder** 还须：`self_check`、`code_review`、测试资产摘要
 7. **子 Agent 不改 plan**；Leader 验证后写 plan / tracking（`runtime/plan-progress-sync.md`）
+
+**若该 WU 启用 Git worktree：** 还必须包含（写短，不展开）：
+
+- `worktree_path` 与 `branch`
+- 约束：只在 `worktree_path` 内读写与运行命令；禁止修改 worktree 外文件
 
 Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
 

@@ -50,6 +50,7 @@ GROUP: <N> | WU: <id> | ITER: <n> | STEP: implement|test|review|done
 Tests: <pass/fail 摘要>
 Queue-remaining: WU-03, WU-04
 Reviewer: separate-task | pending
+Worktree: <path or n/a> | Branch: <name or n/a> | Title(zh): <wu_title_zh>
 ```
 
 ---

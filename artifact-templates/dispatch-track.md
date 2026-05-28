@@ -30,3 +30,10 @@ Sub-agents: 0
 Output: none
 Next: GROUP-1 派发
 ```
+
+```text
+[YYYY-MM-DD HH:MM] WU-02-worktree | Leader | Status: started
+Detail: 创建 WU-02 worktree（<wu_title_zh>）
+Output: .worktrees/<...>
+Next: 派发 WU-02（worktree_path=<...> branch=<...>）
+```
