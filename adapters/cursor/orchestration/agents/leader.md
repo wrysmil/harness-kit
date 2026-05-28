@@ -57,6 +57,11 @@ superpowers:brainstorming → [门禁：用户确认 spec]
    - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
    - 并行 ≤5；plan 可写 `wu_skills: auto`，**派发前** Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；prompt 见各 `agents/*.md`
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
+
+### Git worktree WU：提交与整合（最小规则）
+
+- 派发时：若该 WU 启用 Git worktree，在 prompt 中要求 Coder **在 worktree 分支内完成 `git commit` 并回传 `head_sha`**
+- 整合时：Leader 收到 `head_sha` 后再做整合（`merge` 或 `cherry-pick`），并把“整合动作 + sha”写入 `DISPATCH-TRACK`
 6. **GROUP 尾盘**（`dispatcher-workflow.md` § 步骤 3；spec `2026-05-28-batch-closeout-review-and-collective-test.md`）：
    - **A 集体测试**：跑 `project.verification.md` → Write `*-collective-test.md`
    - **B 集体审查**：委派 `harness-reviewer` → 将返回 Write `*-code-review.md`

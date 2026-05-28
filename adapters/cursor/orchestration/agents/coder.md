@@ -103,7 +103,8 @@ Worker 启动时上下文仅包含：
 
 - 读文件后再改；**禁止**编造文件内容
 - 声称测试通过前必须**实际运行**
-- 不擅自 `git commit` / `git push`（除非 Leader prompt 明确要求）
+- 默认不 `git push`
+- **启用 Git worktree 的 WU**：允许且通常要求在该 worktree 分支内 `git commit`（是否提交以 Leader prompt 为准）
 - 不访问 `.env`、密钥路径
 - **禁止**派发子 Agent、重规划全项目
 

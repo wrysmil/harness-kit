@@ -93,6 +93,7 @@ GROUP-2（依赖 GROUP-1）:
 
 - `worktree_path` 与 `branch`
 - 约束：只在 `worktree_path` 内读写与运行命令；禁止修改 worktree 外文件
+- 交付：在该 worktree 分支内完成 `git commit`，并在返回中给出 `head_sha`
 
 Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
 
