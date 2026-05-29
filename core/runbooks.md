@@ -58,9 +58,10 @@
 完整步骤见 `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`。要点：
 
 1. 遵守 **阶段门禁**（spec/plan 写入后暂停，见 `harness-kit/core/routing.md` § 阶段门禁）
-2. plan 批准后声明 `cursor-orchestration`，拆 WU；代码类委派 `harness-coder`，docs/chore/config 委派 `harness-implementer`
-3. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）
-4. **GROUP 全部 WU 返回后** 必须走 § GROUP 尾盘（不可末 WU 完成即停）
+2. plan 批准后声明 `cursor-orchestration`，拆 WU；用户「开始实现」后 **WORKTREE-INIT**（仓库外沙箱，见 `docs/superpowers/specs/2026-05-29-git-worktree-isolation-design.md`）
+3. 代码类委派 `harness-coder`，docs/chore/config 委派 `harness-implementer`；子 Agent **cwd = worktree_path**
+4. 并行 WU 须有 `tracking/DISPATCH-TRACK-*.md`；中断恢复读 `HANDOFF.md` + tracking（见 `tracking/schema.md`）
+5. **GROUP 全部 WU 返回后** 必须走 § GROUP 尾盘（不可末 WU 完成即停）；交付后 **WORKTREE-CLOSE**（用户确认 Git 后）
 
 ## GROUP 尾盘（集体测试 + 集体审查）
 

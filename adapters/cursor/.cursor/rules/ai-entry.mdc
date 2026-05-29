@@ -27,7 +27,7 @@ alwaysApply: true
 | 验证 / 跑命令 | `verification-before-completion` → `project.verification.md`、`core/verification.md` |
 | 尾盘 / GROUP 收尾 / 「提测前检查」 | `verification-before-completion` → `collective-test.md` → `requesting-code-review` → `code-review.md` → `dispatcher-workflow.md` §3 → spec `2026-05-28-batch-closeout-review-and-collective-test.md` |
 | 决策 | `artifacts.md` + `artifact-templates/decision.md` |
-| 多 task / 已批准 plan | `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md`（末 WU 后**默认进入尾盘**，非直接「完成」） |
+| 多 task / 已批准 plan | `cursor-orchestration` → `dispatcher-workflow.md`（§0 worktree → 派发；末 WU 后尾盘） |
 | 派发 WU（`wu_skills: auto`） | `orchestration/skill-preferences.zh.md` |
 | Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
 | 文档审查 | `document-review` skill → `artifact-templates/document-review.md` |

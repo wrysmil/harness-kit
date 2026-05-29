@@ -19,7 +19,22 @@
 
 ---
 
-## 步骤 1：Worktree 拆分（主 Agent）
+## 步骤 0：Git worktree 沙箱
+
+**时机：** 用户「开始实现」后、GROUP-1 派发前（routing「小改动」可跳过）。  
+**权威：** `docs/superpowers/specs/2026-05-29-git-worktree-isolation-design.md` §5.4。
+
+1. `*-dispatch.md` → `dispatch_stem` → `worktree_id` = `wt-{stem}`
+2. `worktree_path` = `<repo-parent>/.harness-worktrees/<repo-basename>/{worktree_id}/`
+3. `「Harness：git-xywh + project.git.md」` → `git worktree add -b harness/{worktree_id} <worktree_path> <base>`
+4. 已存在且 HANDOFF/tracking 一致 → 复用
+5. tracking 记 `WORKTREE-INIT`；更新 HANDOFF § Git 沙箱
+
+**门禁：** 未完成步骤 0 不得派发写代码类 WU。
+
+## 步骤 1：逻辑执行图拆分（主 Agent）
+
+> 本节为 **GROUP/WU 逻辑图**（写 `*-dispatch.md`），非 Git worktree。
 
 从 plan 提取 work unit（WU），每个 WU 须满足：
 
@@ -27,7 +42,7 @@
 - **可验证**：有 done criteria（测试、lint 或手工检查点）
 - **所有权清晰**：并行 WU 不修改同一文件
 
-产出简易 worktree（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）：
+产出执行图（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）：
 
 ```markdown
 ## 执行图
@@ -68,6 +83,7 @@ GROUP-2（依赖 GROUP-1）:
 5. 必须返回：变更摘要、**`wu_status`**、**Skills 使用**、阻塞项
 6. **Coder** 还须：`self_check`、`code_review`、测试资产摘要
 7. **子 Agent 不改 plan**；Leader 验证后写 plan / tracking（`runtime/plan-progress-sync.md`）
+8. **工作目录：** `<worktree_path>`（仅在此改代码与跑单测；禁改主 checkout、禁 commit/push）
 
 Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
 
@@ -88,7 +104,7 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 1. 收集 WU 结果；处理冲突
 2. **步骤 A — 集体测试**
    - Leader Load `verification-before-completion` + `project.verification.md`
-   - 按本批次 diff 跑最小验证集；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
+   - 命令 **cwd = worktree_path**；按本批次 diff 跑最小验证集；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
    - **Write** `.ai-runtime-artifacts/verifications/YYYY-MM-DD-<topic>-collective-test.md`（模板 `artifact-templates/collective-test.md`）
    - 任一必跑项 **FAIL** → STOP，开 bugfix WU；**不得**进入步骤 B
 3. **步骤 B — 集体代码审查**
@@ -110,6 +126,15 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 4. 上下文重置时覆盖写 `execution-logs/HANDOFF.md`（模板 `artifact-templates/handoff.md`）
 
 中断恢复：见 `tracking/schema.md` § 中断恢复协议。
+
+## 步骤 5：WORKTREE-CLOSE
+
+**时机：** 批次交付完成（尾盘 PASS + 产物落盘）且用户确认 Git 后。
+
+1. **禁止** Leader 自动 push / 开 PR
+2. 用户确认后按 `git-xywh` 处理合并
+3. `git worktree remove <worktree_path>`；tracking 记 `WORKTREE-CLOSE`
+4. 中断未交付 → 保留 worktree，HANDOFF 保留路径
 
 ---
 
@@ -153,3 +178,6 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 - 仅以 Coder `code_review: PASS` 替代尾盘 `harness-reviewer` 集体审查
 - 未 Write `*-code-review.md` 即在 execution-log 写批次交付完成
 - Reviewer 会话内 Write `.ai-runtime-artifacts/`（应由 Leader 落盘）
+- 未 WORKTREE-INIT 即在主 checkout 改业务代码
+- 尾盘在主 checkout 跑验证（须在 `worktree_path`）
+- Leader 自动 push / 开 PR

@@ -47,6 +47,7 @@ Next: <下一步>
 
 ```text
 GROUP: <N> | WU: <id> | ITER: <n> | STEP: implement|test|review|done
+WorktreeId: wt-<stem> | WorktreePath: <abs-path> | Branch: harness/wt-<stem> | Base: <sha>
 Tests: <pass/fail 摘要>
 Queue-remaining: WU-03, WU-04
 Reviewer: separate-task | pending
@@ -59,8 +60,9 @@ Reviewer: separate-task | pending
 1. 打开当前 `DISPATCH-TRACK-*.md`
 2. 找最后一条 `Status: completed` 的 WU/步骤
 3. 对无 `completed` 的 WU，从其最后 `started` 步骤继续
-4. 若存在 `HANDOFF.md` 且比 track 新 → 先读 HANDOFF 再恢复
+4. 若存在 `HANDOFF.md` 且比 track 新 → 先读 HANDOFF 再恢复（含 § Git 沙箱 `worktree_path`）
 5. **不要**重跑已有 `APPROVE` 审查的 WU
+6. 写代码类 WU 在 `worktree_path` 继续，不在主 checkout
 
 ### Leader 恢复话术
 

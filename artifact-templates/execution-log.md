@@ -6,6 +6,12 @@ skills:
 source:
   - <对应的 spec 或 plan 路径>
 created_at: <YYYY-MM-DD>
+worktree:
+  id: 
+  path: 
+  branch: 
+  base_ref: 
+  head_ref: 
 ---
 
 # <Topic> Execution Log

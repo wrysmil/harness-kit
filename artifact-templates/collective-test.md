@@ -10,6 +10,8 @@ source:
   - harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md
 created_at: <YYYY-MM-DD>
 batch_id: GROUP-1
+worktree_id: 
+worktree_path: 
 verdict: PASS
 ---
 
