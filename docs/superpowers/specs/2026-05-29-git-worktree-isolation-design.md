@@ -1,4 +1,4 @@
-﻿---
+---
 artifact: spec
 title: "Git Worktree 执行图级隔离"
 date: 2026-05-29
@@ -252,15 +252,7 @@ Next: GROUP-1 派发
 | GROUP 尾盘 A 集体测试 | Leader 在 **沙箱 worktree** 下跑 `project.verification.md` 命令 |
 | GROUP 尾盘 B 集体审查 | Reviewer 上下文含 `BASE_SHA`（init 基线或分支点）与 `HEAD_SHA`（沙箱当前 HEAD） |
 
-**子 Agent prompt 追加块（规范）：**
-
-```markdown
-## 工作目录（强制）
-- 所有文件读写、测试命令均在以下目录执行：
-  `<worktree_path>`
-- 禁止修改主 checkout 路径下的业务文件。
-- 禁止 git commit / push（除非 Leader 显式授权）。
-```
+**子 Agent prompt（沙箱批次，一行即可）：** `worktree_path: <abs>`；禁改主 checkout 业务文件；禁 commit/push（除非授权）。勿重复 agent 正文纪律。
 
 ### 6.3 步骤 4 — 追踪（扩展字段）
 
@@ -355,9 +347,15 @@ head_sha: <sha>
 
 临时 **worktree_id**：`{父 worktree_id}--wu-{wu-id}`（§5.4.4）。WU 完成后 merge 回父 worktree，再 `git worktree remove` 临时树；tracking 记录 `WORKTREE-SPAWN-WU` / `WORKTREE-MERGE-WU`。
 
-### 8.3 routing「小改动」
+### 8.3 跳过 WORKTREE-INIT
 
-单文件机械修改 **可跳过** WORKTREE-INIT（与现网一致）；一旦进入 `cursor-orchestration` 多 task 流程，**必须**沙箱。
+以下 **不** 创建 Git worktree（在主 checkout 改代码）：
+
+- routing「小改动」
+- Leader **不拆 WU、不委派** harness-* 子 Agent 的简单实现
+- 仅只读探查、无业务代码变更
+
+以下 **必须** 沙箱：将委派 harness-* 写代码类 WU 的 `cursor-orchestration` 批次（见 `dispatcher-workflow.md` §0）。
 
 ### 8.4 Windows
 

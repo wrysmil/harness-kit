@@ -50,13 +50,13 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 1. **路由**：首句 `「Harness：…」`；本阶段 route skill 先 Load、次行 `Skills:`；多 task 走 `cursor-orchestration`
 2. **需求与设计**：先 Load 阶段 skill，再按 skill 流程写产物（`skills` 非空）；写入后**暂停**等用户确认
 3. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权 / `wu_type` / `wu_skills`）
-3b. **WORKTREE-INIT**（「开始实现」后）：创建/复用 Git worktree；见 `dispatcher-workflow.md` §0、`docs/superpowers/specs/2026-05-29-git-worktree-isolation-design.md`
+3b. **WORKTREE-INIT**（仅当将委派 harness-* 写代码类 WU 时）：见 `dispatcher-workflow.md` §0；不派子 Agent 则跳过
 4. **派发**（按 `wu_type`）：
    - 代码类 → `harness-coder`（`feature` / `bugfix` / `refactor` / `ui` / `review-fix`）
    - 轻量 → `harness-implementer`（`docs` / `chore` / `config`）
    - 测试 / E2E → `harness-test-engineer`
    - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
-   - 并行 ≤5；plan 可写 `wu_skills: auto`，**派发前** Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；prompt 见各 `agents/*.md`
+   - 并行 ≤5；`wu_skills: auto` 由 Leader 解析为路径；无 `### Skills 使用` 不整合；**prompt 简练**（见各 `agents/*.md` § Task Prompt 前缀）
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
 6. **GROUP 尾盘**（`dispatcher-workflow.md` § 步骤 3；spec `2026-05-28-batch-closeout-review-and-collective-test.md`）：
    - **A 集体测试**：在 `worktree_path` 跑 `project.verification.md` → Write `*-collective-test.md`

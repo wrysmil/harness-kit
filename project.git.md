@@ -45,7 +45,7 @@ org_skill: git-xywh
 1. 提交 / 分支 / worktree 操作前：**已加载 `git-xywh` skill 正文** + 读本文件（仅 delta）。
 2. 禁止（除非用户明确要求）：向受保护主干直推；公共分支 force push；子 Agent 擅自 commit。
 3. 用户说「帮我提交」：Leader 声明 `「Harness：git-xywh + project.git.md」` 后执行。
-4. Cursor 多 task：业务代码仅在 **worktree_path**；编排产物留在主 checkout（见 worktree spec）。
+4. Cursor 委派 harness-* 子 Agent 时：业务代码在 **worktree_path**；不派子 Agent 则在主 checkout；编排产物始终在主 checkout（见 worktree spec）。
 
 ## 待确认项
 

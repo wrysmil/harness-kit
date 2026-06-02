@@ -62,7 +62,7 @@ Reviewer: separate-task | pending
 3. 对无 `completed` 的 WU，从其最后 `started` 步骤继续
 4. 若存在 `HANDOFF.md` 且比 track 新 → 先读 HANDOFF 再恢复（含 § Git 沙箱 `worktree_path`）
 5. **不要**重跑已有 `APPROVE` 审查的 WU
-6. 写代码类 WU 在 `worktree_path` 继续，不在主 checkout
+6. 曾 WORKTREE-INIT 的批次：写代码类 WU 在 `worktree_path` 继续；未 INIT 则在主 checkout
 
 ### Leader 恢复话术
 

@@ -58,7 +58,7 @@
 | 小改动 / 单文件机械修改 | 无（可选：`project.profile.md` 若需项目上下文） |
 | 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `dispatcher-workflow.md`；「开始实现」后 `docs/superpowers/specs/2026-05-29-git-worktree-isolation-design.md` §0；派发 WU 时 `skill-preferences.zh.md` |
+| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `dispatcher-workflow.md`；**仅当委派 harness-* 子 Agent 时** §0 WORKTREE-INIT；派发 WU 时 `skill-preferences.zh.md` |
 | 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流文档 |
 | 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
 | 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；Cursor 委派 `harness-reviewer`（Leader 落盘） |
@@ -73,6 +73,15 @@
 **禁止：** 在未判定 route 前预读 `dispatcher-workflow.md`、`skill-preferences.zh.md` 或全套 `project.*`。
 
 **Skill 产物：** 上表中带 stage skill 的阶段，正文以已 Load 的 `SKILL.md` 为准；`artifact-templates/spec.md` / `plan.md` 仅为 redirect stub。契约与门禁见 `spec.harness-overlay.md`、`plan.harness-overlay.md`；执行图见 `dispatch.harness-overlay.md`。无 stage skill 的编排产物仍用 `artifact-templates/`（execution-log、track、handoff 等）。
+
+### Git worktree（Cursor）
+
+| 场景 | worktree | 代码目录 |
+| --- | --- | --- |
+| 小改动 / Leader 主线程直接实现（**不拆 WU、不委派** harness-*） | **跳过** | 主 checkout |
+| `cursor-orchestration` 且将委派写代码类子 Agent | **必须** WORKTREE-INIT | `worktree_path` |
+
+用户说「开始实现」但任务仍属 Leader 直接处理时，**不得**仅为该句创建 worktree。
 
 ### "小改动"判定标准
 
@@ -99,7 +108,7 @@
 
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
-**Cursor 实现阶段：** 用户说「开始实现」后先 **WORKTREE-INIT**（Git 沙箱，主 checkout 不写业务代码），再按 `wu_type` 委派；子 Agent cwd = `worktree_path`。详见 `dispatcher-workflow.md` §0、`.cursor/rules/cursor-subagent-routing.mdc`。
+**Cursor 实现阶段：** 仅当走 WU 编排且**委派** harness-* 子 Agent 时：先 **WORKTREE-INIT**，子 Agent cwd = `worktree_path`，主 checkout 不写业务代码。不拆 WU、不派子 Agent 的简单任务在主 checkout 直接做，**不用** worktree。详见 `dispatcher-workflow.md` §0。
 
 **Cursor 交付完成：** 本 GROUP / 批次全部 WU 返回后，**默认进入尾盘**（集体测试 → 集体审查 → Leader 落盘两产物 → 更新 execution-log）。**完成** ≠ 末个 WU 返回；须满足 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4（小改动除外）。
 

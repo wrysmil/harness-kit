@@ -75,20 +75,12 @@ Worker 启动时上下文仅包含：
 ## Task Prompt 前缀（Leader 粘贴）
 
 ```markdown
-你正在以 Implementer Worker 执行 WU-<id>。
-遵循 harness-kit/adapters/cursor/orchestration/agents/implementer.md。
-不要重规划，不要派发子 Agent。
+**Harness Implementer · WU-<id>** · `agents/implementer.md` · role: implementer · wu_type: docs
 
-## 本 WU Skills
-无
+**目标 / Done / 可改 / 禁 / Skills / 验证**（各简练填写）
+**cwd：** `<worktree_path>`   <!-- 仅沙箱批次 -->
 
-## agent_role
-implementer
-
-## wu_type
-docs
-
-[WU 详情：目标、done criteria、允许修改文件、禁止事项]
+**返回：** `implementer.md` § 返回格式
 ```
 
 **代码类 WU（feature/bugfix 等）** 须委派 `harness-coder`，不要用本模板。  
