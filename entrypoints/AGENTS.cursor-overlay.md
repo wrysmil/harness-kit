@@ -3,7 +3,7 @@
 
 # Cursor 执行契约（Harness Kit）
 
-本文件是 **Cursor Agent** 的补充契约。路由、阶段门禁与按判定加载以 `harness-kit/core/routing.md` 为准；委派以 `.cursor/rules/cursor-subagent-routing.mdc` 为准。
+本文件是 **Cursor Agent** 的补充契约。路由、阶段门禁以 `harness-kit/core/routing.md` 为准；文件写入与门禁见 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁；委派见 `cursor-subagent-routing.mdc`。
 
 ## 加载规则（Route-first）
 
@@ -49,7 +49,7 @@
 
 ## 强制声明
 
-首句 `「Harness：<route>」`；本阶段有 route skill 时次行 `Skills:`（细则 `core/routing.md` § 阶段指定 skill 必用）。
+首句 `「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill 时次行 `Skills:`（细则 `core/routing.md` § 阶段指定 skill 必用）。
 
 ## 沟通语言
 

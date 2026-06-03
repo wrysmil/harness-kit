@@ -28,6 +28,16 @@
 
 示例：用户要求“按 writing-style 写文章并发飞书”，默认 route 仍应是 `superpowers:brainstorming -> writing-style -> lark-doc`，而不是只执行 `writing-style -> lark-doc`。
 
+## 用户话术 → Route
+
+| 用户说 | Route | 本阶段禁止 |
+| --- | --- | --- |
+| 写方案 / 出方案 / 设计一下 | `brainstorming` | 改业务代码、写 plan、实现、派子 Agent |
+| 写计划 / 实施计划 | `writing-plans` | 改业务代码、实现、派子 Agent |
+| 开始实现 / 直接做 / 并行执行 | 实现（见路由表） | —（须已过 spec/plan 门禁或属小改动） |
+
+仅说「写方案」→ **只** Write `specs/` 并暂停；不得同轮进入 plan 或实现。细则见 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
+
 ## 路由表
 
 | 任务类型 | Codex Route | Cursor Route | 产物 |
@@ -51,11 +61,11 @@
 
 ## 按判定加载
 
-完成路由判定后，**仅**加载下表对应文件（小改动：声明后直接处理，无需读本表）。
+完成路由判定后，**仅**加载下表对应文件（小改动：声明后直接处理，无需读本表；叠加 skill 时次行 `Skills:` 声明，用时再 Load）。
 
 | 判定（路由表 / 用户任务） | 再读（按序） |
 | --- | --- |
-| 小改动 / 单文件机械修改 | 无（可选：`project.profile.md` 若需项目上下文） |
+| 小改动 / 单文件机械修改 | 无 stage skill（可选 `project.profile.md`）；叠加时按需 Load（验证、Git、修 bug 等） |
 | 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
 | 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `dispatcher-workflow.md`；**仅当委派 harness-* 子 Agent 时** §0 WORKTREE-INIT；派发 WU 时 `skill-preferences.zh.md` |
@@ -102,9 +112,11 @@
 | 计划完成 | `.ai-runtime-artifacts/plans/` | 「开始实现」「并行执行」或给修改意见 |
 | 决策完成 | `.ai-runtime-artifacts/decisions/` | 「执行」 |
 
-**已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须记录在产物 front matter 或回复中）。
+**已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须更新产物 front matter：`approved: true`）。
 
 **用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
+
+**同轮禁止：** Write `specs/` / `plans/` / `decisions/` 后，**同一轮**不得改业务代码、委派 harness-*、WORKTREE-INIT、Read 并执行 `dispatcher-workflow.md`。
 
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
@@ -133,7 +145,8 @@
 - Load 后**不得**用 `artifact-templates` 同名 stub/旧提纲的正文替代 skill；Harness 仅提供 overlay（FM、`## Next`、dispatch 指针，见 `artifacts.md`）。
 - 有阶段 skill：先 Load → 再交付该阶段产物；`skills` 非空且与 route 一致（见 `artifacts.md`）。
 - 子 Agent：prompt「本 WU Skills」所列**必须** Load；返回须 `### Skills 使用`，否则 Leader 不整合。
-- 会话：首句 `「Harness：…」`；本阶段有 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。
+- 小改动：无 stage skill；若将叠加 skill，次行 `Skills: <slug>（用途）`，用时 Load。
+- 会话：首句 `「Harness：…」`；有 route/叠加 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。
 
 ## 沟通语言
 
@@ -143,8 +156,9 @@
 
 ## 运行约束
 
-- **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill 时次行 `Skills:`（见上节）。
-- **未声明时的用户干预：** 如果 AI 响应第一句不是 `「Harness：...」`，说明规则未被加载或被忽略。用户应发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
+- **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill 时次行 `Skills:`（见上节）。
+- **未声明时的用户干预：** 首句无 `「Harness：…」` → 发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
+- **跳过门禁时的干预：** `你跳过了阶段门禁。我只要求写方案/计划，不要改代码。写入 .ai-runtime-artifacts/ 后暂停等我确认。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。
 - **Codex**：调用 `omx` 前写清目标、范围、禁止事项和验收标准；`omx` 输出只作为建议，主执行者必须复核后才能落地。

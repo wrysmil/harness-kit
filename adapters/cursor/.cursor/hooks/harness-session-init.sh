@@ -8,7 +8,7 @@ cat >/dev/null
 
 cat <<'EOF'
 {
-  "additional_context": "Harness Kit：首句「Harness：<route>」；本阶段有 route skill 时次行 Skills: <slug>@<path> loaded。先 Load SKILL.md 再写产物；禁止用 artifact-templates/spec|plan 短模板代替 skill。spec/plan 写入后须暂停（阶段门禁）。详见 harness-kit/core/routing.md。"
+  "additional_context": "Harness：首句「Harness：<route>」；有 route skill 时次行 Skills。spec/plan 写入后暂停，同轮不改业务代码。文本文件用 Write/StrReplace，禁止 Shell 写文件。见 ai-entry.mdc § 文件写入与阶段门禁。"
 }
 EOF
 exit 0

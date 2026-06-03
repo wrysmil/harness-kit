@@ -42,6 +42,7 @@ Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.co
 
 Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存在：
 
+- `.cursor/rules/ai-entry.mdc`（含 § 文件写入与阶段门禁）
 - `.cursor/rules/cursor-subagent-routing.mdc`
 - `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer / web-investigator）
 - `.cursor/skills/`（能力副本；偏好见 `adapters/cursor/orchestration/skill-preferences.zh.md`）

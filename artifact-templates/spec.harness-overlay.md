@@ -9,6 +9,8 @@ source:
   - AGENTS.md
   - harness-kit/core/routing.md
 created_at: <YYYY-MM-DD>
+status: draft
+approved: false
 ---
 
 # Harness overlay（非正文模板）

@@ -39,6 +39,7 @@ readonly: false
 ## 禁止
 
 - 修改 WU 外文件；编造内容；擅自 commit/push；访问 `.env`
+- Shell 写/改仓库文本文件（须用 Write/StrReplace）
 
 ## 返回格式（必须）
 

@@ -22,7 +22,7 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 **需求获取（brainstorming）：** 优先使用环境内 **ask 类结构化提问工具**（如 Cursor `AskQuestion`）；不可用则对话逐条问。每次只问一个关键问题。
 
-**阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>@<path> loaded|skipped`。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
+**阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>（用途）| loaded|skipped`（小改动叠加 skill 同理）。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
 
 ---
 
@@ -47,8 +47,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 ## 职责
 
-1. **路由**：首句 `「Harness：…」`；本阶段 route skill 先 Load、次行 `Skills:`；多 task 走 `cursor-orchestration`
-2. **需求与设计**：先 Load 阶段 skill，再按 skill 流程写产物（`skills` 非空）；写入后**暂停**等用户确认
+1. **路由**：首句 `「Harness：…」`；route/叠加 skill 先声明、用时 Load；多 task 走 `cursor-orchestration`
+2. **需求与设计**：先 Load 阶段 skill，再 Write 产物（`status: draft`、`approved: false`）；写入后**暂停** — 同轮不改业务代码、不派子 Agent、不 Read `dispatcher-workflow.md`
 3. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权 / `wu_type` / `wu_skills`）
 3b. **WORKTREE-INIT**（仅当将委派 harness-* 写代码类 WU 时）：见 `dispatcher-workflow.md` §0；不派子 Agent 则跳过
 4. **派发**（按 `wu_type`）：

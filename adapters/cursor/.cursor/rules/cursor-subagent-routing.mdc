@@ -11,7 +11,8 @@ alwaysApply: true
 ## 优先级
 
 1. `harness-kit/core/routing.md` — 路由、阶段门禁、产物、按判定加载（强制）
-2. 本文件 — Cursor 委派映射
+2. `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁（强制）
+3. 本文件 — Cursor 委派映射
 3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX/Codex 专章在 Cursor 中**忽略**
 
 平台映射：`harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`。
@@ -22,7 +23,7 @@ alwaysApply: true
 
 ```text
 「Harness：<route 或 "小改动，直接处理">」
-Skills: <slug>@<path> loaded|skipped   # 本阶段有 route skill 时
+Skills: <slug>（用途）| loaded|skipped   # 有 route skill 或叠加 skill 时
 ```
 
 多 task 实现示例：`「Harness：cursor-orchestration:dispatcher-workflow」`

@@ -9,14 +9,39 @@ alwaysApply: true
 ## 规范优先级
 
 1. `harness-kit/core/routing.md` — 路由、阶段门禁、按判定加载（强制）
-2. `.cursor/rules/cursor-subagent-routing.mdc` — subagent 委派
-3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX 专章忽略
+2. 本文件 § 文件写入与阶段门禁（强制）
+3. `.cursor/rules/cursor-subagent-routing.mdc` — subagent 委派
+4. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX 专章忽略
+
+## 文件写入与阶段门禁
+
+细则：`routing.md` § 阶段门禁、§ 用户话术 → Route。
+
+**文件写入**
+
+- 改仓库内文本（源码、配置、`.ai-runtime-artifacts/`）**只用** `Write` / `StrReplace`；改前先 `Read`。
+- **Shell 仅用于** 测试、lint、构建、git、只读查询。
+- **禁止** Shell 写文本：`Set-Content`、`Out-File`、`echo … >`、`type … >`、无 `encoding='utf-8'` 的 Python/Node 一行写文件。
+- 默认 **UTF-8 无 BOM**（含中文）。
+
+**阶段门禁**
+
+| 用户说 | Route | 禁止（未获继续指令前） |
+| --- | --- | --- |
+| 写方案 / 出方案 / 设计 | `brainstorming` | 改业务代码、写 plan、派子 Agent、WORKTREE-INIT |
+| 写计划 / 实施计划 | `writing-plans` | 同上 |
+| 开始实现 / 直接做 / 并行执行 | 已过门禁后实现 | — |
+
+- **同轮禁止：** Write 了 `specs/` / `plans/` / `decisions/` → **结束本轮**；不得同轮改业务代码、派发、WORKTREE-INIT。
+- **实现前置：** 用户说「开始实现 / 直接做 / 并行执行」；或 spec/plan `approved: true`；或「小改动，直接处理」。
+- **暂停回复须含：** 产物路径、摘要、`## Next` 选项。
+- **产物 FM：** `status: draft`、`approved: false`；用户确认后改为 `approved: true`。
 
 ## 每任务（必做）
 
-1. 首句：`「Harness：<route 或 "小改动，直接处理">」`；本阶段有 route skill → 次行 `Skills:`，**先 Load SKILL.md 再交付**（`routing.md` § 阶段指定 skill 必用）
+1. 首句：`「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill → 次行 `Skills: <slug>（用途）`，**先 Load 再交付**（`routing.md` § 阶段指定 skill 必用）
 2. **沟通语言：** 对用户回复与子 Agent 派发/整合使用**中文**（`routing.md` § 沟通语言）
-3. **非小改动**：Read `harness-kit/core/routing.md`，按 § 按判定加载 **追加**（先 stage skill，再 artifacts 契约）
+3. **非小改动**：Read `routing.md` 按 § 追加加载
 
 ## 按 routing 判定加载（勿在会话开始预读）
 

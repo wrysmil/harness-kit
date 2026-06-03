@@ -21,6 +21,8 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 
 If you haven't run the verification command in this message, you cannot claim it passes.
 
+**File edits:** Use Write/StrReplace for source and artifacts. Shell is for running commands only—not for writing text files (especially on Windows).
+
 ## TDD Compliance Gate (MANDATORY)
 
 **When production code was written**, you MUST prove TDD compliance **before** claiming done:

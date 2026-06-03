@@ -102,6 +102,7 @@ Worker 启动时上下文仅包含：
 ## 工具使用（Cursor）
 
 - 读文件后再改；**禁止**编造文件内容
+- 文本文件只用 `Write` / `StrReplace`；Shell 仅跑测试/lint/build/git（见 `ai-entry.mdc` § 文件写入与阶段门禁）
 - 声称测试通过前必须**实际运行**
 - 不擅自 `git commit` / `git push`（除非 Leader prompt 明确要求）
 - 不访问 `.env`、密钥路径
