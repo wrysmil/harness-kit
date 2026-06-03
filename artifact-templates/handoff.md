@@ -30,9 +30,17 @@ platform: cursor
 | WU-01 | completed | | |
 | WU-02 | in_progress | | |
 
+## Git 沙箱
+
+- worktree_id: 
+- worktree_path: 
+- branch: 
+- base_ref: 
+
 ## 关键文件
 
 - plan: 
+- dispatch: 
 - track: `.ai-runtime-artifacts/execution-logs/tracking/DISPATCH-TRACK-*.md`
 
 ## 验证状态

@@ -20,6 +20,7 @@ Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 ## 禁止
 
 - 改业务实现（helper 除外）；编造结果；擅自 `git commit` / `push`
+- Shell 写/改仓库文本文件（须用 Write/StrReplace）
 
 ## 返回格式
 

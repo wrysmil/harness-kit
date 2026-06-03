@@ -95,7 +95,7 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
               （写业务代码）      （文档/chore/配置）     （测试/E2E）            （独立审查，可选）
 ```
 
-每个任务 Leader 首句：`「Harness：<route>」`（极小改动可用 `「Harness：小改动，直接处理」`）。
+每个任务 Leader 首句：`「Harness：<route 或 "小改动，直接处理">」`；将用到 skill 时次行 `Skills:`。
 
 ### 阶段怎么走
 

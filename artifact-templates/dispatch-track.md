@@ -17,7 +17,14 @@ Leader 维护。条目 **append-only**。
 
 ## 执行图
 
-（从 plan 复制或链接 worktree）
+（从 plan 复制或链接 `*-dispatch.md`）
+
+## Git 沙箱
+
+- worktree_id: 
+- worktree_path: 
+- branch: 
+- base_ref: 
 
 ## 日志
 
@@ -28,7 +35,7 @@ Leader 维护。条目 **append-only**。
 Detail: 创建 track，plan=<path>
 Sub-agents: 0
 Output: none
-Next: GROUP-1 派发
+Next: WORKTREE-INIT
 ```
 
 ```text

@@ -22,7 +22,7 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 **需求获取（brainstorming）：** 优先使用环境内 **ask 类结构化提问工具**（如 Cursor `AskQuestion`）；不可用则对话逐条问。每次只问一个关键问题。
 
-**阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>@<path> loaded|skipped`。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
+**阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>（用途）| loaded|skipped`（小改动叠加 skill 同理）。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
 
 ---
 
@@ -47,15 +47,16 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 
 ## 职责
 
-1. **路由**：首句 `「Harness：…」`；本阶段 route skill 先 Load、次行 `Skills:`；多 task 走 `cursor-orchestration`
-2. **需求与设计**：先 Load 阶段 skill，再按 skill 流程写产物（`skills` 非空）；写入后**暂停**等用户确认
+1. **路由**：首句 `「Harness：…」`；route/叠加 skill 先声明、用时 Load；多 task 走 `cursor-orchestration`
+2. **需求与设计**：先 Load 阶段 skill，再 Write 产物（`status: draft`、`approved: false`）；写入后**暂停** — 同轮不改业务代码、不派子 Agent、不 Read `dispatcher-workflow.md`
 3. **拆分**：从 plan 提取 WU，写执行图（GROUP / 依赖 / 文件所有权 / `wu_type` / `wu_skills`）
+3b. **WORKTREE-INIT**（仅当将委派 harness-* 写代码类 WU 时）：见 `dispatcher-workflow.md` §0；不派子 Agent 则跳过
 4. **派发**（按 `wu_type`）：
    - 代码类 → `harness-coder`（`feature` / `bugfix` / `refactor` / `ui` / `review-fix`）
    - 轻量 → `harness-implementer`（`docs` / `chore` / `config`）
    - 测试 / E2E → `harness-test-engineer`
    - 信息调研 / 网页搜索 → `harness-web-investigator`（产物 → `.ai-runtime-artifacts/research/`）
-   - 并行 ≤5；plan 可写 `wu_skills: auto`，**派发前** Leader 解析并抄 SKILL 路径；无 `### Skills 使用` 不整合；prompt 见各 `agents/*.md`
+   - 并行 ≤5；`wu_skills: auto` 由 Leader 解析为路径；无 `### Skills 使用` 不整合；**prompt 简练**（见各 `agents/*.md` § Task Prompt 前缀）
 5. **单 WU**：验证返回 → 更新 plan / tracking（子 Agent 不改 plan）
 
 ### Git worktree WU：提交与整合（最小规则）
@@ -63,10 +64,11 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 - 派发时：若该 WU 启用 Git worktree，在 prompt 中要求 Coder **在 worktree 分支内完成 `git commit` 并回传 `head_sha`**
 - 整合时：Leader 收到 `head_sha` 后再做整合（`merge` 或 `cherry-pick`），并把“整合动作 + sha”写入 `DISPATCH-TRACK`
 6. **GROUP 尾盘**（`dispatcher-workflow.md` § 步骤 3；spec `2026-05-28-batch-closeout-review-and-collective-test.md`）：
-   - **A 集体测试**：跑 `project.verification.md` → Write `*-collective-test.md`
+   - **A 集体测试**：在 `worktree_path` 跑 `project.verification.md` → Write `*-collective-test.md`
    - **B 集体审查**：委派 `harness-reviewer` → 将返回 Write `*-code-review.md`
    - **C** 更新 execution-log § 尾盘门禁；`APPROVE`/`SKIPPED` + 测试 PASS 后方可声称批次完成
 7. **追踪**：`DISPATCH-TRACK-*.md`
+8. **WORKTREE-CLOSE**：用户确认 Git 后 `git worktree remove`；不自动 push
 
 ## 沟通语言
 
@@ -88,6 +90,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 - 未落盘 collective-test / code-review 即声称 GROUP 交付完成
 - 末个 WU 返回后直接「完成」（须先尾盘 A+B）
 - 调用 omx / spawn_agent / tmux
+- 主 checkout 写业务代码（多 task；小改动除外）
+- 自动 push / 开 PR
 
 ---
 

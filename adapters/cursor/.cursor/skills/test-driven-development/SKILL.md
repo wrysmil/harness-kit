@@ -36,6 +36,8 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 
 Write code before the test? Delete it. Start over.
 
+**Create test/source files with Write/StrReplace—not shell redirection or Set-Content.**
+
 **No exceptions:**
 - Don't keep it as "reference"
 - Don't "adapt" it while writing tests

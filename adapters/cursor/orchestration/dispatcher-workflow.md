@@ -19,7 +19,23 @@
 
 ---
 
-## 步骤 1：Worktree 拆分（主 Agent）
+## 步骤 0：Git worktree 沙箱
+
+**何时做：** 本批次将**委派** harness-* 写代码类子 Agent（有 `*-dispatch.md` / DISPATCH-TRACK）时，在 GROUP-1 派发前执行。
+
+**何时跳过：** routing「小改动」；Leader **主线程直接实现**（不拆 WU、不派子 Agent）；只读探查（`harness-explorer` 等）且不改业务代码。
+
+**权威：** `docs/superpowers/specs/2026-05-29-git-worktree-isolation-design.md` §5.4。
+
+1. `dispatch_stem` → `worktree_id` = `wt-{stem}` → `worktree_path` = `<repo-parent>/.harness-worktrees/<repo-basename>/{worktree_id}/`
+2. `「Harness：git-xywh + project.git.md」` → `git worktree add -b harness/{worktree_id} <worktree_path> <base>`（已存在且 tracking 一致则复用）
+3. tracking 记 `WORKTREE-INIT`；更新 HANDOFF § Git 沙箱
+
+**门禁：** 将委派写代码类 WU 时，未完成步骤 0 **不得**派发。
+
+## 步骤 1：逻辑执行图拆分（主 Agent）
+
+> 本节为 **GROUP/WU 逻辑图**（写 `*-dispatch.md`），非 Git worktree。
 
 从 plan 提取 work unit（WU），每个 WU 须满足：
 
@@ -27,38 +43,18 @@
 - **可验证**：有 done criteria（测试、lint 或手工检查点）
 - **所有权清晰**：并行 WU 不修改同一文件
 
-产出执行图（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）。
-
-### Git worktree（物理隔离，可回滚）
-
-这里的 “worktree” 同时包含：
-
-- **逻辑 worktree**：WU 拆分/执行图（一直存在）
-- **Git worktree**：可选的物理隔离工作区（本节新增）
-
-**默认规则：**
-
-- 默认仅 `agent_role=coder` 的 WU 会启用 Git worktree 隔离（`implementer/reviewer/explorer/web-investigator` 默认不启用）
-- Leader **同一轮并行派发（dispatch_batch）中 `coder` WU 数量 ≥ 2** 时：这些 `coder` WU **必须**启用 Git worktree
-- 若该轮只有 1 个 `coder` WU：默认不启用（除非 WU 显式 `workspace_scope: wu`）
-
-**启用时 Leader 必写字段：**
-
-- `标题: <wu_title_zh>`（中文短标题，必须）
-- `workspace_scope: wu`
-- `worktree_path: .worktrees/<...>`
-- `branch: wu/<date>/<topic>/WU-<id>-<wu_type>`
+产出执行图（写入与 plan 同 stem 的 `*-dispatch.md`，模板 `artifact-templates/dispatch.harness-overlay.md`；亦可摘要到 tracking）：
 
 ```markdown
 ## 执行图
 
 GROUP-1（并行）:
-  WU-01: <描述> | 标题: <wu_title_zh> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | agent_role: coder | workspace_scope: wu | worktree_path: .worktrees/<...> | branch: wu/<...> | wu_skills: auto
-  WU-02: <描述> | 标题: <wu_title_zh> | 文件: c.ts | 依赖: 无 | wu_type: chore | agent_role: implementer | workspace_scope: none | worktree_path: n/a | branch: n/a | wu_skills: 无
+  WU-01: <描述> | 文件: a.ts, b.ts | 依赖: 无 | wu_type: feature | wu_skills: auto
+  WU-02: <描述> | 文件: c.ts | 依赖: 无 | wu_type: chore | wu_skills: 无
 
 GROUP-2（依赖 GROUP-1）:
-  WU-03: <描述> | 标题: <wu_title_zh> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | agent_role: coder | workspace_scope: wu | worktree_path: .worktrees/<...> | branch: wu/<...> | wu_skills: auto
-  WU-04: API 集成测试 | 标题: <wu_title_zh> | 文件: tests/api/*.ts | 依赖: WU-01 | wu_type: test | agent_role: test-engineer | workspace_scope: none | worktree_path: n/a | branch: n/a | wu_skills: auto
+  WU-03: <描述> | 文件: d.ts | 依赖: WU-01 接口 | wu_type: bugfix | wu_skills: auto
+  WU-04: API 集成测试 | 文件: tests/api/*.ts | 依赖: WU-01 | wu_type: test | wu_skills: auto
 ```
 
 `wu_skills: auto` → 查 **`orchestration/skill-preferences.zh.md`** § 默认路由表。也可手写 slug 覆盖。
@@ -78,24 +74,19 @@ GROUP-2（依赖 GROUP-1）:
 
 **禁止** Leader 在主线程直接修改业务代码（routing「小改动」除外）。
 
-**每个委派 prompt 必须包含：**
+**委派 prompt（中文、简练，勿重复 agent 正文已写的纪律）：**
 
-0. **语言：** prompt 正文与要求返回的 prose 使用**中文**（路径、命令、固定段键名除外；见 `core/routing.md` § 沟通语言）
-1. WU 目标与 done criteria
-2. 允许修改的文件列表
-3. 禁止事项（不改哪些文件、不新增依赖等）
-4. **本 WU Skills**：Leader 解析 `auto` 后**抄 SKILL 路径**（派发 prompt 禁只写 `auto`）；纯 chore 写 `无`。含 `agent_role` + `wu_type`
-5. 必须返回：变更摘要、**`wu_status`**、**Skills 使用**、阻塞项
-6. **Coder** 还须：`self_check`、`code_review`、测试资产摘要
-7. **子 Agent 不改 plan**；Leader 验证后写 plan / tracking（`runtime/plan-progress-sync.md`）
+| 项 | 内容 |
+| --- | --- |
+| 身份 | `WU-<id>` + `agent_role` / `wu_type` + 指向 `agents/<role>.md` |
+| 目标 / Done | 各 1–3 句或勾选列表 |
+| 范围 | 允许改的文件；禁止项（一句） |
+| Skills | slug → SKILL 路径（禁只写 `auto`） |
+| 验证 | 命令 |
+| cwd | 仅沙箱批次：`worktree_path: <abs>`；否则省略 |
+| 返回 | 见对应 `agents/*.md` § 返回格式（须含 `wu_status`、`### Skills 使用`） |
 
-**若该 WU 启用 Git worktree：** 还必须包含（写短，不展开）：
-
-- `worktree_path` 与 `branch`
-- 约束：只在 `worktree_path` 内读写与运行命令；禁止修改 worktree 外文件
-- 交付：在该 worktree 分支内完成 `git commit`，并在返回中给出 `head_sha`
-
-Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-design.md` § 提示词规范，或 `agents/coder.md` § Task Prompt 前缀。
+模板：`agents/coder.md` / `implementer.md` § Task Prompt 前缀。
 
 ### Leader 为 WU 选配 Skills
 
@@ -114,7 +105,7 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 1. 收集 WU 结果；处理冲突
 2. **步骤 A — 集体测试**
    - Leader Load `verification-before-completion` + `project.verification.md`
-   - 按本批次 diff 跑最小验证集；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
+   - 命令 **cwd = worktree_path**；按本批次 diff 跑最小验证集；plan 要集成/E2E 时先完成 `harness-test-engineer` WU
    - **Write** `.ai-runtime-artifacts/verifications/YYYY-MM-DD-<topic>-collective-test.md`（模板 `artifact-templates/collective-test.md`）
    - 任一必跑项 **FAIL** → STOP，开 bugfix WU；**不得**进入步骤 B
 3. **步骤 B — 集体代码审查**
@@ -136,6 +127,15 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 4. 上下文重置时覆盖写 `execution-logs/HANDOFF.md`（模板 `artifact-templates/handoff.md`）
 
 中断恢复：见 `tracking/schema.md` § 中断恢复协议。
+
+## 步骤 5：WORKTREE-CLOSE
+
+**时机：** 曾执行步骤 0，且批次交付完成（尾盘 PASS + 产物落盘）且用户确认 Git 后。未 INIT 则跳过。
+
+1. **禁止** Leader 自动 push / 开 PR
+2. 用户确认后按 `git-xywh` 处理合并
+3. `git worktree remove <worktree_path>`；tracking 记 `WORKTREE-CLOSE`
+4. 中断未交付 → 保留 worktree，HANDOFF 保留路径
 
 ---
 
@@ -179,3 +179,7 @@ Coder 派发 prompt 模板：`docs/superpowers/specs/2026-05-26-coder-role-desig
 - 仅以 Coder `code_review: PASS` 替代尾盘 `harness-reviewer` 集体审查
 - 未 Write `*-code-review.md` 即在 execution-log 写批次交付完成
 - Reviewer 会话内 Write `.ai-runtime-artifacts/`（应由 Leader 落盘）
+- 将委派写代码 WU 却未 WORKTREE-INIT，或在主 checkout 改业务代码
+- 不派子 Agent 仍创建 worktree
+- 尾盘在主 checkout 跑验证（须在 `worktree_path`）
+- Leader 自动 push / 开 PR

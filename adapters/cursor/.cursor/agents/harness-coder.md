@@ -31,6 +31,7 @@ Leader prompt 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 ## 禁止
 
 - 改 WU 外文件；编造结果；未跑命令就写 pass
+- Shell 写/改文本；须用 Write/StrReplace（见 `ai-entry.mdc` § 文件写入与阶段门禁）
 - `.env` / 密钥；擅自 `git commit` / `push`
 
 ## 返回格式

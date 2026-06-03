@@ -24,7 +24,7 @@
 
 ### 约束
 
-- **强制声明：** 回复第一行须为 `「Harness：<route 或 "小改动，直接处理">」`
+- **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；将用到 skill 时次行 `Skills:`
 - **未声明时：** 读取根目录 `CLAUDE.md` 或 `GEMINI.md` 与 `harness-kit/core/routing.md` 后重试
 - 非琐碎任务前声明路由、技能与来源；完成声明须附验证证据
 - 用户指定 skill 为附加项，不替代默认 route（除非用户明确排除）

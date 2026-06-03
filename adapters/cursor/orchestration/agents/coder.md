@@ -102,6 +102,7 @@ Worker 启动时上下文仅包含：
 ## 工具使用（Cursor）
 
 - 读文件后再改；**禁止**编造文件内容
+- 文本文件只用 `Write` / `StrReplace`；Shell 仅跑测试/lint/build/git（见 `ai-entry.mdc` § 文件写入与阶段门禁）
 - 声称测试通过前必须**实际运行**
 - 默认不 `git push`
 - **启用 Git worktree 的 WU**：允许且通常要求在该 worktree 分支内 `git commit`（是否提交以 Leader prompt 为准）
@@ -112,56 +113,21 @@ Worker 启动时上下文仅包含：
 
 ## Task Prompt 前缀（Leader 粘贴）
 
+正文遵守 `coder.md`；**勿重复**下文已规定的闭环纪律。沙箱批次加一行 `worktree_path`；否则省略。
+
 ```markdown
-你正在以 **Harness Coder** 执行 WU-<id>。
-遵循：harness-kit/adapters/cursor/orchestration/agents/coder.md。
+**Harness Coder · WU-<id>** · `agents/coder.md` · role: coder · wu_type: feature
 
-## 身份与边界
-- 你是**资深开发者**，对本 WU 的代码质量负全责（实现、单测、自测、开发者自检）。
-- **不要**重规划、**不要**派发子 Agent、**不要**修改「允许修改」以外的文件。
-- 发现 plan/spec 歧义或范围不足 → **立即停止**，在返回中写清阻塞项，等待 Leader 决策。
+**目标：** …
+**Done：** - [ ] …
+**可改：** `a.ts`, `b.ts`
+**禁：** WU 外文件；commit/push；`.env`
+**Skills：** `slug` → `.cursor/skills/.../SKILL.md`（或无）
+**上下文：** spec/plan 摘录路径
+**验证：** `npm test -- …`
+**cwd：** `<worktree_path>`   <!-- 仅沙箱批次 -->
 
-## 本 WU Skills
-<!-- Leader：解析 auto 后列 slug → SKILL.md 路径，勿只写 auto -->
-
-## agent_role
-coder
-
-## wu_type
-feature
-
-## 目标（一句话）
-<!-- Leader 填写 -->
-
-## Done criteria
-- [ ] ...
-
-## 允许修改（仅以下文件）
-- `path/to/file`
-
-## 禁止
-- 修改 WU 外路径
-- `git commit` / `git push`（除非本条删除）
-- 访问 `.env` 与密钥路径
-
-## 上下文资料
-- Spec：...
-- Plan：...
-- 项目验证：harness-kit/project.verification.md
-
-## 工程化要求
-日志、错误处理、单测、自测（plan 豁免须在返回中说明）
-
-## 验证命令
-```bash
-# Leader 填写
-```
-
-## 开发者自检（硬门槛）
-self_check / open_items / skip_reviewer_eligible — 见 coder.md
-
-## 返回格式
-见 coder.md § 返回格式
+**返回：** `coder.md` § 返回格式（含 wu_status、self_check、code_review、### Skills 使用）
 ```
 
 **`review-fix` WU：** `wu_type: review-fix`；上下文粘贴 Reviewer findings；`auto` 加载 `receiving-code-review`。

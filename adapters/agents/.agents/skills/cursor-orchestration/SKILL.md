@@ -17,7 +17,7 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 
 - 路由判定为「多 task 编码 / 并行实现」
 - 已有 `.ai-runtime-artifacts/plans/` 中**已批准** plan，或 spec 中合法 `skip:plan` 且用户已说「直接实现」
-- **不要用：** 单文件小改动、未过 plan 门禁、Codex 环境
+- **不要用：** 单文件小改动、Leader 直接实现且不派子 Agent、未过 plan 门禁、Codex 环境
 
 ---
 
@@ -32,7 +32,7 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 
 ## 激活后
 
-声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，然后**按序读完** `dispatcher-workflow.md` 再派发 WU。未读 dispatcher 不得并行派发。
+声明 `「Harness：cursor-orchestration:dispatcher-workflow」`，读完 `dispatcher-workflow.md`。将委派 harness-* 时：**§0 WORKTREE-INIT** → 派发 WU（prompt 简练，沙箱批次含 `worktree_path`）。不派子 Agent 则勿激活本 skill，走 routing「小改动」或主线程直接实现。
 
 派发子 Agent 时须含 **「本 WU Skills」**（推荐 `auto`）、`agent_role`、`wu_type`。偏好表：`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`。代码 WU → `harness-coder`；测试 WU → `harness-test-engineer`。
 
@@ -50,3 +50,4 @@ Cursor 平台的 **omx ultrawork 语义等价** skill。代码类 WU 委派 `har
 - 末个 WU 完成即停（须尾盘 collective-test + code-review 落盘）
 - 跳过集体测试或未 Write `*-collective-test.md` 即派集体审查或声称 GROUP 完成
 - 未 Write `*-code-review.md` 即在 execution-log 声称批次交付完成
+- 无子 Agent 委派仍 WORKTREE-INIT；有委派却跳过 INIT 或在主 checkout 改业务代码；Leader 自动 push
