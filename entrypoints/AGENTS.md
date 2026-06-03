@@ -1,7 +1,12 @@
 <!-- 自主性指令 — 请勿删除 -->
-你是一个自主编码代理。在**实现阶段**（用户已批准 spec/plan 并说「开始实现」或等价指令后）无需逐步征求许可，将任务执行至完成。
+你是一个自主编码代理。**自主性仅适用于实现阶段**，且须满足全部条件：
+1. 用户在本会话**已单独说过**「开始实现 / 直接做 / 并行执行」（或等价），**或** spec/plan FM 已 `approved: true` 且引用该授权原话；
+2. **不**含同句组合指令里的「然后执行」（见 `routing.md` § 组合指令）；
+3. 当前任务 **非**「写方案 / 写计划」阶段。
+满足后无需逐步征求许可，执行至完成（Tier 2+ 仍须尾盘产物）。
 **Harness 阶段门禁优先：** 写入 spec / plan / decision 后须暂停；「写方案」「写计划」不属于实现阶段，未获用户继续指令前不得 auto-continue 改代码。详见 `routing.md` § 阶段门禁 与 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
 **Harness 尾盘优先（Cursor）：** 「完成」指本 GROUP / 批次已通过**集体测试**与**集体审查**并落盘（`collective-test` + `code-review`），而非末个 WU 返回即可停。见 `harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
+**Tier 1 Leader 直做：** 须 Write `verifications/*-verification-lite.md`，不得零落盘。见 `routing.md` § 任务 Tier。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
 并行子任务：Codex 用原生子代理；Cursor 用 `.cursor/agents/harness-*` subagent（见 `harness-kit/adapters/cursor/`）。
 <!-- 自主性指令结束 -->
@@ -39,25 +44,25 @@
 | --- | --- |
 | **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`cursor-orchestration` skill |
 | **Codex / OMX** | `harness-kit/entrypoints/AGENTS.omx.md`（或 omx setup 合并后的 OMX 段落） |
-| **Claude Code** | `CLAUDE.md` |
+| **Claude Code** | `CLAUDE.md`、`claude-orchestration` skill、`adapters/claude/bindings.md` |
 | **Gemini** | `GEMINI.md` |
 
 ## 强制声明
 
-每个任务第一句：`「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill 时次行 `Skills:`（见 `routing.md` § 阶段指定 skill 必用）。  
-路由表见 `harness-kit/core/routing.md`（含 Codex / Cursor 并列列）。
+每个任务第一句：`「Harness：<route 或 Tier 0/1>」`；stage skill / Tier 1+ 次行 `Skills:`（见 `routing.md` § 阶段指定 skill 必用）。  
+路由表见 `harness-kit/core/routing.md`（含 Capability / Codex / Cursor / Claude 列）。
 
 ## 路由摘要
 
-| 任务 | Codex | Cursor |
-| --- | --- | --- |
-| 设计 | `superpowers:brainstorming` | 同左 |
-| 计划 | `superpowers:writing-plans` | 同左 |
-| 多 task 实现 | `omx ultrawork` | `cursor-orchestration:dispatcher-workflow` |
-| 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 |
-| 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 → `collective-test` + `code-review` 产物 |
-| 信息调研 / 网页搜索 | `harness-web-investigator` | `harness-web-investigator` |
-| Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 |
+| 任务 | Codex | Cursor | Claude |
+| --- | --- | --- | --- |
+| 设计 | `superpowers:brainstorming` | 同左 | 同左 |
+| 计划 | `superpowers:writing-plans` | 同左 | 同左 |
+| 多 task 实现 | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` |
+| 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 | 同左 |
+| 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 |
+| 信息调研 | `harness-web-investigator` | 同左 | Task + web-investigator |
+| Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 | 同左 |
 
 涉及提交、分支、MR 时由 **Leader** invoke `git-xywh`；子 Agent 默认不 commit。组织规范在 skill，项目差异在 `project.git.md`。
 

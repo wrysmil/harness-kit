@@ -14,11 +14,10 @@ must_contain "artifact-templates/dispatch.harness-overlay.md" "worktree_path"
 must_contain "artifact-templates/dispatch.harness-overlay.md" "branch"
 must_contain "artifact-templates/dispatch.harness-overlay.md" "workspace_scope"
 
-must_contain "adapters/cursor/orchestration/dispatcher-workflow.md" "coder"
-must_contain "adapters/cursor/orchestration/dispatcher-workflow.md" "数量 ≥ 2"
-must_contain "adapters/cursor/orchestration/dispatcher-workflow.md" "Git worktree"
-must_contain "adapters/cursor/orchestration/dispatcher-workflow.md" "worktree_path"
-must_contain "adapters/cursor/orchestration/dispatcher-workflow.md" "branch"
+must_contain "core/orchestration/dispatcher-workflow.md" "coder"
+must_contain "core/orchestration/dispatcher-workflow.md" "WorktreeInit"
+must_contain "core/orchestration/dispatcher-workflow.md" "worktree_path"
+must_contain "core/orchestration/dispatcher-workflow.md" "ParallelBatch"
 
 tmp="$(mktemp -d)"
 cleanup() { rm -rf "$tmp"; }

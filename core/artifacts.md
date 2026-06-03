@@ -72,6 +72,17 @@ created_at: 2026-05-14
 | `dispatch` | 仅 `implementation-plan`：指向同 stem 的 `*-dispatch.md`；单 WU 可 `n/a` |
 | `source` | 产物依据的入口、规则、需求或上下文 |
 | `created_at` | 创建日期，格式 `YYYY-MM-DD` |
+| `tier` | 可选；Tier 1 轻量验证产物填 `1` |
+
+## 任务 Tier 与产物（摘要）
+
+| Tier | 产物 | 模板 |
+| --- | --- | --- |
+| 0 | 无 FM | — |
+| 1 | `verifications/*-verification-lite.md` | `verification-lite.md` |
+| 2+ | spec/plan/dispatch、execution-log、collective-test、code-review 等 | 各 `artifact-templates/` |
+
+细则：`core/routing.md` § 任务 Tier、§ WU 编排硬触发。
 
 ## Artifact 类型
 
@@ -80,6 +91,7 @@ created_at: 2026-05-14
 - `implementation-dispatch`
 - `review`
 - `verification`
+- `verification-lite`
 - `execution-log`
 - `dispatch-track`
 - `handoff`
@@ -99,7 +111,7 @@ created_at: 2026-05-14
 | --- | --- | --- |
 | spec（`brainstorming`） | **SKILL.md** 流程与结构 | `spec.harness-overlay.md`（FM + `## Next`） |
 | plan（`writing-plans`） | **SKILL.md**（Task 细步等） | `plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md` |
-| verification 等 stage skill | skill 纪律 + 简短记录 | `verification.md`、`collective-test.md` |
+| verification 等 stage skill | skill 纪律 + 简短记录 | `verification.md`、`verification-lite.md`（Tier 1）、`collective-test.md` |
 | 尾盘集体审查 | Reviewer 返回 + Leader 落盘 | `code-review.md` |
 | execution-log、track、handoff、wu-checklist 等 | **artifact-templates/** 全文 | 无对应 stage skill |
 

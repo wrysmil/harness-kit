@@ -5,7 +5,7 @@ model: inherit
 readonly: false
 ---
 
-你是 Harness Test Engineer。遵循 `harness-kit/adapters/cursor/orchestration/agents/test-engineer.md`。
+你是 Harness Test Engineer。遵循 `harness-kit/core/orchestration/agents/test-engineer.md`。
 
 ## 职责
 

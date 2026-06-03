@@ -15,15 +15,15 @@ alwaysApply: true
 3. 本文件 — Cursor 委派映射
 3. 根目录 `AGENTS.md` — Harness 覆盖层有效；OMX/Codex 专章在 Cursor 中**忽略**
 
-平台映射：`harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md`。
+平台映射：`adapters/cursor/bindings.md`（历史：`platform-adapters.zh.md`）。
 
 ## Harness 强制声明
 
 收到任务后，第一句必须为：
 
 ```text
-「Harness：<route 或 "小改动，直接处理">」
-Skills: <slug>（用途）| loaded|skipped   # 有 route skill 或叠加 skill 时
+「Harness：<route 或 "Tier 0 小改动" | "Tier 1 Leader 直做">」
+Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 ```
 
 多 task 实现示例：`「Harness：cursor-orchestration:dispatcher-workflow」`
@@ -54,12 +54,18 @@ Skills: <slug>（用途）| loaded|skipped   # 有 route skill 或叠加 skill �
 2. 需委派时：WORKTREE-INIT → 派发 WU；prompt 简练；`auto` 解析 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤5；维护 DISPATCH-TRACK
 3. **GROUP 尾盘**：先集体测试（Write `*-collective-test.md`）→ 再集体审查（委派 `harness-reviewer`，Leader Write `*-code-review.md`）；未过禁止声称批次完成
 4. 整合子 Agent 结果后进入尾盘；`code_review: PASS` 不替代集体审查；可按 spec 合法 `SKIPPED`
-5. 多 task 编排：激活 `cursor-orchestration` skill 后 Read `dispatcher-workflow.md`（勿在会话开始预读）
+5. 多 task 编排：激活 `cursor-orchestration` → Read `core/orchestration/dispatcher-workflow.md`
 6. 文档审查：Load `document-review`；**代码**审查用 `requesting-code-review`（非 document-review）
 
-## 何时委派 vs 主 Agent 直接做
+## 何时委派 vs Leader 直做（Tier）
 
-**委派 subagent：**
+**Tier 2+ — 必须编排（`cursor-orchestration`）：** 见 `routing.md` § WU 编排硬触发。Leader **不得**主线程写业务代码。
+
+**Tier 1 — Leader 直做：** 未命中硬触发；≥2 写文件或 fix/实现类。主 checkout；Write `verification-lite.md`；**不** WORKTREE / DISPATCH-TRACK。
+
+**Tier 0 — 机械小改：** 单文件、无行为变更。无 FM；回复含验证即可。
+
+**委派 subagent（Tier 2+ 或单点）：**
 
 - 已批准 plan 中的 WU（代码 → `harness-coder`；docs/chore/config → `harness-implementer`；测试 / E2E → `harness-test-engineer`）
 - 实现后的审查（→ `harness-reviewer`，不同实例）
@@ -67,12 +73,13 @@ Skills: <slug>（用途）| loaded|skipped   # 有 route skill 或叠加 skill �
 - 缺陷调查（→ `harness-debugger`）
 - 信息调研 / 网页搜索 / 截图取证（→ `harness-web-investigator`）
 
-**主 Agent 直接做（无 worktree、无 WU 派发）：**
+**Leader 主线程（无 WU）：**
 
-- routing「小改动」
-- 已批准范围但**不拆 WU、不委派** harness-* 的简单实现（主 checkout）
+- Tier 0 / Tier 1（见上；Tier 1 须 verification-lite）
 - 写 spec / plan / decision（写完后**暂停**）
 - 范围不清晰（先 brainstorming）
+
+**禁止用 Tier 0/1 规避：** plan 有 dispatch、≥2 WU、用户要求并行 → 必须 Tier 2+。
 
 ## Git（Leader）
 

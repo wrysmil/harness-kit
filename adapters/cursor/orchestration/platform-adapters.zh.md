@@ -13,11 +13,12 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 | 信号 | 平台 |
 | --- | --- |
-| Cursor 工作区、`.cursor/`、subagent 可委派 | **cursor** |
-| Codex CLI + `omx` 在 PATH | **codex** |
-| 以上皆否 | **generic** — 单会话顺序执行，关键步骤需人工确认 |
+| Cursor 工作区 + `.cursor/agents/harness-*` | cursor |
+| CLAUDE.md 会话 + Skill 工具 + 无 Cursor | claude |
+| Codex CLI + `omx` | codex |
+| 否则 | generic |
 
-在 execution-log 的 front matter 中记录 `platform: cursor | codex | generic`。
+在 execution-log 的 front matter 中记录 `platform: cursor | claude | codex | generic`。
 
 ---
 

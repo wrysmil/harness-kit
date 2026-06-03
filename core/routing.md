@@ -9,9 +9,11 @@
 - 方案设计优先使用 `superpowers:brainstorming`；该阶段向用户提问时**优先**使用环境内 ask 类结构化工具（无则对话提问）。
 - 已批准设计后的实施计划使用 `superpowers:writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
-  - **Codex CLI**：使用 `oh-my-codex` 的 `omx` 工作流（如 `omx ultrawork`）
-  - **Cursor**：使用 `cursor-orchestration:dispatcher-workflow`（`.cursor/agents/` subagent 并行，见 `harness-kit/adapters/cursor/orchestration/`）
-- 小改动和单文件机械修改由当前助手直接处理。
+  - **Codex CLI**：`omx ultrawork`（`orchestration.dispatch`）
+  - **Cursor**：`cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`
+  - **Claude Code**：`claude-orchestration` → 同上
+- **Tier 0** 单文件机械修改：Leader 直做，无 FM（见 § 任务 Tier）。
+- **Tier 1+** 简单实现：Leader 直做或编排（见 § WU 编排硬触发）。
 - 项目级 skill 优先于通用 skill。
 - **Git 协作**：组织级分支、提交、MR、热修、合流默认 invoke **`git-xywh`** skill；本项目差异与 AI 约束见 `harness-kit/project.git.md`（不将 skill 全文复制进仓库）。
 
@@ -38,26 +40,67 @@
 
 仅说「写方案」→ **只** Write `specs/` 并暂停；不得同轮进入 plan 或实现。细则见 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
 
+### 组合指令（同句多阶段）
+
+用户**一句**里同时出现设计/计划 **与** 实现/执行（如「写计划然后执行」「出方案并直接做」）：
+
+| 规则 | 说明 |
+| --- | --- |
+| **只执行前一阶段** | 本轮回合仅完成 spec 或 plan，**暂停** |
+| **不得** | 因句末「然后执行/直接做」在本轮改业务代码、激活编排 skill、Write Tier 1+ 实现产物 |
+| **回复须说明** | 「plan 已写入；请在本会话说 **开始实现** 后继续」 |
+| **例外** | 用户**同时**明确「spec/plan 也不用等我确认」→ 可写 FM `approved: true` 并注明原话 |
+
+「之后都默认你推荐的就好」**不**构成上述例外（见 § 阶段门禁）。
+
+## 任务 Tier（产物分级）
+
+| Tier | 名称 | 典型场景 | 产物 |
+| --- | --- | --- | --- |
+| **0** | 机械小改 | 单文件 typo、改常量、纯格式化 | **无** FM；回复含验证摘要即可 |
+| **1** | Leader 直做 | ≥2 写文件、bugfix、小 feature、配置变更、用户说 fix/实现但未走 WU | **`verifications/*-verification-lite.md`**（模板 `verification-lite.md`） |
+| **2+** | 编排交付 | 多 task、有 `*-dispatch.md`、并行 WU、批次尾盘 | spec/plan/dispatch、execution-log、collective-test、code-review 等 |
+
+**升级规则：** 执行中发现 Tier 估低 → 立即补 Tier 1 产物或暂停升级 spec/plan。
+
+**Tier 0 硬条件（须同时）：** 仅 **1** 个写文件；无新增测试；无行为变更；用户未说「实现/fix/审查」。
+
+**Tier 1 触发（任一即须）：** ≥2 写文件；跑过测试/lint；用户说 fix/实现/改 bug；Leader 直做已批准 plan 且不委派 WU。
+
+**禁止：** 用 Tier 0 规避 Tier 1；用 Tier 1 Leader 直做规避 Tier 2 编排（见下节硬触发）。
+
+### WU 编排硬触发（Tier 2+，不得 Leader 直做）
+
+满足 **任一** 须 `cursor-orchestration` / `claude-orchestration`（不得仅 Tier 1）：
+
+- plan FM 的 `dispatch:` **非** `n/a`，或存在 `*-dispatch.md`
+- plan 内 **≥2** 个可并行 WU / GROUP
+- 用户说「并行」「多 task」「开始实现」且已有 **已批准** plan
+- 预计 **≥3** 个写文件且非纯 docs/chore
+
+不满足上表且 scope 有界 → 允许 Tier 1 Leader 直做。
+
 ## 路由表
 
-| 任务类型 | Codex Route | Cursor Route | 产物 |
-| --- | --- | --- | --- |
-| 需求澄清 / 方案设计 / 行为变更 | `superpowers:brainstorming` | `superpowers:brainstorming` | `.ai-runtime-artifacts/specs/` |
-| 实施计划 | `superpowers:writing-plans` | `superpowers:writing-plans` | `.ai-runtime-artifacts/plans/` |
-| 多 task 编码 / 并行实现 | `omx ultrawork` 或等价 omx 工作流 | `cursor-orchestration:dispatcher-workflow` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
-| 验证 / 跑命令证据 | `superpowers:verification-before-completion` | `superpowers:verification-before-completion` | `.ai-runtime-artifacts/verifications/` |
-| 代码审查（尾盘/批次） | `requesting-code-review` | `requesting-code-review` + `cursor-orchestration` | `.ai-runtime-artifacts/reviews/` |
-| **批次收尾（尾盘）** | `verification-before-completion` → `requesting-code-review` | 先 `verification-before-completion`，再 `requesting-code-review` | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
-| 缺陷调查 | `superpowers:systematic-debugging` 或 `omx` debugger 路由 | `superpowers:systematic-debugging` + `harness-debugger` 或 `harness-explorer` | `.ai-runtime-artifacts/specs/` 或 `.ai-runtime-artifacts/verifications/` |
-| 验证 / 修复循环 | `omx` verify/fix 或 `superpowers:verification-before-completion` | `superpowers:verification-before-completion` + 独立 `harness-reviewer` | `.ai-runtime-artifacts/verifications/` + `.ai-runtime-artifacts/reviews/` |
-| 架构决策 | architect / critic / planner 组合 | Task `generalPurpose`（只读）× 多轮 + decision 产物 | `.ai-runtime-artifacts/decisions/` |
-| 信息调研 / 网页搜索 / 截图取证 | `harness-web-investigator` | `harness-web-investigator` | `.ai-runtime-artifacts/research/` |
-| 文章 / 知识沉淀 / 对外文档 | `superpowers:brainstorming` + 写作风格 skill + 文档发布 skill | 同左 | `.ai-runtime-artifacts/retros/` 或用户指定位置 |
-| 小改动 / 单文件机械修改 | 直接处理 | 直接处理 | 无需产物 |
-| 建分支 / 提交 / rebase / 开 MR·PR | `git-xywh` + `project.git.md` | 同左 | 无（或用户要求的 MR 链接） |
-| 热修 / 提测线 `test/v*` / 合流 / 打标签 | `git-xywh` + `project.git.md` | 同左 | 无 |
-| Harness 脚手架变更提交 | `git-xywh`（类型 `chore`，范围 `harness-kit`） | 同左 | 与业务 commit 分离 |
-| 文档审查 | `superpowers:document-review` | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
+| 任务类型 | Capability | Codex | Cursor | Claude | 产物 |
+| --- | --- | --- | --- | --- | --- |
+| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `superpowers:brainstorming` | 同左 | 同左 | `.ai-runtime-artifacts/specs/` |
+| 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | 同左 | `.ai-runtime-artifacts/plans/` |
+| 多 task 编码 / 并行实现 | `orchestration.dispatch` | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
+| 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | 同左 | `.ai-runtime-artifacts/verifications/` |
+| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` | 同左 + 编排 skill | 同左 + 编排 skill | `.ai-runtime-artifacts/reviews/` |
+| **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
+| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 + harness-debugger/explorer | 同左 + Task | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
+| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + harness-reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
+| 架构决策 | — | architect / critic / planner | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
+| 信息调研 / 网页搜索 | `roles.web-investigator` | omx research | `harness-web-investigator` | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
+| 文章 / 知识沉淀 / 对外文档 | — | brainstorming + 写作 skill | 同左 | 同左 | `retros/` 或用户指定 |
+| 小改动 / Tier 0 机械修改 | — | 直接处理 | 同左 | 同左 | 无 FM（回复含验证） |
+| Leader 直做 / Tier 1 简单实现 | `skills.stage-load` | 直做 + verification | 同左 | 同左 | `verifications/*-verification-lite.md` |
+| 建分支 / 提交 / rebase / MR·PR | `git.worktree-script` + git-xywh | `git-xywh` + `project.git.md` | 同左 | 同左 | 无（或 MR 链接） |
+| 热修 / 提测线 / 合流 / 标签 | — | `git-xywh` + `project.git.md` | 同左 | 同左 | 无 |
+| Harness 脚手架变更 | — | `git-xywh` chore | 同左 | 同左 | 与业务 commit 分离 |
+| 文档审查 | — | `superpowers:document-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
 
 ## 按判定加载
 
@@ -65,22 +108,24 @@
 
 | 判定（路由表 / 用户任务） | 再读（按序） |
 | --- | --- |
-| 小改动 / 单文件机械修改 | 无 stage skill（可选 `project.profile.md`）；叠加时按需 Load（验证、Git、修 bug 等） |
+| 小改动 / Tier 0 | 无 stage skill；回复须含改动摘要 + 验证命令输出 |
+| Leader 直做 / Tier 1 | **①** Load `verification-before-completion` → **②** `project.verification.md` → **③** Write `verification-lite.md` |
 | 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` skill → `dispatcher-workflow.md`；**仅当委派 harness-* 子 Agent 时** §0 WORKTREE-INIT；派发 WU 时 `skill-preferences.zh.md` |
-| 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流文档 |
+| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`；委派时 §0 WORKTREE-INIT；`core/orchestration/skill-preferences.md` |
+| 多 task 编码 / 并行实现（Claude） | `claude-orchestration` → 同上；Task 绑定见 `adapters/claude/bindings.md` |
+| 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流 |
 | 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
 | 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；Cursor 委派 `harness-reviewer`（Leader 落盘） |
-| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** `requesting-code-review` → `artifact-templates/code-review.md` **③** `dispatcher-workflow.md` § 步骤 3 **④** `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` |
-| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `orchestration/agents/` |
-| 信息调研 / 网页搜索 | 委派 `harness-web-investigator` → `orchestration/agents/web-investigator.md` |
+| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** `requesting-code-review` → `artifact-templates/code-review.md` **③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
+| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `core/orchestration/agents/`；Claude 用 Task |
+| 信息调研 / 网页搜索 | 委派 web-investigator（Cursor subagent / Claude Task）→ `core/orchestration/agents/web-investigator.md` |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
 | 文档审查 | **①** Load `document-review` → **②** 根据文档类型加载 `review-rules/*.md` |
 
-**禁止：** 在未判定 route 前预读 `dispatcher-workflow.md`、`skill-preferences.zh.md` 或全套 `project.*`。
+**禁止：** 在未判定 route 前预读 `core/orchestration/dispatcher-workflow.md`、`skill-preferences.md` 或全套 `project.*`。
 
 **Skill 产物：** 上表中带 stage skill 的阶段，正文以已 Load 的 `SKILL.md` 为准；`artifact-templates/spec.md` / `plan.md` 仅为 redirect stub。契约与门禁见 `spec.harness-overlay.md`、`plan.harness-overlay.md`；执行图见 `dispatch.harness-overlay.md`。无 stage skill 的编排产物仍用 `artifact-templates/`（execution-log、track、handoff 等）。
 
@@ -93,14 +138,18 @@
 
 用户说「开始实现」但任务仍属 Leader 直接处理时，**不得**仅为该句创建 worktree。
 
-### "小改动"判定标准
+### Tier 与小改动判定
 
-以下情况**不属于**小改动，必须走路由表产出产物：
+**Tier 0（见 § 任务 Tier）：** 仅聊天 + 验证摘要，无 FM。
 
-- 涉及 3 个以上文件的代码审查或 diff 分析
-- 用户要求"审核"、"review"、"检查"代码质量或正确性
-- 作为实施流程末尾的验证步骤（无论用户是否显式说"验证"）
-- 需要跨模块理解才能给出结论的分析
+**以下不属于 Tier 0**（至少 Tier 1；满足 WU 硬触发则 Tier 2+）：
+
+- ≥2 个写文件
+- 用户要求 fix / 实现 / 改 bug / 审查
+- 涉及 3 个以上文件的 diff 分析
+- 作为实施流程末尾的验证步骤
+- 需要跨模块理解才能给出结论
+- plan 已存在且 `dispatch:` 非 `n/a`
 
 ## 阶段门禁
 
@@ -112,7 +161,9 @@
 | 计划完成 | `.ai-runtime-artifacts/plans/` | 「开始实现」「并行执行」或给修改意见 |
 | 决策完成 | `.ai-runtime-artifacts/decisions/` | 「执行」 |
 
-**已批准** = 用户说过上表继续指令，或任务开头一次性授权该跳转（须更新产物 front matter：`approved: true`）。
+**已批准** = 用户在本会话**单独说过**上表继续指令（如「开始实现」），或任务开头一次性授权且 FM 写 `approved: true` + 引用原话。
+
+**不算已批准：** 同句组合指令中的「然后执行/直接做」（见 § 组合指令）；仅写 plan 的同轮 continuation。
 
 **用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
 
@@ -145,8 +196,11 @@
 - Load 后**不得**用 `artifact-templates` 同名 stub/旧提纲的正文替代 skill；Harness 仅提供 overlay（FM、`## Next`、dispatch 指针，见 `artifacts.md`）。
 - 有阶段 skill：先 Load → 再交付该阶段产物；`skills` 非空且与 route 一致（见 `artifacts.md`）。
 - 子 Agent：prompt「本 WU Skills」所列**必须** Load；返回须 `### Skills 使用`，否则 Leader 不整合。
-- 小改动：无 stage skill；若将叠加 skill，次行 `Skills: <slug>（用途）`，用时 Load。
-- 会话：首句 `「Harness：…」`；有 route/叠加 skill 时次行 `Skills: <slug>@<path> loaded|skipped`。
+- 小改动 Tier 0：无 stage skill；次行 `Skills:` 仅在有叠加 skill 时
+- 会话声明（**统一格式，全平台**）：
+  - 首行：`「Harness：<route 或 "Tier 0 小改动" | "Tier 1 Leader 直做">」`
+  - 次行（有 stage/route skill 或 Tier 1+）：`Skills: <slug>@<path> loaded|skipped`
+- Tier 1+ 完成前须 Load `verification-before-completion` 并落盘或回复附命令输出
 
 ## 沟通语言
 
@@ -156,7 +210,7 @@
 
 ## 运行约束
 
-- **强制声明：** 首句 `「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill 时次行 `Skills:`（见上节）。
+- **强制声明：** 首行 `「Harness：…」`；次行 `Skills:` 格式见 § 阶段指定 skill 必用（Tier 1+ 或 stage skill 时必填）
 - **未声明时的用户干预：** 首句无 `「Harness：…」` → 发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - **跳过门禁时的干预：** `你跳过了阶段门禁。我只要求写方案/计划，不要改代码。写入 .ai-runtime-artifacts/ 后暂停等我确认。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
