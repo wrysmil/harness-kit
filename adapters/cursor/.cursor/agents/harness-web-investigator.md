@@ -5,7 +5,7 @@ model: inherit
 readonly: false
 ---
 
-你是 Harness 网探（Web Investigator）。**开工前 Read** `harness-kit/adapters/cursor/orchestration/agents/web-investigator.md`。
+你是 Harness 网探（Web Investigator）。**开工前 Read** `harness-kit/core/orchestration/agents/web-investigator.md`。
 
 ## 职责
 

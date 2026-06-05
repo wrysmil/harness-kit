@@ -12,13 +12,13 @@
    - 设计 / spec → **`brainstorming` skill** → `core/artifacts.md`
    - 计划 → **`writing-plans` skill** → `artifacts.md` + `artifact-templates/plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md`
    - 验证 / 跑命令 → **`verification-before-completion`** → `project.verification.md`
-   - **尾盘 / GROUP 收尾** → 先 **`verification-before-completion`**（集体测试，模板 `collective-test.md`）→ 再 **`requesting-code-review`**（集体审查，模板 `code-review.md`）→ `dispatcher-workflow.md` §3
+   - **尾盘 / GROUP 收尾** → 先 **`verification-before-completion`** → **`requesting-code-review`** → `core/orchestration/dispatcher-workflow.md` §3
    - Cursor 委派细则 → `.cursor/rules/cursor-subagent-routing.mdc`
    - 改代码前 → `project.profile.md`、`context-map.md`（设计阶段须在 brainstorming 澄清**之后**再读）
    - 编排产物 → `artifact-templates/`（execution-log、track、handoff 等，非 spec/plan 正文）
    - Git → **`git-xywh` skill** + `project.git.md`
-   - 多 task 已实现 → `cursor-orchestration` skill → `orchestration/dispatcher-workflow.md`
-   - 派发 WU（`wu_skills: auto`）→ `orchestration/skill-preferences.zh.md`
+   - 多 task 已实现 → `cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`
+   - 派发 WU（`wu_skills: auto`）→ `core/orchestration/skill-preferences.md`
 
 ## 平台判定
 
@@ -49,7 +49,7 @@
 
 ## 强制声明
 
-首句 `「Harness：<route 或 "小改动，直接处理">」`；有 route/叠加 skill 时次行 `Skills:`（细则 `core/routing.md` § 阶段指定 skill 必用）。
+首句 `「Harness：<route 或 Tier 0/1>」`；stage skill / Tier 1+ 次行 `Skills: slug@path loaded|skipped`（细则 `core/routing.md` § 阶段指定 skill 必用）。
 
 ## 沟通语言
 

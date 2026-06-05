@@ -1,0 +1,71 @@
+platform: codex
+matrix_version: 1
+capabilities:
+  routing.stage-gate:
+    status: supported
+    binding: "routing.md + AGENTS overlay"
+  routing.harness-declare:
+    status: supported
+    binding: "Harness 声明"
+  orchestration.dispatch:
+    status: supported
+    binding: "omx ultrawork"
+  orchestration.leader:
+    status: supported
+    binding: "主 Agent + omx leader 路由"
+  orchestration.parallel-wu:
+    status: supported
+    binding: "omx ultrawork 并行"
+  orchestration.dispatch-track:
+    status: supported
+    binding: "execution-log / omx tracking"
+  orchestration.worktree-sandbox:
+    status: degraded
+    binding: "git worktree 或跳过"
+    degraded_reason: "omx 默认路径可能无 worktree"
+  orchestration.collective-closeout:
+    status: supported
+    binding: "verify/fix + reviewer 路由"
+  orchestration.continuous-loop:
+    status: manual
+    binding: "omx 维护模式 opt-in"
+  roles.coder:
+    status: supported
+    binding: "omx worker"
+  roles.implementer:
+    status: supported
+    binding: "omx worker"
+  roles.reviewer:
+    status: supported
+    binding: "omx reviewer"
+  roles.test-engineer:
+    status: supported
+    binding: "omx test 路由"
+  roles.explorer:
+    status: supported
+    binding: "omx explore"
+  roles.debugger:
+    status: supported
+    binding: "omx debugger"
+  roles.web-investigator:
+    status: degraded
+    binding: "general research 路由"
+    degraded_reason: "无专用 web-investigator omx 角色"
+  artifacts.runtime-layout:
+    status: supported
+    binding: ".ai-runtime-artifacts/"
+  artifacts.verification-lite:
+    status: supported
+    binding: "Tier 1 → verification-lite.md"
+  skills.stage-load:
+    status: supported
+    binding: "omx skills / Read SKILL.md"
+  interaction.structured-ask:
+    status: degraded
+    binding: "对话式"
+  hooks.session-lifecycle:
+    status: manual
+    binding: "无标准 hook"
+  git.worktree-script:
+    status: degraded
+    binding: "manual git worktree"

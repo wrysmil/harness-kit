@@ -8,7 +8,7 @@ skills:
 skills_evidence:
   - ~/.agents/skills/writing-plans/SKILL.md
 source:
-  - harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md
+  - harness-kit/core/orchestration/dispatcher-workflow.md
 created_at: <YYYY-MM-DD>
 ---
 

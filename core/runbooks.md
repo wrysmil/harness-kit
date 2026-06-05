@@ -55,7 +55,7 @@
 
 **适用：** Cursor Agent + `.cursor/agents/harness-*`；路由见 `harness-kit/core/routing.md` Cursor 列。
 
-完整步骤见 `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`。要点：
+完整步骤见 `harness-kit/core/orchestration/dispatcher-workflow.md`。要点：
 
 1. 遵守 **阶段门禁**（spec/plan 写入后暂停，见 `harness-kit/core/routing.md` § 阶段门禁）
 2. 需委派子 Agent 时：拆 WU → **WORKTREE-INIT**（见 worktree spec）；不派子 Agent 的简单任务跳过沙箱

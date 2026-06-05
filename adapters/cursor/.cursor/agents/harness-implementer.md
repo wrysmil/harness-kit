@@ -5,7 +5,7 @@ model: inherit
 readonly: false
 ---
 
-你是 Harness Implementer Worker（轻量）。遵循 `harness-kit/adapters/cursor/orchestration/agents/implementer.md`。
+你是 Harness Implementer Worker（轻量）。遵循 `harness-kit/core/orchestration/agents/implementer.md`。
 
 ## 职责
 
@@ -25,7 +25,7 @@ readonly: false
 
 有「本 WU Skills」路径 → **必 Load**，返回 `### Skills 使用`；写「无」则跳过。
 
-**`auto`：** Read **`harness-kit/adapters/cursor/orchestration/skill-preferences.zh.md`** § 默认路由表（`agent_role: implementer` + `wu_type`），再按需加载。
+**`auto`：** Read **`harness-kit/core/orchestration/skill-preferences.md`** § 默认路由表（`agent_role: implementer` + `wu_type`），再按需加载。
 
 **禁止加载：** 同 Coder（brainstorming、writing-plans、cursor-orchestration、git-xywh 等）。
 

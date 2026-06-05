@@ -34,6 +34,7 @@ created_at: 2026-05-14
 从 `harness-kit/adapters/` 投影到项目根目录：
 
 - `harness-kit/adapters/agents/.agents/` -> `.agents/`
+- `harness-kit/adapters/claude/.agents/` -> `.agents/`（合并 claude-orchestration skill）
 - `harness-kit/adapters/cursor/.cursor/` -> `.cursor/`
 
 `harness-kit/adapters/cursor/orchestration/` **不投影**，保留在 harness-kit 内供 AI 读取。
@@ -45,8 +46,9 @@ Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存
 - `.cursor/rules/ai-entry.mdc`（含 § 文件写入与阶段门禁）
 - `.cursor/rules/cursor-subagent-routing.mdc`
 - `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer / web-investigator）
-- `.cursor/skills/`（能力副本；偏好见 `adapters/cursor/orchestration/skill-preferences.zh.md`）
+- `.cursor/skills/`（能力副本；WU 偏好见 `core/orchestration/skill-preferences.md`）
 - `.agents/skills/cursor-orchestration/SKILL.md`
+- `.agents/skills/claude-orchestration/SKILL.md`（Claude Code；源 `adapters/claude/.agents/skills/`）
 
 可选启用 Cursor hooks：
 

@@ -1,130 +1,52 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+description: Harness 代码审查：WU 轻量审查与 GROUP 尾盘集体审查。完成实现、批次收尾、合并前使用。触发：review、审查、code-review、集体审查。
 ---
 
-# Requesting Code Review
+# Requesting Code Review（Harness）
 
-Dispatch a code reviewer subagent to catch issues before they cascade. The reviewer gets precisely crafted context for evaluation — never your session's history. This keeps the reviewer focused on the work product, not your thought process, and preserves your own context for continued work.
+**Core principle:** Review early, review often — **Harness 下必须用 `harness-reviewer`，禁止裸 `generalPurpose`。**
 
-**Core principle:** Review early, review often.
+## 两层审查（必辨）
 
-## When to Request Review
+| 层 | 谁发起 | 机制 | 落盘 |
+| --- | --- | --- | --- |
+| **WU 轻量审查** | Coder（WU 内） | 独立 `harness-reviewer` 实例 | **不落盘**；返回 `code_review: PASS\|BLOCK` |
+| **GROUP 集体审查** | Leader（尾盘 B） | 独立 `harness-reviewer`；须先 collective-test PASS | Leader Write `reviews/*-code-review.md` |
 
-**Mandatory:**
-- After each task in subagent-driven development
-- After completing major feature
-- Before merge to main
+**顺序（尾盘）：** collective-test → 本 skill → code-review 产物。细则：batch-closeout spec §4。
 
-**Optional but valuable:**
-- When stuck (fresh perspective)
-- Before refactoring (baseline check)
-- After fixing complex bug
+## Harness 委派（Cursor）
 
-## How to Request
+1. 声明 `Skills: requesting-code-review@<path> loaded`
+2. Load 本 skill
+3. 委派 **`harness-reviewer`**（与所有 Coder/Implementer **不同实例**；readonly）
+4. Prompt 正文：`core/orchestration/agents/reviewer.md`；占位符见 `code-reviewer.md`
+5. **Leader** 将集体审查返回 Write `artifact-templates/code-review.md` 路径；Reviewer **不** Write 文件
 
-**1. Get git SHAs:**
-```bash
-BASE_SHA=$(git rev-parse HEAD~1)  # or origin/main
-HEAD_SHA=$(git rev-parse HEAD)
-```
+**Claude：** 新 Task + readonly + `agents/reviewer.md`（见 `adapters/claude/bindings.md`）。
 
-**2. Dispatch code reviewer subagent:**
+**范围证据：** 优先 **文件列表 + diff 摘要**；worktree 批次可用 `{BASE_SHA}`/`{HEAD_SHA}`，非必须。
 
-Use Task tool with `general-purpose` type, fill template at `code-reviewer.md`
+## 何时必须
 
-**Placeholders:**
-- `{DESCRIPTION}` - Brief summary of what you built
-- `{PLAN_OR_REQUIREMENTS}` - What it should do
-- `{BASE_SHA}` - Starting commit
-- `{HEAD_SHA}` - Ending commit
+- GROUP 尾盘（Tier 2+ 批次交付）
+- WU 内 Coder 闭环（`coder.md` § 轻量审查）
+- 合并 main 前（Leader 组织）
 
-**3. Act on feedback:**
-- Fix Critical issues immediately
-- Fix Important issues before proceeding
-- Note Minor issues for later
-- Push back if reviewer is wrong (with reasoning)
+## 禁止
 
-## Example
+- 实现与审查同一 subagent 实例
+- 无 `harness-reviewer` 约束的 Task
+- 跳过 collective-test 直接集体审查
+- Reviewer 会话内 Write `.ai-runtime-artifacts/`
+- 仅以 Coder `code_review: PASS` 替代尾盘集体审查
 
-```
-[Just completed Task 2: Add verification function]
+## 反馈处理
 
-You: Let me request code review before proceeding.
+- Critical → 立即修；Important → 继续前修；Minor → 记录
+- 有依据时可 push back
 
-BASE_SHA=$(git log --oneline | grep "Task 1" | head -1 | awk '{print $1}')
-HEAD_SHA=$(git rev-parse HEAD)
+## Superpowers 原版（非 Harness 项目）
 
-[Dispatch code reviewer subagent]
-  DESCRIPTION: Added verifyIndex() and repairIndex() with 4 issue types
-  PLAN_OR_REQUIREMENTS: Task 2 from docs/superpowers/plans/deployment-plan.md
-  BASE_SHA: a7981ec
-  HEAD_SHA: 3df7661
-
-[Subagent returns]:
-  Strengths: Clean architecture, real tests
-  Issues:
-    Important: Missing progress indicators
-    Minor: Magic number (100) for reporting interval
-  Assessment: Ready to proceed
-
-You: [Fix progress indicators]
-[Continue to Task 3]
-```
-
-## Integration with Workflows
-
-**Subagent-Driven Development:**
-- Review after EACH task
-- Catch issues before they compound
-- Fix before moving to next task
-
-**Executing Plans:**
-- Review after each task or at natural checkpoints
-- Get feedback, apply, continue
-
-**Ad-Hoc Development:**
-- Review before merge
-- Review when stuck
-
-## Red Flags
-
-**Never:**
-- Skip review because "it's simple"
-- Ignore Critical issues
-- Proceed with unfixed Important issues
-- Argue with valid technical feedback
-
-**If reviewer wrong:**
-- Push back with technical reasoning
-- Show code/tests that prove it works
-- Request clarification
-
-See template at: requesting-code-review/code-reviewer.md
-
----
-
-## Harness / Cursor 覆盖（强制）
-
-在 **Harness Kit + Cursor** 下，本节优先于上文「Task general-purpose」：
-
-### 委派谁
-
-| 场景 | 机制 |
-| --- | --- |
-| WU 轻量审查 | Coder Load 本 skill → 委派 **`harness-reviewer`**（与实现 **不同实例**） |
-| 尾盘集体审查 | Leader Load 本 skill → 委派 **`harness-reviewer`** |
-| **禁止** | 无 `harness-reviewer` 约束的裸 `generalPurpose` Task |
-
-Prompt 正文：`harness-kit/adapters/cursor/orchestration/agents/reviewer.md`；可选占位符见同目录 `code-reviewer.md`。
-
-### 落盘（禁止仅对话输出）
-
-| 角色 | 职责 |
-| --- | --- |
-| `harness-reviewer` | readonly；**只返回** `APPROVE` \| `BLOCK` + Findings |
-| **Leader** | 收到返回后 **Write** `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（`artifact-templates/code-review.md`） |
-
-### 与尾盘集体测试的顺序
-
-GROUP 收尾：**先**集体测试（`collective-test.md`）**再**本 skill 集体审查。细则：`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
+无 Harness Kit 时，可用 Task `general-purpose` + git SHA + `code-reviewer.md` 模板（见 skill 副本 `_vendor` 说明）。**本项目忽略该路径。**

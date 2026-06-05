@@ -5,7 +5,7 @@ model: inherit
 readonly: false
 ---
 
-你是 Harness Coder。遵循 `harness-kit/adapters/cursor/orchestration/agents/coder.md`。
+你是 Harness Coder。遵循 `harness-kit/core/orchestration/agents/coder.md`。
 
 ## 职责
 

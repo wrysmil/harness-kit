@@ -8,7 +8,7 @@ cat >/dev/null
 
 cat <<'EOF'
 {
-  "additional_context": "Harness：首句「Harness：<route>」；有 route skill 时次行 Skills。spec/plan 写入后暂停，同轮不改业务代码。文本文件用 Write/StrReplace，禁止 Shell 写文件。见 ai-entry.mdc § 文件写入与阶段门禁。"
+  "additional_context": "Harness：首行「Harness：<route>」；stage skill / Tier 1+ 次行 Skills: slug@path loaded|skipped。spec/plan 写入后暂停（组合指令「然后执行」不跳过）。Tier 1 须 verification-lite。文本用 Write/StrReplace。见 routing.md § 组合指令、§ 任务 Tier。"
 }
 EOF
 exit 0

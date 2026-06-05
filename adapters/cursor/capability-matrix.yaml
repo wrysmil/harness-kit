@@ -1,0 +1,69 @@
+platform: cursor
+matrix_version: 1
+capabilities:
+  routing.stage-gate:
+    status: supported
+    binding: "ai-entry.mdc + routing.md 阶段门禁"
+  routing.harness-declare:
+    status: supported
+    binding: "首句 Harness 声明"
+  orchestration.dispatch:
+    status: supported
+    binding: "cursor-orchestration → core/orchestration/dispatcher-workflow.md"
+  orchestration.leader:
+    status: supported
+    binding: "主 Agent Composer/Agent 模式"
+  orchestration.parallel-wu:
+    status: supported
+    binding: "并行 subagent/Task; max 3 default"
+  orchestration.dispatch-track:
+    status: supported
+    binding: "DISPATCH-TRACK append-only"
+  orchestration.worktree-sandbox:
+    status: supported
+    binding: "dispatcher §0 WORKTREE-INIT"
+  orchestration.collective-closeout:
+    status: supported
+    binding: "collective-test + harness-reviewer + code-review"
+  orchestration.continuous-loop:
+    status: supported
+    binding: "orchestration/continuous-loop.md opt-in"
+  roles.coder:
+    status: supported
+    binding: "harness-coder subagent"
+  roles.implementer:
+    status: supported
+    binding: "harness-implementer"
+  roles.reviewer:
+    status: supported
+    binding: "harness-reviewer readonly"
+  roles.test-engineer:
+    status: supported
+    binding: "harness-test-engineer"
+  roles.explorer:
+    status: supported
+    binding: "harness-explorer / Task explore"
+  roles.debugger:
+    status: supported
+    binding: "harness-debugger"
+  roles.web-investigator:
+    status: supported
+    binding: "harness-web-investigator"
+  artifacts.runtime-layout:
+    status: supported
+    binding: ".ai-runtime-artifacts/"
+  artifacts.verification-lite:
+    status: supported
+    binding: "Tier 1 Leader 直做 → verification-lite.md"
+  skills.stage-load:
+    status: supported
+    binding: "Read SKILL.md / Skill 工具"
+  interaction.structured-ask:
+    status: supported
+    binding: "AskQuestion"
+  hooks.session-lifecycle:
+    status: supported
+    binding: ".cursor/hooks.json"
+  git.worktree-script:
+    status: supported
+    binding: "git worktree + harness-worktree.sh"

@@ -37,6 +37,15 @@ required_kit_files=(
   "project.verification.md"
   "project.git.md"
   "core/routing.md"
+  "core/capabilities/registry.md"
+  "core/capabilities/primitives.md"
+  "core/orchestration/dispatcher-workflow.md"
+  "core/orchestration/roles.md"
+  "core/orchestration/skill-preferences.md"
+  "core/orchestration/config.defaults.yaml"
+  "core/orchestration/tracking/schema.md"
+  "core/orchestration/agents/leader.md"
+  "core/orchestration/agents/coder.md"
   "core/artifacts.md"
   "core/verification.md"
   "core/runbooks.md"
@@ -53,6 +62,7 @@ required_kit_files=(
   "artifact-templates/plan.harness-overlay.md"
   "artifact-templates/dispatch.harness-overlay.md"
   "artifact-templates/verification.md"
+  "artifact-templates/verification-lite.md"
   "artifact-templates/collective-test.md"
   "artifact-templates/code-review.md"
   "artifact-templates/document-review.md"
@@ -107,7 +117,14 @@ required_kit_files=(
   "adapters/cursor/orchestration/runtime/plan-progress-sync.md"
   "adapters/cursor/orchestration/tracking/schema.md"
   "adapters/agents/.agents/skills/cursor-orchestration/SKILL.md"
-  "adapters/codex/README.md"
+  "adapters/cursor/bindings.md"
+  "adapters/cursor/capability-matrix.yaml"
+  "adapters/claude/README.md"
+  "adapters/claude/bindings.md"
+  "adapters/claude/capability-matrix.yaml"
+  "adapters/claude/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/codex/bindings.md"
+  "adapters/codex/capability-matrix.yaml"
   "scripts/install-ai-skills.sh"
   "scripts/harness-init.sh"
   "scripts/harness-check.sh"
@@ -128,6 +145,7 @@ required_deployed_files=(
   ".cursor/agents/harness-web-investigator.md"
   ".agents/README.md"
   ".agents/skills/cursor-orchestration/SKILL.md"
+  ".agents/skills/claude-orchestration/SKILL.md"
   ".ai-runtime-artifacts/README.md"
 )
 
@@ -184,6 +202,7 @@ echo "==> Checking harness subagent projection shells"
 agent_errors=0
 agents_dir="$(kit_path adapters/cursor/.cursor/agents)"
 orch_dir="$(kit_path adapters/cursor/orchestration/agents)"
+core_orch_dir="$(kit_path core/orchestration/agents)"
 max_projection_lines=80
 
 for projected in "$agents_dir"/harness-*.md; do
@@ -194,12 +213,15 @@ for projected in "$agents_dir"/harness-*.md; do
   base="$(basename "$projected" .md)"
   canonical_name="${base#harness-}"
   canonical="$orch_dir/${canonical_name}.md"
-  if [[ -f "$canonical" ]]; then
-    if ! grep -q 'orchestration/agents/' "$projected" 2>/dev/null; then
+  core_canonical="$core_orch_dir/${canonical_name}.md"
+  if [[ -f "$canonical" ]] || [[ -f "$core_canonical" ]]; then
+    if ! grep -qE 'orchestration/agents/|core/orchestration/agents/' "$projected" 2>/dev/null; then
       echo "missing orchestration/agents/ reference: $rel_projected" >&2
       agent_errors=1
     fi
-    canon_lines="$(wc -l < "$canonical" | tr -d ' ')"
+    ref="$canonical"
+    [[ -f "$core_canonical" ]] && ref="$core_canonical"
+    canon_lines="$(wc -l < "$ref" | tr -d ' ')"
     max_allowed=$(( canon_lines * 12 / 10 ))
     if [[ "$lines" -gt "$max_allowed" ]]; then
       echo "projection too fat ($lines > $max_allowed vs canonical $canon_lines): $rel_projected" >&2
@@ -212,6 +234,89 @@ for projected in "$agents_dir"/harness-*.md; do
 done
 
 if [[ "$agent_errors" -ne 0 ]]; then
+  exit 1
+fi
+
+echo "==> Checking orchestration stub redirects"
+stub_errors=0
+for stub in \
+  "$(kit_path adapters/cursor/orchestration/dispatcher-workflow.md)" \
+  "$(kit_path adapters/cursor/orchestration/skill-preferences.zh.md)"; do
+  if [[ -f "$stub" ]]; then
+    if ! grep -q 'core/orchestration/' "$stub" 2>/dev/null; then
+      echo "stub missing core redirect: $stub" >&2
+      stub_errors=1
+    else
+      echo "ok: stub redirect $stub"
+    fi
+  else
+    echo "missing stub: $stub" >&2
+    stub_errors=1
+  fi
+done
+
+if [[ "$stub_errors" -ne 0 ]]; then
+  exit 1
+fi
+
+echo "==> Checking capability matrix coverage"
+matrix_errors=0
+registry="$(kit_path core/capabilities/registry.md)"
+if [[ ! -f "$registry" ]]; then
+  echo "missing registry: $registry" >&2
+  matrix_errors=1
+else
+  capability_ids=()
+  while IFS= read -r cap_line; do
+    [[ -n "$cap_line" ]] && capability_ids+=("$cap_line")
+  done < <(grep -E '^### [a-z0-9.-]+$' "$registry" | sed 's/^### //')
+  for platform in cursor claude codex; do
+    matrix="$(kit_path "adapters/$platform/capability-matrix.yaml")"
+    bindings="$(kit_path "adapters/$platform/bindings.md")"
+    if [[ ! -f "$matrix" ]]; then
+      echo "missing matrix: $matrix" >&2
+      matrix_errors=1
+      continue
+    fi
+    if [[ ! -f "$bindings" ]]; then
+      echo "missing bindings: $bindings" >&2
+      matrix_errors=1
+    fi
+    for cap_id in "${capability_ids[@]}"; do
+      if ! grep -q "^  ${cap_id}:" "$matrix" 2>/dev/null; then
+        echo "matrix missing capability $cap_id: $matrix" >&2
+        matrix_errors=1
+      fi
+    done
+    while IFS= read -r cap_key; do
+      [[ -n "$cap_key" ]] || continue
+      block="$(awk -v key="$cap_key" '
+        $0 ~ "^  " key ":" { show=1; print; next }
+        show && /^  [a-z]/ { exit }
+        show { print }
+      ' "$matrix")"
+      if printf '%s\n' "$block" | grep -q 'status: degraded'; then
+        if [[ -f "$bindings" ]] && ! grep -qE "${cap_key}|degraded" "$bindings" 2>/dev/null; then
+          echo "degraded capability $cap_key lacks bindings note: $bindings" >&2
+          matrix_errors=1
+        fi
+      fi
+    done < <(grep -E '^  [a-z][a-z0-9.-]*:' "$matrix" 2>/dev/null | sed -n 's/^  \([a-z0-9.-]*\):.*/\1/p')
+    echo "ok: matrix $platform (${#capability_ids[@]} capabilities)"
+  done
+fi
+
+routing_file="$(kit_path core/routing.md)"
+if [[ -f "$routing_file" ]]; then
+  if ! grep -q 'claude-orchestration' "$routing_file" 2>/dev/null; then
+    echo "routing missing claude-orchestration column/reference" >&2
+    matrix_errors=1
+  else
+    echo "ok: routing claude-orchestration"
+  fi
+fi
+
+if [[ "$matrix_errors" -ne 0 ]]; then
   exit 1
 fi
 

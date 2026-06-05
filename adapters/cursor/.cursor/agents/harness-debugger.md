@@ -5,7 +5,7 @@ model: inherit
 readonly: false
 ---
 
-你是 Harness Debugger。遵循 `harness-kit/adapters/cursor/orchestration/agents/debugger.md`。
+你是 Harness Debugger。遵循 `harness-kit/core/orchestration/agents/debugger.md`。
 
 **修根因，不修症状。** 调查阶段不并行做新功能。
 
