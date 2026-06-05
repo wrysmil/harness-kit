@@ -21,8 +21,7 @@ alwaysApply: true
 
 - 改仓库内文本（源码、配置、`.ai-runtime-artifacts/`）**只用** `Write` / `StrReplace`；改前先 `Read`。
 - **Shell 仅用于** 测试、lint、构建、git、只读查询。
-- **禁止** Shell 写文本：`Set-Content`、`Out-File`、`echo … >`、`type … >`、无 `encoding='utf-8'` 的 Python/Node 一行写文件。
-- 默认 **UTF-8 无 BOM**（含中文）。
+- **禁止** Shell 写文本：`Set-Content`、`Out-File`、`echo … >`、`type … >`、Python/Node 一行写文件。
 
 **阶段门禁**
 
