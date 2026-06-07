@@ -4,35 +4,29 @@
 
 ## 项目身份
 
-**travel-assistant（旅行规划助手）** — 基于 AI 的智能旅行规划与推荐系统。当前处于 **架构迁移期**（分支 `feature/architecture-to-chat`）：从旧版多 Agent + 独立 MCP Server 流水线，重构为 **nanobot 聊天网关 + 地图/聊天双面板前端 + FastAPI 管理后台** 的携程式体验。根目录 `README.md` 仍描述旧架构，实施以 `.ai-runtime-artifacts/specs/` 与 `plans/` 为准。
+**{项目名称}（{简短描述}）** — {一句话定位}。当前处于 **{阶段}**（分支 `{分支名}`）：{当前阶段的关键变化描述}。
 
 ## 技术栈
 
 | 层 | 技术 |
 | --- | --- |
-| 用户端 | React 19、TypeScript、Vite 8、Tailwind CSS 4、高德 JS API、Zustand |
-| 管理端 | React 19、Vite、React Router（`admin/`） |
-| 管理 API | Python 3.11+、FastAPI、uvicorn、aiosqlite、PyJWT |
-| 聊天 / Agent | **nanobot**（仓库内 `nanobot/` 源码，`pip install -e`） |
-| 工具 / 地理 | MCP（`mcp` 包）、高德 / Unsplash（经 MCP 或配置） |
-| 部署 | 根目录 `Dockerfile` + `docker-compose.yml`（nginx 反代、前后端一体镜像） |
-| Harness | `harness-kit/`、`.ai-runtime-artifacts/`、Cursor 七套 `harness-*` subagent（含 `web-investigator`） |
+| 用户端 | {前端框架}、{语言}、{构建工具}、{CSS 方案}、{状态管理} |
+| 管理端 | {管理端技术栈} |
+| 管理 API | {后端语言}、{框架}、{数据库}、{认证方案} |
+| 聊天 / Agent | {AI/Agent 方案} |
+| 工具 / 集成 | {第三方服务、MCP 等} |
+| 部署 | {容器化方案、CI/CD} |
+| Harness | {harness-kit 版本或配置} |
 
 ## 主要目录
 
 | 路径 | 职责 |
 | --- | --- |
-| `backend/` | FastAPI 管理 API：认证、技能/知识库/定时任务/配置；`nanobot_mgr` 生命周期 |
-| `backend/app/api/` | HTTP 路由（`auth`、`admin/*`） |
-| `backend/app/core/` | 配置、依赖、nanobot 管理、路径 |
-| `backend/mcp_servers/` | 遗留/可选 MCP Server（amap、unsplash，stdio） |
-| `frontend/` | 用户端：地图 + 聊天（WebSocket → nanobot） |
-| `admin/` | 运营/管理后台 SPA |
-| `nanobot/` | 嵌入的 nanobot 源码与测试 |
+| `{目录1}/` | {职责描述} |
+| `{目录2}/` | {职责描述} |
+| `{目录3}/` | {职责描述} |
 | `harness-kit/` | Agent Harness 规范、适配器、脚本（勿当业务模块改） |
 | `.ai-runtime-artifacts/` | spec / plan / verification / execution-log 等过程产物 |
-| `docker/`、`nginx.conf` | 容器与反代配置 |
-| `.github/workflows/` | Docker 镜像构建推送（`travel-assistant.yml`） |
 
 ## 禁区
 
@@ -43,25 +37,21 @@
 
 ## 交付口径
 
-- 非琐碎需求：先 spec → 人确认 → plan → 人确认 → 实现（Cursor：`cursor-orchestration`；代码 WU → `harness-coder`，docs/chore/config → `harness-implementer`）→ **尾盘**：集体测试（`*-collective-test.md`）→ 集体审查（`*-code-review.md`，Leader 落盘）→ execution-log 完成。
-- 重构验收：前后端可构建、Docker 可启动、聊天链路可连 nanobot、管理 API 可鉴权、地图（高德）与聊天双面板可用；详见 `project.verification.md` 与 `.ai-runtime-artifacts/plans/`。
-- 竞品对标：`.ai-runtime-artifacts/specs/2026-05-26-ctrip-ai-tripplanner-competitive-spec.md`；网探报告见 `research/2026-05-26-ctrip-ai-tripplanner-research-report.md`。**设计阶段：** 上述仅作**参考**；须先 Load **brainstorming** 并与用户澄清，不可用旧 spec/扫代码代替 skill 流程。
+- 非琐碎需求：先 spec → 人确认 → plan → 人确认 → 实现 → **尾盘**：集体测试 → 集体审查（Leader 落盘）→ execution-log 完成。
+- 验收标准：{根据项目填写具体验收条件}。
+- 竞品参考：{如有竞品分析文档，填写路径}。**设计阶段：** 上述仅作**参考**；须先 Load **brainstorming** 并与用户澄清，不可用旧 spec/扫代码代替 skill 流程。
 - 文档与根 `README.md` 不一致时，以 **已批准 spec/plan** 与当前代码为准，并记待确认项。
 
 ## 推断项
 
-- 默认远程为 GitHub（存在 `.github/workflows/`）；MR/PR 平台推断为 **GitHub**。
-- 无根级 `package.json`；前后端各自 `package.json`，Python 依赖在 `backend/requirements.txt`。
-- 无 `backend/` 内 pytest 套件；**nanobot/** 含大量测试，业务后端测试策略待团队确认。
-- 无 husky / commitlint；提交格式推断仅依赖团队习惯 + `git-xywh` skill。
-- CI 主要为 **Docker 镜像构建推送**，非 PR 门禁 lint/test。
-- 当前功能分支：`feature/architecture-to-chat`（2026-05-26 profiler 刷新）。
-- `nanobot/` 为 vendored 源码，升级需与上游 nanobot 仓库协调。
+- {推断 1：如远程平台、分支策略等}
+- {推断 2：如包管理、依赖结构等}
+- {推断 3：如测试策略、CI 配置等}
+- {推断 4：如提交规范、代码风格等}
 
 ## 待确认项
 
-- 旧 `README.md` 与多 Agent 描述何时同步为新架构说明。
-- 生产默认分支名（`main` / `develop`）及是否启用 `git-xywh` 三主干模型。
-- 是否允许 AI 自动 `git push` / 开 PR（默认禁止，需负责人明确）。
-- `backend/mcp_servers/` 在新架构下是否保留或废弃。
-- 业务后端单元测试 / E2E 的最低验收命令（当前 plan 含 Docker E2E，无统一 `pytest backend`）。
+- {待确认 1}
+- {待确认 2}
+- {待确认 3}
+- {待确认 4}
