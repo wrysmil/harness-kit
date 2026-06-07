@@ -69,3 +69,15 @@ capabilities:
   git.worktree-script:
     status: degraded
     binding: "manual git worktree"
+  verification.collective-test:
+    status: supported
+    binding: "Leader 跑 project.verification.md → Write *-collective-test.md"
+  verification.collective-review:
+    status: supported
+    binding: "omx reviewer routing → Leader Write *-code-review.md"
+  verification.before-completion:
+    status: supported
+    binding: "verification-before-completion skill 铁律 + TDD 合规门"
+  verification.fix-loop:
+    status: supported
+    binding: "BLOCK → review-fix WU → 重新验证"

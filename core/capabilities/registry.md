@@ -2,6 +2,16 @@
 
 命名：`<domain>.<name>`，全小写，连字符分词。parity 审计见各 `adapters/*/capability-matrix.yaml`。
 
+## 完整性校验
+
+新增 capability 时，必须同步更新：
+- 本文件（registry.md）
+- `adapters/cursor/capability-matrix.yaml`
+- `adapters/claude/capability-matrix.yaml`
+- `adapters/codex/capability-matrix.yaml`
+
+校验命令：`grep -c "### " core/capabilities/registry.md` 应等于各 YAML 中 `capabilities:` 下的 key 数量。
+
 ---
 
 ### routing.stage-gate
@@ -151,4 +161,39 @@
 - **Requires:** Tier 1 Leader 直做完成
 - **Produces:** `verifications/*-verification-lite.md`
 - **Forbidden:** 替代 Tier 2+ execution-log / collective-test
+- **Degraded:** 无
+
+### git.worktree-script
+
+- **Requires:** 将委派写代码类 worker
+- **Produces:** worktree 创建/清理脚本执行
+- **Forbidden:** 有委派却跳过 worktree 初始化
+- **Degraded:** Codex/generic 手动 git worktree
+
+### verification.collective-test
+
+- **Requires:** GROUP 全部 WU 返回
+- **Produces:** `verifications/*-collective-test.md`
+- **Forbidden:** 未运行 `project.verification.md` 命令即声称 PASS
+- **Degraded:** 无
+
+### verification.collective-review
+
+- **Requires:** GROUP 全部 WU 返回 + 集体测试 PASS
+- **Produces:** `reviews/*-code-review.md`
+- **Forbidden:** reviewer 与实现同实例；worker 内 Write reviews/
+- **Degraded:** 无
+
+### verification.before-completion
+
+- **Requires:** 任何完成声明
+- **Produces:** 验证证据（verification-lite 或 collective-test）
+- **Forbidden:** 无新鲜验证证据即声称完成（铁律）
+- **Degraded:** 无
+
+### verification.fix-loop
+
+- **Requires:** 集体审查 BLOCK 或验证 FAIL
+- **Produces:** review-fix WU + 重新验证
+- **Forbidden:** 跳过修复直接声称完成
 - **Degraded:** 无

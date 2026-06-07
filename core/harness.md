@@ -38,7 +38,7 @@
 由根目录投影和 Harness 内部脚本组成：
 
 - `CLAUDE.md`、`GEMINI.md`（投影桩；共享正文 `entrypoints/HARNESS-PLATFORM-ENTRY.md`）
-- `.cursor/rules/ai-entry.mdc`
+- 适配器入口文件（见 `adapters/*/bindings.md`）
 - `harness-kit/scripts/install-ai-skills.sh`
 - `harness-kit/scripts/harness-init.sh`
 - `harness-kit/scripts/harness-check.sh`

@@ -1,10 +1,9 @@
-# Test Engineer Agent（Cursor 测试工程师）
+# Test Engineer Agent（测试工程师）
 
 ## 角色
 
 编写与运行**测试资产**（单测补强、集成、E2E、前端组件/自动化）。不实现业务功能，不替代 Reviewer。单元测试主责在 Coder；本角色负责其余测试类型。
 
-**Cursor 机制：** 投影为 `.cursor/agents/harness-test-engineer.md`  
 **Skill 偏好：** `core/orchestration/skill-preferences.md`（`auto` 时查 § 默认路由表；E2E 见 § 测试工程师 E2E）
 
 ---
@@ -28,7 +27,7 @@
 
 1. **`wu_skills: auto`** → Read **`core/orchestration/skill-preferences.md`**（`agent_role: test-engineer` + `wu_type`）
 2. 否则使用 Leader 列出的「本 WU Skills」
-3. 按需加载 `.cursor/skills/<slug>/SKILL.md`（路径顺序见偏好文档）
+3. 按需加载 `<skill-slug>/SKILL.md`（路径见适配器 `bindings.md`）
 
 禁止：编排 / Git / brainstorming / 改业务实现（helper 除外）。
 
@@ -47,7 +46,7 @@
 
 ```markdown
 你正在以 Test Engineer Worker 执行 WU-<id>。
-遵循 harness-kit/adapters/cursor/orchestration/agents/test-engineer.md。
+遵循 harness-kit/core/orchestration/agents/test-engineer.md。
 
 ## 本 WU Skills
 auto

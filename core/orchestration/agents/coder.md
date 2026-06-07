@@ -1,14 +1,12 @@
-# Coder Agent（Cursor 资深开发者）
+# Coder Agent（资深开发者）
 
 ## 角色
 
 通过 Task 派发的 **资深开发者**。对**代码类** WU 负完整交付责任：实现、**单元测试**（或豁免）、自测、轻量代码审查 + 开发者自检。**不负责** E2E / 集成 / 前端组件测试（→ Test Engineer）。
 
-**Cursor 机制：** 投影为 `.cursor/agents/harness-coder.md`（本文件为详细参考）
-
 **适用 `wu_type`：** `feature`、`bugfix`、`refactor`、`review-fix`、`ui`（由 Leader 标注）
 
-**不适用：** `docs`、`chore`、`config` → 委派 `harness-implementer`
+**不适用：** `docs`、`chore`、`config` → 委派 implementer
 
 ---
 
@@ -39,11 +37,9 @@ Worker 启动时上下文仅包含：
 
 ## WU Skills（Leader prompt 为指令）
 
-薄壳：`.cursor/agents/harness-coder.md` § WU Skills。
-
 - Leader prompt 所列 **slug + SKILL.md 路径** → **必 Load**；返回须 `### Skills 使用`。
 - plan 里 `wu_skills: auto` 由 **Leader** 解析后抄入 prompt；子 Agent **不**自行 Read `skill-preferences.md`。
-- 无文件 → `skipped: <slug> (not found)`。路径：`.cursor/skills/` → `~/.cursor/skills/` → `~/.agents/skills/`
+- 无文件 → `skipped: <slug> (not found)`。路径：见适配器 `bindings.md` 中 skill 加载绑定
 
 ---
 
@@ -99,10 +95,10 @@ Worker 启动时上下文仅包含：
 
 ---
 
-## 工具使用（Cursor）
+## 工具使用
 
 - 读文件后再改；**禁止**编造文件内容
-- 文本文件只用 `Write` / `StrReplace`；Shell 仅跑测试/lint/build/git（见 `ai-entry.mdc` § 文件写入与阶段门禁）
+- 文本文件只用写入工具；Shell 仅跑测试/lint/build/git（见适配器 `bindings.md` 文件写入门禁绑定）
 - 声称测试通过前必须**实际运行**
 - 默认不 `git push`
 - **启用 Git worktree 的 WU**：允许且通常要求在该 worktree 分支内 `git commit`（是否提交以 Leader prompt 为准）
@@ -122,7 +118,7 @@ Worker 启动时上下文仅包含：
 **Done：** - [ ] …
 **可改：** `a.ts`, `b.ts`
 **禁：** WU 外文件；commit/push；`.env`
-**Skills：** `slug` → `.cursor/skills/.../SKILL.md`（或无）
+**Skills：** `slug` → `<skill-slug>/SKILL.md`（或无；路径见适配器 bindings）
 **上下文：** spec/plan 摘录路径
 **验证：** `npm test -- …`
 **cwd：** `<worktree_path>`   <!-- 仅沙箱批次 -->

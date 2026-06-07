@@ -69,3 +69,15 @@ capabilities:
   git.worktree-script:
     status: supported
     binding: "git worktree 共用脚本"
+  verification.collective-test:
+    status: supported
+    binding: "Leader 跑 project.verification.md → Write *-collective-test.md"
+  verification.collective-review:
+    status: supported
+    binding: "reviewer Task readonly → Leader Write *-code-review.md"
+  verification.before-completion:
+    status: supported
+    binding: "verification-before-completion skill 铁律 + TDD 合规门"
+  verification.fix-loop:
+    status: supported
+    binding: "BLOCK → review-fix WU → 重新验证"

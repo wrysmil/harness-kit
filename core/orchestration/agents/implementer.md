@@ -1,13 +1,10 @@
-# Implementer Agent（Cursor 实现者 Worker）
+# Implementer Agent（轻量执行 Worker）
 
 ## 角色
 
 通过 Task 派发的 **轻量执行 Worker**。用于文档、模板、纯配置等 WU，**不**承担代码类 WU 的完整工程闭环。
 
-**适用 `wu_type`：** `docs`、`chore`、`config`（代码类 → `harness-coder`，见 `agents/coder.md`）
-
-**Cursor 机制：** 投影为 `.cursor/agents/harness-implementer.md`（本文件为详细参考）  
-**改编来源：** harness-engineer `agents/implementer.md`
+**适用 `wu_type`：** `docs`、`chore`、`config`（代码类 → coder，见 `agents/coder.md`）
 
 ---
 
@@ -38,8 +35,6 @@ Worker 启动时上下文仅包含：
 
 ## WU Skills
 
-薄壳：`.cursor/agents/harness-implementer.md` § WU Skills。
-
 - Leader 所列路径 → **必 Load**；返回 `### Skills 使用`。写「无」→ 不加载。
 - plan 的 `auto` 仅 **Leader** 解析；子 Agent 不查 `skill-preferences.md`。
 
@@ -63,10 +58,10 @@ Worker 启动时上下文仅包含：
 
 ---
 
-## 工具使用（Cursor）
+## 工具使用
 
 - 读文件后再改；**禁止**编造文件内容
-- 文本文件只用 `Write` / `StrReplace`；Shell 仅跑测试/lint/build/git（见 `ai-entry.mdc` § 文件写入与阶段门禁）
+- 文本文件只用写入工具；Shell 仅跑测试/lint/build/git（见适配器 `bindings.md` 文件写入门禁绑定）
 - 声称测试通过前必须**实际运行**
 - 不擅自 `git commit` / `git push`（除非 Leader prompt 明确要求）
 - 不访问 `.env`、密钥路径
@@ -84,8 +79,8 @@ Worker 启动时上下文仅包含：
 **返回：** `implementer.md` § 返回格式
 ```
 
-**代码类 WU（feature/bugfix 等）** 须委派 `harness-coder`，不要用本模板。  
-审查 **BLOCK** 后的代码修复：委派 **`harness-coder`**，`wu_type: review-fix`。
+**代码类 WU（feature/bugfix 等）** 须委派 coder，不要用本模板。  
+审查 **BLOCK** 后的代码修复：委派 **coder**，`wu_type: review-fix`。
 
 ---
 

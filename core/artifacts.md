@@ -53,7 +53,7 @@ skills:
   - brainstorming
   - writing-plans
 skills_evidence:
-  - .cursor/skills/brainstorming/SKILL.md
+  - brainstorming/SKILL.md（路径见适配器 bindings）
 source:
   - AGENTS.md
   - harness-kit/core/routing.md

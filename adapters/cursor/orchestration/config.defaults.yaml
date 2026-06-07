@@ -1,16 +1,7 @@
-# Cursor 编排默认配置（harness-kit）
-# 项目可在 .harness/settings.local.json 覆盖（Phase 2 可选）
-
-runtime:
-  max_parallel_agents: 3
-  loop_mode: single-pass   # single-pass | maintenance | continuous（continuous 需显式 opt-in）
+# Cursor 编排配置覆盖层
+# 继承自 harness-kit/core/orchestration/config.defaults.yaml
+# 仅列出 Cursor 特定覆盖项
 
 orchestration:
   platform: cursor
   skill: cursor-orchestration
-  dispatcher_doc: harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md
-
-artifacts:
-  execution_logs: .ai-runtime-artifacts/execution-logs/
-  tracking: .ai-runtime-artifacts/execution-logs/tracking/
-  handoff: .ai-runtime-artifacts/execution-logs/HANDOFF.md

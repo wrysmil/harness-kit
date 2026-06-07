@@ -67,3 +67,15 @@ capabilities:
   git.worktree-script:
     status: supported
     binding: "git worktree + harness-worktree.sh"
+  verification.collective-test:
+    status: supported
+    binding: "Leader 跑 project.verification.md → Write *-collective-test.md"
+  verification.collective-review:
+    status: supported
+    binding: "harness-reviewer readonly subagent → Leader Write *-code-review.md"
+  verification.before-completion:
+    status: supported
+    binding: "verification-before-completion skill 铁律 + TDD 合规门"
+  verification.fix-loop:
+    status: supported
+    binding: "BLOCK → review-fix WU → 重新验证"

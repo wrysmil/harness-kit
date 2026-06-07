@@ -4,7 +4,7 @@
 
 本文档是 Harness **子 Agent 应加载哪些 skill** 的**唯一维护入口**（文档维护，**不是** skill 文件）。
 
-- 项目内置**能力副本**在 `.cursor/skills/`（TDD、verification 等），由 Cursor 发现；升级用 `bash harness-kit/scripts/sync-cursor-skills.sh`。
+- 项目内置**能力副本**（TDD、verification 等），由适配器发现与加载；见适配器 `bindings.md` 中 skill 加载绑定。
 - **编排步骤**见 `core/orchestration/dispatcher-workflow.md`。
 
 ---
@@ -18,7 +18,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 3. 得到 skill slug 列表（顺序即加载顺序）
 4. 应用 `overrides` 追加、`exclude` 删除
 5. 剔除 **§ 全局禁止**
-6. 对列表中每一项 **按需** invoke / Read `.cursor/skills/<slug>/SKILL.md`（不存在则 `skipped`，不硬套）
+6. 对列表中每一项 **按需** invoke / Read `<skill-slug>/SKILL.md`（不存在则 `skipped`，不硬套；实际路径见适配器 bindings）
 
 **Leader 派发：** 将解析出的 **slug + 路径** 抄入 prompt（**禁**只写 `auto`）。子 Agent 须返回 `### Skills 使用`。
 
@@ -49,7 +49,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 ---
 
-## 内置能力副本（`.cursor/skills/`）
+## 内置能力副本
 
 | slug | 用途 | 来源 |
 | --- | --- | --- |
@@ -58,41 +58,41 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | systematic-debugging | 根因调查 | superpowers（副本） |
 | requesting-code-review | 独立审查 | superpowers（副本） |
 | receiving-code-review | 按审查意见改代码 | superpowers（副本） |
-| ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | ~/.trae/skills（整目录副本） |
+| ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | Trae skills（整目录副本） |
 | frontend-design | UI 实现审美 | 全局复制 |
 | agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
 
-副本来源登记：`adapters/cursor/.cursor/skills/_vendor-sources.yaml`。
+副本来源登记：见适配器 skill 来源配置。
 
 ### 仅 Leader / 不在子 Agent 列表
 
-| slug | 位置 |
+| slug | 说明 |
 | --- | --- |
-| cursor-orchestration | `.agents/skills/` |
+| 编排调度 skill | 见适配器 `bindings.md`（cursor-orchestration / claude-orchestration 等） |
 | brainstorming, writing-plans, git-xywh | 用户全局 |
 
 ---
 
 ## 按 Harness 角色（速查）
 
-| 角色 | Subagent | 典型 wu_type | auto 默认 |
+| 角色 | agent_role | 典型 wu_type | auto 默认 |
 | --- | --- | --- | --- |
-| Coder | harness-coder | feature / bugfix / refactor | TDD + verification + requesting-code-review |
-| Coder | harness-coder | ui | ui-ux-pro-max + frontend-design + TDD + verification + requesting-code-review |
-| Coder | harness-coder | review-fix | receiving-code-review + TDD + verification + requesting-code-review |
-| 轻量执行 | harness-implementer | docs / chore / config | 无 |
-| 探查者 | harness-explorer | explore | 无 |
-| 调试者 | harness-debugger | bugfix | systematic-debugging + verification |
-| 审查者 | harness-reviewer | review | requesting-code-review + verification |
-| 测试工程师 | harness-test-engineer | test | TDD + verification |
-| 测试工程师 | harness-test-engineer | e2e | agent-browser + verification |
-| 网探 | harness-web-investigator | research | agent-browser |
+| Coder | coder | feature / bugfix / refactor | TDD + verification + requesting-code-review |
+| Coder | coder | ui | ui-ux-pro-max + frontend-design + TDD + verification + requesting-code-review |
+| Coder | coder | review-fix | receiving-code-review + TDD + verification + requesting-code-review |
+| 轻量执行 | implementer | docs / chore / config | 无 |
+| 探查者 | explorer | explore | 无 |
+| 调试者 | debugger | bugfix | systematic-debugging + verification |
+| 审查者 | reviewer | review | requesting-code-review + verification |
+| 测试工程师 | test-engineer | test | TDD + verification |
+| 测试工程师 | test-engineer | e2e | agent-browser + verification |
+| 网探 | web-investigator | research | agent-browser |
 
 ---
 
 ## 测试工程师 E2E
 
-`wu_type: e2e` 且 `auto` 时：**必须先 Read** `.cursor/skills/agent-browser/SKILL.md`（再按 skill 执行）。
+`wu_type: e2e` 且 `auto` 时：**必须先 Read** `agent-browser/SKILL.md`（路径见适配器 bindings；再按 skill 执行）。
 
 执行优先级：Playwright MCP → `agent-browser`（`infsh`）→ 项目 CLI。返回 `e2e_via: playwright-mcp | agent-browser | cli | n/a`。
 
@@ -102,16 +102,16 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | 任务 | Subagent | auto 查表 |
 | --- | --- | --- |
-| 并行写业务代码 | harness-coder | coder + wu_type |
-| 审查 BLOCK 后按意见改代码 | harness-coder | coder + **review-fix** |
-| 文档 / 配置 / chore | harness-implementer | implementer + docs/chore/config |
-| 只读摸底 | harness-explorer | explorer |
-| 调查 bug | harness-debugger | debugger |
-| 实现后审查 | harness-reviewer | reviewer |
-| 补测试 / 集成测试 | harness-test-engineer | test-engineer + test |
-| E2E 验收 | harness-test-engineer | test-engineer + e2e |
-| 信息调研 / 网页搜索 | harness-web-investigator | web-investigator + research |
-| 只跑一条命令 | Task shell | 无 |
+| 并行写业务代码 | coder | coder + wu_type |
+| 审查 BLOCK 后按意见改代码 | coder | coder + **review-fix** |
+| 文档 / 配置 / chore | implementer | implementer + docs/chore/config |
+| 只读摸底 | explorer | explorer |
+| 调查 bug | debugger | debugger |
+| 实现后审查 | reviewer | reviewer |
+| 补测试 / 集成测试 | test-engineer | test-engineer + test |
+| E2E 验收 | test-engineer | test-engineer + e2e |
+| 信息调研 / 网页搜索 | web-investigator | web-investigator + research |
+| 只跑一条命令 | shell Task | 无 |
 | 提交 / MR | Leader | git-xywh（禁止子 Agent） |
 
 ---
@@ -128,14 +128,15 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 ## 加载顺序（路径）
 
-1. `.cursor/skills/<slug>/SKILL.md`
-2. `~/.cursor/skills/<slug>/SKILL.md`
-3. `~/.agents/skills/<slug>/SKILL.md`
+实际路径因平台而异，见适配器 `bindings.md` 中 skill 加载绑定。通用搜索顺序：
+
+1. `<skill-slug>/SKILL.md`（项目内）
+2. `~/.agents/skills/<slug>/SKILL.md`（用户全局）
 
 ---
 
 ## 维护
 
 - 改路由：**只改本文档** § 默认路由表；plan 执行图见 `artifact-templates/dispatch.harness-overlay.md`。
-- 升级能力副本：`bash harness-kit/scripts/sync-cursor-skills.sh`。
-- 项目专有 skill：放在 `.cursor/skills/<name>/`，在 plan 的 `wu_skills` 手写或 `overrides` 追加。
+- 升级能力副本：见适配器 README 中 skill 同步说明。
+- 项目专有 skill：放在适配器 skill 目录，在 plan 的 `wu_skills` 手写或 `overrides` 追加。
