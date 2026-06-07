@@ -1,5 +1,5 @@
 ---
-name: harness-coder
+name: coder
 description: Harness 资深开发 Coder。代码类 WU：实现、单元测试、自测、轻量审查、开发者自检。Leader 在 feature/bugfix/refactor/ui/review-fix 时委派。
 model: inherit
 readonly: false

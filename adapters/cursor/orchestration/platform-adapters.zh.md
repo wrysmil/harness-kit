@@ -13,7 +13,7 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 | 信号 | 平台 |
 | --- | --- |
-| Cursor 工作区 + `.cursor/agents/harness-*` | cursor |
+| Cursor 工作区 + `.agents/agents/*.md` | cursor |
 | CLAUDE.md 会话 + Skill 工具 + 无 Cursor | claude |
 | Codex CLI + `omx` | codex |
 | 否则 | generic |
@@ -27,27 +27,27 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 | Harness 角色 | Cursor 机制 |
 | --- | --- |
 | 编排者（Leader） | 主 Agent（Composer / Agent 模式） |
-| 实现 / 审查 / 探查 / 调试 | **`.cursor/agents/harness-*.md`** 项目 subagent |
+| 实现 / 审查 / 探查 / 调试 | **`.agents/agents/<role>.md`** 共享 subagent |
 | Shell / 测试 / 构建 | Task `shell`（补充） |
 | CI 失败 | Task `ci-investigator`（补充） |
 | 项目规则 | `.cursor/rules/`、`AGENTS.md`、`harness-kit/core/` |
 | 生命周期钩子（可选） | `.cursor/hooks.json` |
 
-### 项目 Subagent（`.cursor/agents/`）
+### 共享 Subagent（`.agents/agents/`）
 
 | 文件 | 用途 |
 | --- | --- |
-| `harness-coder.md` | 代码类 WU：实现、单测、自测、开发者自检 |
-| `harness-implementer.md` | 轻量 WU（docs/chore/config） |
-| `harness-reviewer.md` | 独立审查（readonly） |
-| `harness-explorer.md` | 只读探查 |
-| `harness-debugger.md` | 缺陷调查 |
-| `harness-test-engineer.md` | 测试 / E2E 资产 |
-| `harness-web-investigator.md` | 网探：信息搜索、网页浏览、截图取证 |
+| `coder.md` | 代码类 WU：实现、单测、自测、开发者自检 |
+| `implementer.md` | 轻量 WU（docs/chore/config） |
+| `reviewer.md` | 独立审查（readonly） |
+| `explorer.md` | 只读探查 |
+| `debugger.md` | 缺陷调查 |
+| `test-engineer.md` | 测试 / E2E 资产 |
+| `web-investigator.md` | 网探：信息搜索、网页浏览、截图取证 |
 
-内置 skill（`.cursor/skills/`，Cursor 自动发现）：见 `orchestration/skill-preferences.zh.md`。
+共享 skill（`.agents/skills/`）与平台 skill（`.cursor/skills/`）：见 `core/orchestration/skill-preferences.md`。
 
-源模板：`harness-kit/adapters/cursor/.cursor/agents/`（bootstrap 投影到项目根 `.cursor/agents/`）。
+源模板：`harness-kit/adapters/agents/.agents/`（bootstrap 投影到项目根 `.agents/`）。
 
 详细 prompt 与返回格式见各文件及 `orchestration/agents/`（Leader 参考）。
 
@@ -55,7 +55,7 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 | 类型 | 用途 |
 | --- | --- |
-| `explore` | 无 harness-explorer 时的只读搜索 |
+| `explore` | 无 explorer 时的只读搜索 |
 | `shell` | 测试、构建、脚本 |
 | `ci-investigator` | CI 失败根因 |
 

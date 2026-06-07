@@ -93,7 +93,7 @@
 | 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
 | **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
 | 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
-| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + harness-reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
+| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
 | 架构决策 | — | architect / critic / planner | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
 | 信息调研 / 网页搜索 | `roles.web-investigator` | omx research | web-investigator | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
 | 文章 / 知识沉淀 / 对外文档 | — | brainstorming + 写作 skill | 同左 | 同左 | `retros/` 或用户指定 |
@@ -168,7 +168,7 @@
 
 **用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
 
-**同轮禁止：** Write `specs/` / `plans/` / `decisions/` 后，**同一轮**不得改业务代码、委派 harness-*、WORKTREE-INIT、Read 并执行 `dispatcher-workflow.md`。
+**同轮禁止：** Write `specs/` / `plans/` / `decisions/` 后，**同一轮**不得改业务代码、委派子 Agent、WORKTREE-INIT、Read 并执行 `dispatcher-workflow.md`。
 
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
@@ -182,7 +182,7 @@
 | --- | --- |
 | 组织规范来源 | **`git-xywh` skill**（三主干、五类临时分支、Angular 提交、MR 流程） |
 | 项目差异来源 | **`harness-kit/project.git.md`**（MR 平台、commitlint、是否允许 AI push、Harness 独立 commit 等） |
-| 谁执行 Git | **Leader / 主 Agent**；`harness-coder` / `harness-implementer` 等子 Agent 默认不 commit/push |
+| 谁执行 Git | **Leader / 主 Agent**；`coder` / `implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
 | skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
 | **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `harness-kit/core/runbooks.md` § Git 协作 |

@@ -1,5 +1,5 @@
 ---
-name: harness-debugger
+name: debugger
 description: Harness 缺陷调查专家。复现失败、定位根因、提出最小修复方案。Use proactively when tests fail or unexpected behavior occurs. 触发词：调试、bug、失败调查、systematic-debugging。
 model: inherit
 readonly: false

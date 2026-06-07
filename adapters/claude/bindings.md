@@ -3,12 +3,14 @@
 | 原语 | Claude 绑定 |
 | --- | --- |
 | `DetectPlatform()` | CLAUDE.md 会话 + Skill 工具 → `claude` |
-| `SpawnWorker(role)` | Task(subagent_type=generalPurpose) + `core/orchestration/agents/<role>.md` 作 prompt 正文 |
+| `SpawnWorker(role)` | Task(subagent_type=generalPurpose) + `.agents/agents/<role>.md` 作 prompt 正文 |
 | `SpawnWorker(reviewer)` | 新 Task 实例 + readonly 约束 |
 | `ParallelBatch` | 并行 Task（对齐 `dispatching-parallel-agents`）；不传 Leader 全历史 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
 | `StructuredAsk` | **degraded** — 对话式单选/确认 |
 | `EmitHook` | **manual** — 用户本地 hook |
+| `LoadSkill(slug)` | Read `.agents/skills/<slug>/SKILL.md`；或 `Skill("<slug>")` 若已注册 |
+| `LoadAgent(role)` | Read `.agents/agents/<role>.md` 作 Task prompt |
 | `LoadCapability(orchestration.dispatch)` | `claude-orchestration` skill → core dispatcher |
 
 **委派 prompt 必含：** WU id、wu_type、agent_role、允许文件、禁止项、done criteria、worktree_path（若启用）、本 WU Skills、返回格式。

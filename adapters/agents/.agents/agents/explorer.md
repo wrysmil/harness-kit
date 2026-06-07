@@ -1,5 +1,5 @@
 ---
-name: harness-explorer
+name: explorer
 description: Harness 只读探查者。跨模块代码搜索、符号映射、调用链分析、实现现状调查。Use proactively before large refactors or multi-module tasks. 触发词：探索、探查、只读调研、explore。
 model: fast
 readonly: true

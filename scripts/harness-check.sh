@@ -86,43 +86,36 @@ required_kit_files=(
   "adapters/agents/.agents/README.md"
   "adapters/cursor/.cursor/rules/ai-entry.mdc"
   "adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc"
-  "adapters/cursor/.cursor/agents/harness-coder.md"
-  "adapters/cursor/.cursor/agents/harness-implementer.md"
-  "adapters/cursor/.cursor/agents/harness-reviewer.md"
-  "adapters/cursor/.cursor/agents/harness-explorer.md"
-  "adapters/cursor/.cursor/agents/harness-debugger.md"
-  "adapters/cursor/.cursor/agents/harness-test-engineer.md"
-  "adapters/cursor/.cursor/agents/harness-web-investigator.md"
-  "adapters/cursor/.cursor/skills/test-driven-development/SKILL.md"
-  "adapters/cursor/.cursor/skills/verification-before-completion/SKILL.md"
-  "adapters/cursor/.cursor/skills/ui-ux-pro-max/SKILL.md"
-  "adapters/cursor/.cursor/skills/ui-ux-pro-max/scripts/search.py"
-  "adapters/cursor/orchestration/skill-preferences.zh.md"
-  "adapters/cursor/orchestration/agents/test-engineer.md"
+  "adapters/agents/.agents/agents/coder.md"
+  "adapters/agents/.agents/agents/implementer.md"
+  "adapters/agents/.agents/agents/reviewer.md"
+  "adapters/agents/.agents/agents/explorer.md"
+  "adapters/agents/.agents/agents/debugger.md"
+  "adapters/agents/.agents/agents/test-engineer.md"
+  "adapters/agents/.agents/agents/web-investigator.md"
+  "adapters/agents/.agents/skills/test-driven-development/SKILL.md"
+  "adapters/agents/.agents/skills/verification-before-completion/SKILL.md"
+  "adapters/agents/.agents/skills/ui-ux-pro-max/SKILL.md"
+  "adapters/agents/.agents/skills/ui-ux-pro-max/scripts/search.py"
   "scripts/sync-cursor-skills.sh"
+  "scripts/harness-project.sh"
   "adapters/cursor/README.md"
   "adapters/cursor/orchestration/platform-adapters.zh.md"
-  "adapters/cursor/orchestration/dispatcher-workflow.md"
   "adapters/cursor/orchestration/config.defaults.yaml"
   "adapters/cursor/orchestration/VENDOR.md"
   "adapters/cursor/orchestration/CURSOR-PRECHECK.md"
   "adapters/cursor/orchestration/context-budget.md"
   "adapters/cursor/orchestration/model-routing.yaml"
-  "adapters/cursor/orchestration/agents/leader.md"
-  "adapters/cursor/orchestration/agents/coder.md"
-  "adapters/cursor/orchestration/agents/implementer.md"
-  "adapters/cursor/orchestration/agents/reviewer.md"
-  "adapters/cursor/orchestration/agents/debugger.md"
-  "adapters/cursor/orchestration/agents/web-investigator.md"
   "adapters/cursor/orchestration/runtime/plan-progress-sync.md"
-  "adapters/cursor/orchestration/tracking/schema.md"
   "adapters/agents/.agents/skills/cursor-orchestration/SKILL.md"
   "adapters/cursor/bindings.md"
   "adapters/cursor/capability-matrix.yaml"
   "adapters/claude/README.md"
   "adapters/claude/bindings.md"
   "adapters/claude/capability-matrix.yaml"
-  "adapters/claude/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/agents/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/trae/bindings.md"
+  "adapters/trae/capability-matrix.yaml"
   "adapters/codex/bindings.md"
   "adapters/codex/capability-matrix.yaml"
   "scripts/install-ai-skills.sh"
@@ -130,23 +123,30 @@ required_kit_files=(
   "scripts/harness-check.sh"
 )
 
-required_deployed_files=(
+# 共享层 deployed 文件（所有平台都需要）
+required_deployed_shared=(
   "AGENTS.md"
   "CLAUDE.md"
   "GEMINI.md"
-  ".cursor/rules/ai-entry.mdc"
-  ".cursor/rules/cursor-subagent-routing.mdc"
-  ".cursor/agents/harness-coder.md"
-  ".cursor/agents/harness-implementer.md"
-  ".cursor/agents/harness-reviewer.md"
-  ".cursor/agents/harness-explorer.md"
-  ".cursor/agents/harness-debugger.md"
-  ".cursor/agents/harness-test-engineer.md"
-  ".cursor/agents/harness-web-investigator.md"
   ".agents/README.md"
+  ".agents/agents/coder.md"
+  ".agents/agents/implementer.md"
+  ".agents/agents/reviewer.md"
+  ".agents/agents/explorer.md"
+  ".agents/agents/debugger.md"
+  ".agents/agents/test-engineer.md"
+  ".agents/agents/web-investigator.md"
   ".agents/skills/cursor-orchestration/SKILL.md"
   ".agents/skills/claude-orchestration/SKILL.md"
+  ".agents/skills/test-driven-development/SKILL.md"
+  ".agents/skills/verification-before-completion/SKILL.md"
   ".ai-runtime-artifacts/README.md"
+)
+
+# Cursor 平台层 deployed 文件
+required_deployed_cursor=(
+  ".cursor/rules/ai-entry.mdc"
+  ".cursor/rules/cursor-subagent-routing.mdc"
 )
 
 required_dirs=(
@@ -161,6 +161,20 @@ required_dirs=(
   ".ai-runtime-artifacts/execution-logs/tracking"
 )
 
+# ─── 平台检测 ───────────────────────────────────────────────
+
+detect_deployed_platform() {
+  local platforms=()
+  [[ -d ".cursor" ]] && platforms+=("cursor")
+  [[ -f "CLAUDE.md" || -d ".claude" ]] && platforms+=("claude")
+  [[ -d ".trae" ]] && platforms+=("trae")
+  if [[ ${#platforms[@]} -eq 0 ]]; then
+    echo "unknown"
+  else
+    echo "${platforms[0]}"
+  fi
+}
+
 missing=0
 for rel in "${required_kit_files[@]}"; do
   file="$(kit_path "$rel")"
@@ -173,7 +187,12 @@ for rel in "${required_kit_files[@]}"; do
 done
 
 if [[ "$LAYOUT" == "deployed" ]]; then
-  for file in "${required_deployed_files[@]}"; do
+  # 检测平台
+  PLATFORM="$(detect_deployed_platform)"
+  echo "==> detected platform: $PLATFORM"
+
+  # 共享层文件
+  for file in "${required_deployed_shared[@]}"; do
     if [[ -f "$file" ]]; then
       echo "ok: $file"
     else
@@ -182,6 +201,19 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     fi
   done
 
+  # Cursor 平台层文件（仅 Cursor 平台检查）
+  if [[ "$PLATFORM" == "cursor" || "$PLATFORM" == "unknown" ]]; then
+    for file in "${required_deployed_cursor[@]}"; do
+      if [[ -f "$file" ]]; then
+        echo "ok: $file"
+      else
+        echo "missing: $file" >&2
+        missing=1
+      fi
+    done
+  fi
+
+  # 目录
   for dir in "${required_dirs[@]}"; do
     if [[ -d "$dir" ]]; then
       echo "ok: $dir"
@@ -200,28 +232,23 @@ fi
 
 echo "==> Checking harness subagent projection shells"
 agent_errors=0
-agents_dir="$(kit_path adapters/cursor/.cursor/agents)"
-orch_dir="$(kit_path adapters/cursor/orchestration/agents)"
+agents_dir="$(kit_path adapters/agents/.agents/agents)"
 core_orch_dir="$(kit_path core/orchestration/agents)"
 max_projection_lines=80
 
-for projected in "$agents_dir"/harness-*.md; do
+for projected in "$agents_dir"/*.md; do
   [[ -f "$projected" ]] || continue
   rel_projected="${projected#"$ROOT_DIR"/}"
   rel_projected="${rel_projected#./}"
   lines="$(wc -l < "$projected" | tr -d ' ')"
   base="$(basename "$projected" .md)"
-  canonical_name="${base#harness-}"
-  canonical="$orch_dir/${canonical_name}.md"
-  core_canonical="$core_orch_dir/${canonical_name}.md"
-  if [[ -f "$canonical" ]] || [[ -f "$core_canonical" ]]; then
+  core_canonical="$core_orch_dir/${base}.md"
+  if [[ -f "$core_canonical" ]]; then
     if ! grep -qE 'orchestration/agents/|core/orchestration/agents/' "$projected" 2>/dev/null; then
       echo "missing orchestration/agents/ reference: $rel_projected" >&2
       agent_errors=1
     fi
-    ref="$canonical"
-    [[ -f "$core_canonical" ]] && ref="$core_canonical"
-    canon_lines="$(wc -l < "$ref" | tr -d ' ')"
+    canon_lines="$(wc -l < "$core_canonical" | tr -d ' ')"
     max_allowed=$(( canon_lines * 12 / 10 ))
     if [[ "$lines" -gt "$max_allowed" ]]; then
       echo "projection too fat ($lines > $max_allowed vs canonical $canon_lines): $rel_projected" >&2
@@ -237,27 +264,7 @@ if [[ "$agent_errors" -ne 0 ]]; then
   exit 1
 fi
 
-echo "==> Checking orchestration stub redirects"
-stub_errors=0
-for stub in \
-  "$(kit_path adapters/cursor/orchestration/dispatcher-workflow.md)" \
-  "$(kit_path adapters/cursor/orchestration/skill-preferences.zh.md)"; do
-  if [[ -f "$stub" ]]; then
-    if ! grep -q 'core/orchestration/' "$stub" 2>/dev/null; then
-      echo "stub missing core redirect: $stub" >&2
-      stub_errors=1
-    else
-      echo "ok: stub redirect $stub"
-    fi
-  else
-    echo "missing stub: $stub" >&2
-    stub_errors=1
-  fi
-done
-
-if [[ "$stub_errors" -ne 0 ]]; then
-  exit 1
-fi
+echo "==> Checking orchestration stub redirects (skipped — stubs deleted after shared layer migration)"
 
 echo "==> Checking capability matrix coverage"
 matrix_errors=0
@@ -270,7 +277,7 @@ else
   while IFS= read -r cap_line; do
     [[ -n "$cap_line" ]] && capability_ids+=("$cap_line")
   done < <(grep -E '^### [a-z0-9.-]+$' "$registry" | sed 's/^### //')
-  for platform in cursor claude codex; do
+  for platform in cursor claude codex trae; do
     matrix="$(kit_path "adapters/$platform/capability-matrix.yaml")"
     bindings="$(kit_path "adapters/$platform/bindings.md")"
     if [[ ! -f "$matrix" ]]; then
@@ -437,5 +444,6 @@ echo "==> Checking shell scripts"
 bash -n "$(kit_path scripts/install-ai-skills.sh)"
 bash -n "$(kit_path scripts/harness-init.sh)"
 bash -n "$(kit_path scripts/harness-check.sh)"
+bash -n "$(kit_path scripts/harness-project.sh)"
 
 echo "==> Harness check complete"

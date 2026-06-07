@@ -62,7 +62,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | frontend-design | UI 实现审美 | 全局复制 |
 | agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
 
-副本来源登记：见适配器 skill 来源配置。
+副本来源登记：见 `adapters/agents/.agents/skills/_vendor-sources.yaml`。
 
 ### 仅 Leader / 不在子 Agent 列表
 
@@ -128,10 +128,13 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 ## 加载顺序（路径）
 
-实际路径因平台而异，见适配器 `bindings.md` 中 skill 加载绑定。通用搜索顺序：
+实际路径因平台而异，见适配器 `bindings.md` 中 `LoadSkill` 绑定。通用搜索顺序：
 
-1. `<skill-slug>/SKILL.md`（项目内）
-2. `~/.agents/skills/<slug>/SKILL.md`（用户全局）
+1. `.agents/skills/<slug>/SKILL.md`（项目共享层 — 首选）
+2. `.cursor/skills/<slug>/SKILL.md` 或 `.claude/skills/<slug>/SKILL.md`（平台层覆盖）
+3. `~/.agents/skills/<slug>/SKILL.md`（用户全局）
+
+共享层 `.agents/skills/` 包含所有平台通用 skill（TDD、verification、code-review 等）；平台层仅放平台特有 skill。
 
 ---
 

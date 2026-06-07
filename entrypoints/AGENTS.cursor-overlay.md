@@ -22,20 +22,20 @@
 
 ## 平台判定
 
-- **Cursor**：`.cursor/agents/harness-*` + `cursor-orchestration` skill；**不**调用 omx
+- **Cursor**：`.agents/agents/*.md` + `cursor-orchestration` skill；**不**调用 omx
 - **Codex CLI**：`harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
 
 ## 子 Agent
 
-项目 subagent 位于 `.cursor/agents/`（bootstrap 从 `harness-kit/adapters/cursor/.cursor/agents/` 投影）：
+共享 subagent 位于 `.agents/agents/`（bootstrap 从 `harness-kit/adapters/agents/.agents/agents/` 投影）：
 
-- `harness-coder` — 代码类 WU（plan 批准后）
-- `harness-implementer` — 轻量 WU（docs/chore/config）
-- `harness-reviewer` — 独立审查（readonly）
-- `harness-explorer` — 只读探查
-- `harness-debugger` — 缺陷调查
-- `harness-test-engineer` — 测试 / E2E（`wu_type: test | e2e`）
-- `harness-web-investigator` — 信息调研（`wu_type: research`）
+- `coder` — 代码类 WU（plan 批准后）
+- `implementer` — 轻量 WU（docs/chore/config）
+- `reviewer` — 独立审查（readonly）
+- `explorer` — 只读探查
+- `debugger` — 缺陷调查
+- `test-engineer` — 测试 / E2E（`wu_type: test | e2e`）
+- `web-investigator` — 信息调研（`wu_type: research`）
 
 薄壳 → 正文：`orchestration/agents/*.md`。路由表见 `core/routing.md`（不在此重复）。
 

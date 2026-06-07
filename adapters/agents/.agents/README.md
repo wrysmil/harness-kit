@@ -1,58 +1,58 @@
-# .agents
+# .agents — 共享层
 
-本目录存放当前项目自己新增的 AI 规则和 skills。
+本目录是 harness-kit 的**平台无关共享层**，Cursor / Claude Code / Trae 均引用。
 
-## 目录约定
+## 目录结构
 
-- `skills/`：项目自己新增的 skills。
-
-Harness 脚手架预置编排 skill（投影后位于 `.agents/skills/`）：
-
-- **Cursor：** `cursor-orchestration`（→ `core/orchestration/dispatcher-workflow.md`）
-- **Claude Code：** `claude-orchestration`（同上）
-
-Codex 仍走 `omx ultrawork`。
-
-其他业务 skill（专利、业务分析、发布检查等）由项目按需新增到 `.agents/skills/`。
-
-## AI 接入方式
-
-团队成员不需要自己照着命令逐条执行。把下面这段话交给 AI：
-
-```text
-请先读取 AGENTS.md 和 harness-kit/core/routing.md。
-如果当前环境需要安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
-完成后请汇总 oh-my-codex / omx 和基础 skills 的可用状态。
+```
+.agents/
+├── skills/         ← 共享 skills（11 个）
+├── agents/         ← 共享 agent manifests（7 个）
+└── README.md
 ```
 
-AI 会按需调用 `harness-kit/scripts/install-ai-skills.sh`。该脚本负责安装或检查 `oh-my-codex` / `omx`，并检查本机是否已安装 superpowers 与组织 skill **`git-xywh`**。
+## 共享 Skills（`.agents/skills/`）
 
-## 外部通用 Skills
+| slug | 用途 | 来源 |
+| --- | --- | --- |
+| test-driven-development | 先测后实现 | superpowers（副本） |
+| verification-before-completion | 完成前须有命令证据 | superpowers（副本） |
+| systematic-debugging | 根因调查 | superpowers（副本） |
+| requesting-code-review | 独立审查 | superpowers（副本） |
+| receiving-code-review | 按审查意见改代码 | superpowers（副本） |
+| ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | Trae skills（整目录副本） |
+| frontend-design | UI 实现审美 | 全局复制 |
+| agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
+| document-review | 文档审查 | 内置 |
+| cursor-orchestration | Cursor 编排调度 | 内置（→ core dispatcher） |
+| claude-orchestration | Claude 编排调度 | 内置（→ core dispatcher） |
 
-本仓库不复制 superpowers skills。通过标准方式安装后，优先使用以下外部能力；若未安装，则使用 `oh-my-codex` 中的等价工作流能力：
+来源登记：`_vendor-sources.yaml`
 
-- `superpowers:brainstorming`
-- `superpowers:writing-plans`
-- `superpowers:systematic-debugging`
-- `superpowers:test-driven-development`
-- `superpowers:verification-before-completion`
-- `git-xywh`（组织 Git：分支、Angular 提交、MR；路由见 `harness-kit/core/routing.md`，项目差异见 `harness-kit/project.git.md`）
+## 共享 Agent Manifests（`.agents/agents/`）
 
-安装方式（全局）：
+薄壳文件，指向 `harness-kit/core/orchestration/agents/<role>.md`（正文）。
 
-```bash
-npx skills add obra/superpowers -g
-# git-xywh：按组织文档安装（slug: git-xywh），常见路径 ~/.cursor/skills/git-xywh/
-```
+| 文件 | 角色 |
+| --- | --- |
+| coder.md | 资深开发者 |
+| implementer.md | 轻量执行 Worker |
+| reviewer.md | 独立审查者 |
+| test-engineer.md | 测试工程师 |
+| debugger.md | 缺陷调查专家 |
+| explorer.md | 只读探查者 |
+| web-investigator.md | 网探 |
 
-安装后 skills 位于 `~/.cursor/skills/`、`~/.claude/skills/` 或 `~/.agents/skills/` 下（由 skills CLI 或团队流程管理）。
+## 平台特有扩展
 
-**Git 任务时：** 必须先 invoke / Read **`git-xywh`**，再读 `harness-kit/project.git.md`（见 `harness-kit/core/runbooks.md` § Git 协作）。
-
-其他成员如果尚未安装，AI 应按 `AGENTS.md` 的行为要求使用当前工具中等价的能力。
+| 平台 | 目录 | 内容 |
+| --- | --- | --- |
+| Cursor | `adapters/cursor/.cursor/` | rules、hooks、git-xywh skill |
+| Claude Code | `adapters/claude/` | bindings、capability-matrix |
+| Trae | `adapters/trae/` | bindings、capability-matrix |
 
 ## 优先级
 
-项目级 skill 只放真正属于本项目的能力。`oh-my-codex` / `omx` 由 npm 包和 `harness-kit/scripts/install-ai-skills.sh` 管理，不在 `.agents/skills/` 中重复定义。
+平台层可覆盖共享层（如同名 skill，平台层优先）。项目级 skill 只放真正属于本项目的能力。
 
-若 `.agents/skills/` 中的项目级规则与旧 `.cursor/`、`.agent/`、`.conductor/`、`.kiro/` 规则冲突，以项目级规则和 `AGENTS.md` 为准。
+若 `.agents/` 中的规则与平台层规则冲突，以项目级规则和 `AGENTS.md` 为准。

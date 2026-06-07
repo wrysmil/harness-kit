@@ -24,31 +24,31 @@ capabilities:
     binding: "dispatcher §0 WORKTREE-INIT"
   orchestration.collective-closeout:
     status: supported
-    binding: "collective-test + harness-reviewer + code-review"
+    binding: "collective-test + reviewer + code-review"
   orchestration.continuous-loop:
     status: supported
     binding: "orchestration/continuous-loop.md opt-in"
   roles.coder:
     status: supported
-    binding: "harness-coder subagent"
+    binding: "coder subagent"
   roles.implementer:
     status: supported
-    binding: "harness-implementer"
+    binding: "implementer"
   roles.reviewer:
     status: supported
-    binding: "harness-reviewer readonly"
+    binding: "reviewer readonly"
   roles.test-engineer:
     status: supported
-    binding: "harness-test-engineer"
+    binding: "test-engineer"
   roles.explorer:
     status: supported
-    binding: "harness-explorer / Task explore"
+    binding: "explorer / Task explore"
   roles.debugger:
     status: supported
-    binding: "harness-debugger"
+    binding: "debugger"
   roles.web-investigator:
     status: supported
-    binding: "harness-web-investigator"
+    binding: "web-investigator"
   artifacts.runtime-layout:
     status: supported
     binding: ".ai-runtime-artifacts/"
@@ -72,7 +72,7 @@ capabilities:
     binding: "Leader 跑 project.verification.md → Write *-collective-test.md"
   verification.collective-review:
     status: supported
-    binding: "harness-reviewer readonly subagent → Leader Write *-code-review.md"
+    binding: "reviewer readonly subagent → Leader Write *-code-review.md"
   verification.before-completion:
     status: supported
     binding: "verification-before-completion skill 铁律 + TDD 合规门"

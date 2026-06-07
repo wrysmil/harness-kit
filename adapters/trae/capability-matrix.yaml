@@ -1,0 +1,81 @@
+platform: trae
+matrix_version: 1
+capabilities:
+  routing.stage-gate:
+    status: degraded
+    binding: "待定义"
+  routing.harness-declare:
+    status: degraded
+    binding: "待定义"
+  orchestration.dispatch:
+    status: degraded
+    binding: "待定义"
+  orchestration.leader:
+    status: degraded
+    binding: "待定义"
+  orchestration.parallel-wu:
+    status: degraded
+    binding: "待定义"
+  orchestration.dispatch-track:
+    status: degraded
+    binding: "待定义"
+  orchestration.worktree-sandbox:
+    status: degraded
+    binding: "git worktree"
+  orchestration.collective-closeout:
+    status: degraded
+    binding: "待定义"
+  orchestration.continuous-loop:
+    status: degraded
+    binding: "待定义"
+  roles.coder:
+    status: degraded
+    binding: "待定义"
+  roles.implementer:
+    status: degraded
+    binding: "待定义"
+  roles.reviewer:
+    status: degraded
+    binding: "待定义"
+  roles.test-engineer:
+    status: degraded
+    binding: "待定义"
+  roles.explorer:
+    status: degraded
+    binding: "待定义"
+  roles.debugger:
+    status: degraded
+    binding: "待定义"
+  roles.web-investigator:
+    status: degraded
+    binding: "待定义"
+  artifacts.runtime-layout:
+    status: degraded
+    binding: "待定义"
+  artifacts.verification-lite:
+    status: degraded
+    binding: "待定义"
+  skills.stage-load:
+    status: degraded
+    binding: "Read SKILL.md"
+  interaction.structured-ask:
+    status: degraded
+    binding: "待定义"
+  hooks.session-lifecycle:
+    status: degraded
+    binding: "待定义"
+  git.worktree-script:
+    status: degraded
+    binding: "git worktree"
+  verification.collective-test:
+    status: degraded
+    binding: "待定义"
+  verification.collective-review:
+    status: degraded
+    binding: "待定义"
+  verification.before-completion:
+    status: degraded
+    binding: "待定义"
+  verification.fix-loop:
+    status: degraded
+    binding: "待定义"

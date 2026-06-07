@@ -5,26 +5,26 @@ description: Harness 代码审查：WU 轻量审查与 GROUP 尾盘集体审查�
 
 # Requesting Code Review（Harness）
 
-**Core principle:** Review early, review often — **Harness 下必须用 `harness-reviewer`，禁止裸 `generalPurpose`。**
+**Core principle:** Review early, review often — **Harness 下必须用独立 `reviewer` 实例，禁止裸 `generalPurpose`。**
 
 ## 两层审查（必辨）
 
 | 层 | 谁发起 | 机制 | 落盘 |
 | --- | --- | --- | --- |
-| **WU 轻量审查** | Coder（WU 内） | 独立 `harness-reviewer` 实例 | **不落盘**；返回 `code_review: PASS\|BLOCK` |
-| **GROUP 集体审查** | Leader（尾盘 B） | 独立 `harness-reviewer`；须先 collective-test PASS | Leader Write `reviews/*-code-review.md` |
+| **WU 轻量审查** | Coder（WU 内） | 独立 `reviewer` 实例 | **不落盘**；返回 `code_review: PASS\|BLOCK` |
+| **GROUP 集体审查** | Leader（尾盘 B） | 独立 `reviewer`；须先 collective-test PASS | Leader Write `reviews/*-code-review.md` |
 
 **顺序（尾盘）：** collective-test → 本 skill → code-review 产物。细则：batch-closeout spec §4。
 
-## Harness 委派（Cursor）
+## 委派协议
 
 1. 声明 `Skills: requesting-code-review@<path> loaded`
 2. Load 本 skill
-3. 委派 **`harness-reviewer`**（与所有 Coder/Implementer **不同实例**；readonly）
+3. 委派 **独立 `reviewer` 实例**（与所有 Coder/Implementer **不同实例**；readonly）
 4. Prompt 正文：`core/orchestration/agents/reviewer.md`；占位符见 `code-reviewer.md`
 5. **Leader** 将集体审查返回 Write `artifact-templates/code-review.md` 路径；Reviewer **不** Write 文件
 
-**Claude：** 新 Task + readonly + `agents/reviewer.md`（见 `adapters/claude/bindings.md`）。
+**平台绑定：** 见 `adapters/*/bindings.md`（SpawnWorker(reviewer)）。
 
 **范围证据：** 优先 **文件列表 + diff 摘要**；worktree 批次可用 `{BASE_SHA}`/`{HEAD_SHA}`，非必须。
 
@@ -37,7 +37,7 @@ description: Harness 代码审查：WU 轻量审查与 GROUP 尾盘集体审查�
 ## 禁止
 
 - 实现与审查同一 subagent 实例
-- 无 `harness-reviewer` 约束的 Task
+- 无 `reviewer` 约束的 Task
 - 跳过 collective-test 直接集体审查
 - Reviewer 会话内 Write `.ai-runtime-artifacts/`
 - 仅以 Coder `code_review: PASS` 替代尾盘集体审查

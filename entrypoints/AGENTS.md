@@ -61,7 +61,7 @@
 | 多 task 实现 | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` |
 | 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 | 同左 |
 | 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 |
-| 信息调研 | `harness-web-investigator` | 同左 | Task + web-investigator |
+| 信息调研 | `web-investigator` | 同左 | Task + web-investigator |
 | Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 | 同左 |
 
 涉及提交、分支、MR 时由 **Leader** invoke `git-xywh`；子 Agent 默认不 commit。组织规范在 skill，项目差异在 `project.git.md`。

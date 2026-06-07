@@ -20,13 +20,13 @@ description: Cursor 多 subagent 并行编排，等价 omx ultrawork。已批准
 
 | agent_role | 机制 |
 | --- | --- |
-| coder / implementer / test-engineer / debugger / web-investigator | `harness-*` subagent |
-| reviewer | `harness-reviewer` readonly |
-| explorer | `harness-explorer` 或 Task `explore` |
+| coder / implementer / test-engineer / debugger / web-investigator | `.agents/agents/<role>.md` subagent |
+| reviewer | `reviewer` readonly |
+| explorer | `explorer` 或 Task `explore` |
 
 绑定：`adapters/cursor/bindings.md`。`wu_skills: auto` → `core/orchestration/skill-preferences.md`。
 
-**尾盘：** collective-test → harness-reviewer → Leader 落盘 code-review。
+**尾盘：** collective-test → reviewer → Leader 落盘 code-review。
 
 ## 禁止
 

@@ -40,4 +40,4 @@ Handoff 路径：`.ai-runtime-artifacts/execution-logs/HANDOFF.md`
 | --- | --- |
 | 调研 → 计划 | 新会话或 HANDOFF |
 | 计划 → 实现 | **必须** HANDOFF 或新 Leader 上下文 |
-| 实现 → 审查 | **必须** 独立 `harness-reviewer` subagent（不同实例） |
+| 实现 → 审查 | **必须** 独立 `reviewer` subagent（不同实例） |

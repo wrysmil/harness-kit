@@ -1,13 +1,13 @@
 # Code Reviewer Prompt Template（Harness）
 
-**用途：** 填充 **harness-reviewer** 委派 prompt。集体审查由 Leader 落盘；WU 轻审由 Coder 整合返回。
+**用途：** 填充 **reviewer** 委派 prompt。集体审查由 Leader 落盘；WU 轻审由 Coder 整合返回。
 
-## Cursor 委派
+## 委派示例
 
 ```text
-Use the harness-reviewer subagent to review <WU-id | GROUP batch>.
-Follow harness-kit/core/orchestration/agents/reviewer.md.
-You did not implement this code. Readonly. Do not modify files.
+委派独立 reviewer 实例审查 <WU-id | GROUP batch>。
+遵循 harness-kit/core/orchestration/agents/reviewer.md。
+未参与此代码实现。Readonly。不修改文件。
 ```
 
 ## Prompt body（Leader / Coder 填入）

@@ -1,5 +1,5 @@
 ---
-name: harness-test-engineer
+name: test-engineer
 description: Harness 测试工程师。单测补强、集成、E2E、前端自动化；不改业务实现。wu_type test/e2e 时委派。
 model: inherit
 readonly: false

@@ -1,5 +1,5 @@
 # Cursor subagent 模型路由建议（非强制）
-# 实现/审查优先使用 .cursor/agents/harness-*；未指定 model 时继承主 Agent。
+# 实现/审查优先使用 .agents/agents/<role>.md；未指定 model 时继承主 Agent。
 
 roles:
   leader:
@@ -7,41 +7,41 @@ roles:
     subagent: null
     model: inherit
 
-  harness_explorer:
+  explorer:
     description: 只读探查
-    subagent: harness-explorer
+    subagent: explorer
     readonly: true
     model: fast
 
-  harness_implementer:
+  implementer:
     description: 轻量 WU（docs/chore/config）
-    subagent: harness-implementer
+    subagent: implementer
     model: inherit
 
-  harness_coder:
+  coder:
     description: 代码类 WU：实现、单测、自测、开发者自检
-    subagent: harness-coder
+    subagent: coder
     model: inherit
 
-  harness_reviewer:
+  reviewer:
     description: 独立审查
-    subagent: harness-reviewer
+    subagent: reviewer
     readonly: true
     model: inherit
 
-  harness_debugger:
+  debugger:
     description: 根因调查
-    subagent: harness-debugger
+    subagent: debugger
     model: inherit
 
-  harness_test_engineer:
+  test_engineer:
     description: 测试与 E2E 资产
-    subagent: harness-test-engineer
+    subagent: test-engineer
     model: inherit
 
-  harness_web_investigator:
+  web_investigator:
     description: 信息调研、网页浏览、截图取证
-    subagent: harness-web-investigator
+    subagent: web-investigator
     model: inherit
 
   shell_runner:

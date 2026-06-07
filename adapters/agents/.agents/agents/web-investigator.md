@@ -1,5 +1,5 @@
 ---
-name: harness-web-investigator
+name: web-investigator
 description: Harness 网探。信息搜索、网页浏览、截图取证。Use proactively when user asks to research, search, investigate, or gather information from the web. 触发词：调研、搜索、网探、查一下、帮我找、了解一下、截图取证。
 model: inherit
 readonly: false

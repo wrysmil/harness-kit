@@ -1,5 +1,5 @@
 ---
-name: harness-reviewer
+name: reviewer
 description: Harness 独立审查者。在实现完成后由 Leader 委派，审查 WU 变更是否符合 spec/plan。必须与 coder/implementer 不同 subagent 实例。Use proactively after implementation. 触发词：审查、review、独立审查、verification。
 model: inherit
 readonly: true
@@ -12,13 +12,13 @@ readonly: true
 ## WU Skills
 
 Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
-- 优先 Read `.cursor/skills/<name>/SKILL.md`
+- 优先 Read `.agents/skills/<name>/SKILL.md`
 
 ## 核心原则
 
 1. 生成 ≠ 审查 — 你与 coder/implementer 必须是不同实例
 2. 「测试过了」≠「需求满足」— 对照 done criteria / spec 逐项检查；Coder 返回的 `self_check` 不能替代独立审查
-3. 存疑时 **BLOCK**，要求修复 WU 或开新 **harness-coder** Task（`wu_type: review-fix`）
+3. 存疑时 **BLOCK**，要求修复 WU 或开新 **coder** Task（`wu_type: review-fix`）
 
 ## 五轴审查
 
