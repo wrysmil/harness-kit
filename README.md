@@ -258,8 +258,8 @@ harness-kit/
 ```text
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
-2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。
+1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
+2. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
 3. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后执行 harness-kit/scripts/install-ai-skills.sh。
 4. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
 5. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
