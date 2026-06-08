@@ -7,8 +7,8 @@
 | `SpawnWorker(reviewer)` | 新 Task 实例 + readonly 约束 |
 | `ParallelBatch` | 并行 Task（对齐 `dispatching-parallel-agents`）；不传 Leader 全历史 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
-| `StructuredAsk` | **degraded** — 对话式单选/确认 |
-| `EmitHook` | **manual** — 用户本地 hook |
+| `StructuredAsk` | `AskUserQuestion` 工具（单选/多选 + preview） |
+| `EmitHook` | `PreToolUse`/`PostToolUse`/`AskUserQuestion`/`Stop` hooks（`.claude/settings.json`） |
 | `LoadSkill(slug)` | Read `.agents/skills/<slug>/SKILL.md`；或 `Skill("<slug>")` 若已注册 |
 | `LoadAgent(role)` | Read `.agents/agents/<role>.md` 作 Task prompt |
 | `LoadCapability(orchestration.dispatch)` | `claude-orchestration` skill → core dispatcher |

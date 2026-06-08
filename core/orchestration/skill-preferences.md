@@ -131,7 +131,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 实际路径因平台而异，见适配器 `bindings.md` 中 `LoadSkill` 绑定。通用搜索顺序：
 
 1. `.agents/skills/<slug>/SKILL.md`（项目共享层 — 首选）
-2. `.cursor/skills/<slug>/SKILL.md` 或 `.claude/skills/<slug>/SKILL.md`（平台层覆盖）
+2. `.cursor/skills/<slug>/SKILL.md`、`.claude/skills/<slug>/SKILL.md` 或 `.trae/skills/<slug>/SKILL.md`（平台层覆盖）
 3. `~/.agents/skills/<slug>/SKILL.md`（用户全局）
 
 共享层 `.agents/skills/` 包含所有平台通用 skill（TDD、verification、code-review 等）；平台层仅放平台特有 skill。

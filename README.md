@@ -200,7 +200,7 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | Claude Code | `CLAUDE.md` |
 | Gemini | `GEMINI.md` |
 | Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**） |
-| Cursor 编排深读 | `harness-kit/adapters/cursor/orchestration/`（不投影，供 AI 读取） |
+| Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
 | Agents / Skills | `.agents/`（含 `cursor-orchestration`） |
 | Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
 
@@ -284,8 +284,8 @@ harness-kit/
 - harness-kit/core/harness.md
 - harness-kit/core/routing.md（路由表、阶段门禁、wu_type → subagent）
 - harness-kit/adapters/cursor/README.md
-- harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md
-- harness-kit/adapters/cursor/orchestration/platform-adapters.zh.md
+- harness-kit/core/orchestration/dispatcher-workflow.md
+- harness-kit/core/orchestration/platform-adapters.zh.md
 - harness-kit/adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc
 
 我要改造 Harness Kit，目标如下（请据此实现，不要擅自扩大范围）：
@@ -294,7 +294,7 @@ harness-kit/
 约束与交付要求：
 1. 先输出简短方案（改哪些文件、是否动 routing / 门禁 / 投影层），等我确认后再改文件；若我已在开头说「直接做」，可跳过确认。
 2. 遵守 Harness 双层结构：
-   - 编排深读：`harness-kit/adapters/cursor/orchestration/`（不投影）
+   - 编排深读：`harness-kit/core/orchestration/`（不投影）
    - 投影层：`harness-kit/adapters/cursor/.cursor/agents/`、`.cursor/rules/` → bootstrap 后到项目根 `.cursor/`
    深读与投影须一致；改 agent 时同步 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`。
 3. 凡影响「谁来做、何时停、派谁」的变更，必须同步：
@@ -320,7 +320,7 @@ harness-kit/
 - 与 Leader / Coder / Reviewer 的边界：...
 
 请按现有 harness-coder 模式落地：
-1. 新增 `harness-kit/adapters/cursor/orchestration/agents/<role>.md`（详细 prompt、返回字段、禁止项）
+1. 新增 `harness-kit/core/orchestration/agents/<role>.md`（详细 prompt、返回字段、禁止项）
 2. 新增 `harness-kit/adapters/cursor/.cursor/agents/harness-<role>.md`（front matter：name、description、model、readonly）
 3. 更新 `platform-adapters.zh.md` 角色映射表
 4. 更新 `dispatcher-workflow.md` 步骤 2 派发表与委派 prompt 必填项
@@ -340,7 +340,7 @@ harness-kit/
 - 是否影响阶段门禁（spec/plan 暂停）：是 / 否
 
 请优先改：
-- `harness-kit/adapters/cursor/orchestration/dispatcher-workflow.md`
+- `harness-kit/core/orchestration/dispatcher-workflow.md`
 - `harness-kit/adapters/agents/.agents/skills/cursor-orchestration/SKILL.md`（与 dispatcher 一致）
 - 若改路由或门禁：`harness-kit/core/routing.md`
 - 若改 Leader 行为：`orchestration/agents/leader.md`
@@ -403,7 +403,7 @@ WU-<id>：<名称>
 | 文档 | 说明 |
 |------|------|
 | `adapters/cursor/README.md` | Cursor 投影与编排 |
-| `adapters/cursor/orchestration/dispatcher-workflow.md` | 派发与整合步骤（AI 深读） |
+| `core/orchestration/dispatcher-workflow.md` | 派发与整合步骤（AI 深读） |
 | `init/bootstrap.prompt.md` | 新项目接入详版 |
 | `core/artifacts.md` | 过程产物规范 |
 | `docs/communication-templates.md` | 完整沟通话术模板集 |

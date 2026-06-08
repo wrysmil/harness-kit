@@ -43,7 +43,7 @@
 | 地图 | `frontend/src/components/map/MapPanel.tsx`、`frontend/src/hooks/useAMap.ts` | 高德 JS API |
 | 管理 UI | `admin/src/` | 路由与后台页面 |
 | MCP（遗留） | `backend/mcp_servers/` | amap / unsplash stdio server |
-| Harness 编排 | `harness-kit/adapters/cursor/orchestration/` | dispatcher、WU、skill 偏好 |
+| Harness 编排 | `harness-kit/core/orchestration/` | dispatcher、WU、skill 偏好 |
 | 重构计划 | `.ai-runtime-artifacts/plans/2026-05-25-travel-assistant-refactor-plan.md` | 分 Phase 实施清单 |
 | 竞品调研 | `.ai-runtime-artifacts/specs/2026-05-26-ctrip-ai-tripplanner-competitive-spec.md` | 携程 AI 行程对标 |
 | Demo 打磨 | `.ai-runtime-artifacts/plans/2026-05-26-demo-polish-amap-integration-plan.md` | LLM Key / 高德 / 聊天冒烟 |

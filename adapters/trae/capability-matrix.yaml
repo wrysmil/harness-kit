@@ -2,80 +2,81 @@ platform: trae
 matrix_version: 1
 capabilities:
   routing.stage-gate:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: ".trae/rules/ 规则文件"
   routing.harness-declare:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: ".trae/rules/ 首句 Harness 声明"
   orchestration.dispatch:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "trae-orchestration → core dispatcher（Trae Agent 模式）"
   orchestration.leader:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent 模式（自主规划+执行）"
   orchestration.parallel-wu:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent 并行任务; max 3"
   orchestration.dispatch-track:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "DISPATCH-TRACK append-only"
   orchestration.worktree-sandbox:
-    status: degraded
+    status: supported
     binding: "git worktree"
   orchestration.collective-closeout:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "collective-test + reviewer + code-review"
   orchestration.continuous-loop:
-    status: degraded
-    binding: "待定义"
+    status: manual
+    binding: "HANDOFF 人工衔接多会话"
+    notes: "见 continuous-loop 文档 opt-in"
   roles.coder:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent + .agents/agents/coder.md"
   roles.implementer:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent + .agents/agents/implementer.md"
   roles.reviewer:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent readonly + .agents/agents/reviewer.md"
   roles.test-engineer:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent + .agents/agents/test-engineer.md"
   roles.explorer:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent readonly + .agents/agents/explorer.md"
   roles.debugger:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent + .agents/agents/debugger.md"
   roles.web-investigator:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae Agent + .agents/agents/web-investigator.md"
   artifacts.runtime-layout:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: ".ai-runtime-artifacts/"
   artifacts.verification-lite:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Tier 1 → verification-lite.md"
   skills.stage-load:
-    status: degraded
+    status: supported
     binding: "Read SKILL.md"
   interaction.structured-ask:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae structured Ask"
   hooks.session-lifecycle:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Trae hooks 机制"
   git.worktree-script:
-    status: degraded
-    binding: "git worktree"
+    status: supported
+    binding: "git worktree 共用脚本"
   verification.collective-test:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "Leader 跑 project.verification.md → Write *-collective-test.md"
   verification.collective-review:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "reviewer readonly → Leader Write *-code-review.md"
   verification.before-completion:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "verification-before-completion skill 铁律 + TDD 合规门"
   verification.fix-loop:
-    status: degraded
-    binding: "待定义"
+    status: supported
+    binding: "BLOCK → review-fix WU → 重新验证"

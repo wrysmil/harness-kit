@@ -16,8 +16,8 @@
 
 | 能力 | 状态 |
 | --- | --- |
-| `interaction.structured-ask` | degraded — 对话式单选 |
-| `hooks.session-lifecycle` | manual — 无 `.cursor/hooks.json` |
+| `interaction.structured-ask` | supported — AskUserQuestion 工具 |
+| `hooks.session-lifecycle` | supported — .claude/settings.json hooks |
 | `orchestration.continuous-loop` | manual — 多会话 HANDOFF |
 | Task `ci-investigator` | degraded — generalPurpose + 只读 |
 

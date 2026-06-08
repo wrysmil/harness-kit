@@ -20,6 +20,6 @@
 | `LoadAgent(role)` | Read `.agents/agents/<role>.md`（共享层） |
 | `LoadCapability(orchestration.dispatch)` | `cursor-orchestration` skill → core dispatcher |
 
-**Skill 路径：** 共享 `.agents/skills/`；平台特有 `.cursor/skills/`（如 `git-xywh`）。
+**Skill 路径：** 共享 `.agents/skills/`（含 `git-xywh` 等通用 skill）；平台特有 `.cursor/skills/`。
 
 **降级：** 见 `capability-matrix.yaml`。

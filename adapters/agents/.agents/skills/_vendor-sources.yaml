@@ -19,7 +19,7 @@ skills:
     source: ~/.agents/skills/receiving-code-review/SKILL.md
     upstream: obra/superpowers
   frontend-design:
-    source: ~/.cursor/skills/frontend-design/SKILL.md
+    source: ~/.agents/skills/frontend-design/SKILL.md
     upstream: anthropics/skills (frontend-design)
   agent-browser:
     source: ~/.agents/skills/agent-browser/SKILL.md

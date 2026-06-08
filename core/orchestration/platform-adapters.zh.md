@@ -13,12 +13,13 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 | 信号 | 平台 |
 | --- | --- |
-| Cursor 工作区 + `.agents/agents/*.md` | cursor |
+| Cursor 工作区 + `.cursor/rules/` | cursor |
 | CLAUDE.md 会话 + Skill 工具 + 无 Cursor | claude |
+| Trae 工作区 + `.trae/rules/` | trae |
 | Codex CLI + `omx` | codex |
 | 否则 | generic |
 
-在 execution-log 的 front matter 中记录 `platform: cursor | claude | codex | generic`。
+在 execution-log 的 front matter 中记录 `platform: cursor | claude | trae | codex | generic`。
 
 ---
 
@@ -66,13 +67,41 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 ```yaml
 max_parallel_agents: 3      # 上限 5；遇限流则降低
 loop_mode: single-pass      # 默认；continuous 需显式 opt-in
-subagent_spawn: .cursor/agents/harness-*  # 实现/审查优先
+subagent_spawn: .agents/agents/<role>.md  # 共享层
 monitoring: 轮询后台 Task 与终端输出
 ```
 
-配置模板：`harness-kit/adapters/cursor/orchestration/config.defaults.yaml`
+配置模板：`harness-kit/adapters/cursor/.cursor/config.defaults.yaml`
 
 阶段门禁见 `harness-kit/core/routing.md` § 阶段门禁。
+
+---
+
+## Claude 角色映射
+
+| Harness 角色 | Claude 机制 |
+| --- | --- |
+| 编排者（Leader） | 主会话（CLAUDE.md + AGENTS.md） |
+| 实现 / 审查 / 探查 / 调试 | **Task(subagent_type=generalPurpose)** + `.agents/agents/<role>.md` 作 prompt |
+| Shell / 测试 / 构建 | Task |
+| 项目规则 | `CLAUDE.md`、`AGENTS.md`、`harness-kit/core/` |
+| 生命周期钩子 | `.claude/settings.json`（PreToolUse / PostToolUse / Stop） |
+
+共享 skill（`.agents/skills/`）与平台 skill（`.claude/skills/`）：见 `core/orchestration/skill-preferences.md`。
+
+---
+
+## Trae 角色映射
+
+| Harness 角色 | Trae 机制 |
+| --- | --- |
+| 编排者（Leader） | Trae Agent 模式（自主规划+执行） |
+| 实现 / 审查 / 探查 / 调试 | **Trae Agent** + `.agents/agents/<role>.md` |
+| Shell / 测试 / 构建 | Trae Agent Task |
+| 项目规则 | `.trae/rules/`、`AGENTS.md`、`harness-kit/core/` |
+| 生命周期钩子 | Trae hooks 机制 |
+
+共享 skill（`.agents/skills/`）与平台 skill（`.trae/skills/`）：见 `core/orchestration/skill-preferences.md`。
 
 ---
 

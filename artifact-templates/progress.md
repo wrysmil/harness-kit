@@ -4,7 +4,7 @@ route: cursor-orchestration:dispatcher-workflow
 skills:
   - cursor-orchestration
 source:
-  - harness-kit/adapters/cursor/orchestration/tracking/schema.md
+  - harness-kit/core/orchestration/tracking/schema.md
 created_at: YYYY-MM-DD
 platform: cursor
 ---

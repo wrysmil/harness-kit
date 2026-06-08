@@ -19,11 +19,11 @@ Cursor 适配分两层：
 | `../../core/orchestration/dispatcher-workflow.md` | 编排唯一步骤源 |
 | `bindings.md` | Cursor 原语映射 |
 | `capability-matrix.yaml` | parity 审计 |
-| `orchestration/platform-adapters.zh.md` | 平台检测（历史） |
+| `../../core/orchestration/platform-adapters.zh.md` | 平台检测与角色映射 |
 | `../../entrypoints/AGENTS.cursor-overlay.md` | Cursor 契约 |
 | `../../core/routing.md` | 路由权威 |
 
-上游改编来源见 `orchestration/VENDOR.md`。
+上游改编来源见 `VENDOR.md`。
 
 ## 接入
 

@@ -4,11 +4,11 @@
 2. **不**含同句组合指令里的「然后执行」（见 `routing.md` § 组合指令）；
 3. 当前任务 **非**「写方案 / 写计划」阶段。
 满足后无需逐步征求许可，执行至完成（Tier 2+ 仍须尾盘产物）。
-**Harness 阶段门禁优先：** 写入 spec / plan / decision 后须暂停；「写方案」「写计划」不属于实现阶段，未获用户继续指令前不得 auto-continue 改代码。详见 `routing.md` § 阶段门禁 与 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
+**Harness 阶段门禁优先：** 写入 spec / plan / decision 后须暂停；「写方案」「写计划」不属于实现阶段，未获用户继续指令前不得 auto-continue 改代码。详见 `routing.md` § 阶段门禁。Cursor 平台额外见 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
 **Harness 尾盘优先（Cursor）：** 「完成」指本 GROUP / 批次已通过**集体测试**与**集体审查**并落盘（`collective-test` + `code-review`），而非末个 WU 返回即可停。见 `harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
 **Tier 1 Leader 直做：** 须 Write `verifications/*-verification-lite.md`，不得零落盘。见 `routing.md` § 任务 Tier。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
-并行子任务：Codex 用原生子代理；Cursor 用 `.cursor/agents/harness-*` subagent（见 `harness-kit/adapters/cursor/`）。
+并行子任务：Codex 用原生子代理；Cursor 用 `.agents/agents/<role>.md` 共享 subagent（见 `harness-kit/adapters/agents/`）；Claude / Trae 同理。
 <!-- 自主性指令结束 -->
 <!-- omx:generated:agents-md -->
 
@@ -68,11 +68,11 @@
 
 ## 可选：Cursor Hooks
 
-启用 Harness 路由提示 hook：见 `harness-kit/adapters/cursor/orchestration/hooks/README.md`。
+启用 Harness 路由提示 hook：见 `harness-kit/adapters/cursor/.cursor/hooks/README.md`。
 
 ## 可选：Continuous Loop
 
-长期自治循环（opt-in）：见 `harness-kit/adapters/cursor/orchestration/continuous-loop.md`。
+长期自治循环（opt-in）：见 `harness-kit/core/orchestration/continuous-loop.md`。
 
 ## OMX 正文
 

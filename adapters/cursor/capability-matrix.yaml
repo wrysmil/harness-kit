@@ -27,7 +27,7 @@ capabilities:
     binding: "collective-test + reviewer + code-review"
   orchestration.continuous-loop:
     status: supported
-    binding: "orchestration/continuous-loop.md opt-in"
+    binding: "core/orchestration/continuous-loop.md opt-in"
   roles.coder:
     status: supported
     binding: "coder subagent"

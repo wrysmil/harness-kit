@@ -6,3 +6,4 @@
 .env.*
 .worktrees/
 .ai-runtime-artifacts/
+.idea/

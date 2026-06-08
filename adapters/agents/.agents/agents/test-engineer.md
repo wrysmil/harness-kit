@@ -10,7 +10,7 @@ readonly: false
 ## 职责
 
 - 只改 Leader 允许的**测试**路径；跑 `project.verification.md` 与 WU 指定命令
-- `wu_type: e2e` → **必须先 Read** `.cursor/skills/agent-browser/SKILL.md`（`auto` 已含）
+- `wu_type: e2e` → **必须先 Read** `.agents/skills/agent-browser/SKILL.md`（`auto` 已含）
 - 不派子 Agent；不改 plan / tracking
 
 ## WU Skills

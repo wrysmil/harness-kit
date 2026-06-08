@@ -60,12 +60,11 @@ capabilities:
     status: supported
     binding: "Read SKILL.md"
   interaction.structured-ask:
-    status: degraded
-    binding: "对话式单选"
-    degraded_reason: "无 AskQuestion 工具"
+    status: supported
+    binding: "AskUserQuestion 工具（单选/多选 + preview）"
   hooks.session-lifecycle:
-    status: manual
-    binding: "用户本地 hook"
+    status: supported
+    binding: "PreToolUse/PostToolUse/AskUserQuestion/Stop hooks（.claude/settings.json）"
   git.worktree-script:
     status: supported
     binding: "git worktree 共用脚本"

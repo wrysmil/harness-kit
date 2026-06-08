@@ -6,7 +6,7 @@
 
 ```
 .agents/
-├── skills/         ← 共享 skills（11 个）
+├── skills/         ← 共享 skills（13 个，含 git-xywh + trae-orchestration）
 ├── agents/         ← 共享 agent manifests（7 个）
 └── README.md
 ```
@@ -24,8 +24,10 @@
 | frontend-design | UI 实现审美 | 全局复制 |
 | agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
 | document-review | 文档审查 | 内置 |
+| git-xywh | 组织 Git 工作流规范 | 从 cursor 迁移 |
 | cursor-orchestration | Cursor 编排调度 | 内置（→ core dispatcher） |
 | claude-orchestration | Claude 编排调度 | 内置（→ core dispatcher） |
+| trae-orchestration | Trae 编排调度 | 新增（→ core dispatcher） |
 
 来源登记：`_vendor-sources.yaml`
 
@@ -47,7 +49,7 @@
 
 | 平台 | 目录 | 内容 |
 | --- | --- | --- |
-| Cursor | `adapters/cursor/.cursor/` | rules、hooks、git-xywh skill |
+| Cursor | `adapters/cursor/.cursor/` | rules、hooks |
 | Claude Code | `adapters/claude/` | bindings、capability-matrix |
 | Trae | `adapters/trae/` | bindings、capability-matrix |
 
