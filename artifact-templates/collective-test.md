@@ -4,10 +4,10 @@ route: cursor-orchestration:dispatcher-workflow -> batch-closeout
 skills:
   - verification-before-completion
 skills_evidence:
-  - adapters/cursor/.cursor/skills/verification-before-completion/SKILL.md
+  - adapters/agents/.agents/skills/verification-before-completion/SKILL.md
 source:
-  - harness-kit/project.verification.md
-  - harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md
+  - project.verification.md
+  - docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md
 created_at: <YYYY-MM-DD>
 batch_id: GROUP-1
 worktree_id: 
