@@ -4,7 +4,7 @@
 | --- | --- |
 | `DetectPlatform()` | CLAUDE.md 会话 + Skill 工具 → `claude` |
 | `SpawnWorker(role)` | Task(subagent_type=generalPurpose) + `.agents/agents/<role>.md` 作 prompt 正文 |
-| `SpawnWorker(reviewer)` | 新 Task 实例 + readonly 约束 |
+| `SpawnWorker(reviewer)` | 新 Task 实例 + readonly 约束（**prompt 级约束**；subagent 仍能用 Write 工具——通过"独立实例 + prompt 纪律"维持，**不**是平台门禁） |
 | `ParallelBatch` | 并行 Task（对齐 `dispatching-parallel-agents`）；不传 Leader 全历史 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
 | `StructuredAsk` | `AskUserQuestion` 工具（单选/多选 + preview） |

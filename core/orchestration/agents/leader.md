@@ -20,6 +20,8 @@ superpowers:brainstorming → [门禁：用户确认 spec]
 → execution-log 关闭
 ```
 
+> **物理能力声明（2026-06-11）：** 上述阶段链中的「集体测试」「集体审查」「WORKTREE-CLOSE」**必须由 Leader 在 Claude Code 会话中手动执行**。Claude Code 平台**没有**调度器/状态机/自动触发器；`harness-session-init` / `harness-subagent-stop` 钩子只发提示，**不**强制 Leader 走 A/B/C。`SpawnWorker(reviewer)` 是 prompt 级 readonly 约束，subagent 仍能用 Write 工具——通过独立实例 + prompt 纪律维持，不可作为"审查写不写文件"的门禁。详见 `claude-continuous-loop.md` § 物理能力诚实声明、`docs/diagnosis/2026-06-11-collective-test-code-review-gap.md`。
+
 **需求获取（brainstorming）：** 优先使用环境内 **结构化提问工具**（见适配器 `bindings.md` 中 `StructuredAsk` 绑定）；不可用则对话逐条问。每次只问一个关键问题。
 
 **阶段 skill（`routing.md` § 阶段指定 skill 必用）：** Route 列写明的 skill 本阶段**必 Load** 后再交付产物。次行 `Skills: <slug>（用途）| loaded|skipped`（小改动叠加 skill 同理）。写 spec 前须完成 `brainstorming` Load；产物 `skills` 非空。
