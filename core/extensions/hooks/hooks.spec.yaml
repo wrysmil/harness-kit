@@ -19,7 +19,7 @@ hooks:
         config_field: hooks.SessionStart
 
   - name: harness-subagent-stop
-    description: 提醒 Leader 追加 DISPATCH 追踪与 plan 勾选
+    description: 提醒 Leader plan 勾选 + 追踪落盘 + 尾盘判断（content 见 content/subagent-stop.md）
     content: content/subagent-stop.md
     bindings:
       cursor:

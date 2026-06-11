@@ -342,7 +342,7 @@ plan 中写的 **集成 / E2E / 契约测试** 列入必跑，由 `harness-test-
 
 - [x] `harness-check.sh`：execution-log 尾盘链接 warn（非 fatal）
 - [ ] 独立 `leader-review-coordination` skill（**暂缓**；当前用 routing + runbook + 模板）
-- [x] Hook：`harness-subagent-track-reminder.sh` 已含尾盘提醒
+- [x] Hook：`harness-subagent-stop.sh` 已含尾盘提醒（content 含 plan 勾选 / 追踪落盘 / 尾盘判断 3 步；hooks.spec.yaml 的 description 落后于 content，2026-06-11 同步）
 
 ---
 
