@@ -462,6 +462,66 @@ if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
   fi
 fi
 
+# 检查 artifact-templates/*.md 的 front matter 路径是否真实存在
+# 目的：挡 gap #3、#4、#5 —— 模板自身 FM 写错路径此前无人发现
+echo "==> Checking artifact-templates FM paths"
+tmpl_errors=0
+for tmpl in artifact-templates/*.md; do
+  [[ -f "$tmpl" ]] || continue
+  base="$(basename "$tmpl")"
+  [[ "$base" == "README.md" ]] && continue
+
+  front_matter="$(awk '
+    NR == 1 && $0 == "---" { in_fm = 1; next }
+    in_fm && $0 == "---" { exit }
+    in_fm { print }
+  ' "$tmpl")"
+
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    # 启发式：跳过明显非仓库内路径（纯 bash glob，不依赖 rg）
+    case "$path" in
+      /*|~*) continue ;;                # 绝对路径 / 用户全局
+      *\<*|*\>*) continue ;;            # 含占位符
+      *' '*|*'（'*|*'）'*|*'，'*) continue ;;  # 含空格 / 全角标点
+      *[!A-Za-z0-9._/-]*) continue ;;   # 含其他非路径字符（含中文自由文本）
+      */*/.*|*.md|*/*/*.md) ;;           # 像仓库内 .md 路径
+      *) continue ;;                     # 不像路径的占位符（如 user-query）
+    esac
+    if [[ ! -e "$path" ]]; then
+      echo "warn: missing skills_evidence path: $path (in $tmpl)" >&2
+      tmpl_warn=1
+    fi
+  done < <(printf '%s\n' "$front_matter" | awk '
+    /^skills_evidence:/ { f = 1; next }
+    f && /^[A-Za-z0-9_.-]+:/ { exit }
+    f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+  ')
+
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    case "$path" in
+      /*|~*) continue ;;
+      *\<*|*\>*) continue ;;
+      *' '*|*'（'*|*'）'*|*'，'*) continue ;;
+      *[!A-Za-z0-9._/-]*) continue ;;
+      */*/.*|*.md|*/*/*.md) ;;
+      *) continue ;;
+    esac
+    if [[ ! -e "$path" ]]; then
+      echo "warn: missing source path: $path (in $tmpl)" >&2
+      tmpl_warn=1
+    fi
+  done < <(printf '%s\n' "$front_matter" | awk '
+    /^source:/ { f = 1; next }
+    f && /^[A-Za-z0-9_.-]+:/ { exit }
+    f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+  ')
+done
+if [[ "$tmpl_warn" -eq 0 ]]; then
+  echo "ok: artifact-templates FM paths"
+fi
+
 if [[ -f package.json ]]; then
   echo "==> Checking package.json"
   node -e "JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package-json-ok')"
