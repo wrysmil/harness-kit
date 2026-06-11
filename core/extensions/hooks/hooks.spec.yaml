@@ -33,3 +33,15 @@ hooks:
         script: scripts/claude/harness-subagent-stop.sh
         config_file: .claude/settings.json
         config_field: hooks.SubagentStop
+
+  - name: block-native-plan-mode
+    description: 阻断平台原生 plan 工具（Claude Code EnterPlanMode/ExitPlanMode），强制走 writing-plans skill
+    content: content/block-native-plan-mode.md
+    bindings:
+      claude:
+        event: PreToolUse
+        matcher: "EnterPlanMode|ExitPlanMode"
+        script: scripts/claude/block-native-plan-mode.sh
+        config_file: .claude/settings.json
+        config_field: hooks.PreToolUse
+    notes: "opt-in 强阻断。脚本退码 2 + stderr 反馈给模型；默认未启用，启用见 README § 启用方式。"

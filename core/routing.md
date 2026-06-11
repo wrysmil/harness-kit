@@ -17,6 +17,30 @@
 - 项目级 skill 优先于通用 skill。
 - **Git 协作**：组织级分支、提交、MR、热修、合流默认 invoke **`git-xywh`** skill；本项目差异与 AI 约束见 `harness-kit/project.git.md`（不将 skill 全文复制进仓库）。
 
+## 平台原生 plan 工具（禁止使用）
+
+**Claude Code 的 `EnterPlanMode` / `ExitPlanMode`、Cursor 的 Plan 模式** 等**平台原生 plan 工具**会把 plan 写到平台私有目录（`~/.claude/plans/`、Cursor 内部），**完全绕过** Harness 的 stage skill 流程、`plan.harness-overlay.md` 契约与 `.ai-runtime-artifacts/plans/` 落盘规则。一旦走原生工具，本会话**无法**做 plan 门禁拦截、executor 不会把 plan 当 Harness 产物、用户也看不到完整 plan body。
+
+**规则：**
+
+| 任务 | 走 Harness | 禁止 |
+| --- | --- | --- |
+| 写实施计划 | Load `writing-plans` skill → `artifact-templates/plan.harness-overlay.md` → Write `.ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md` | Claude Code `EnterPlanMode` / `ExitPlanMode`、Cursor Plan 模式 |
+| 写方案 | Load `brainstorming` skill → `artifact-templates/spec.harness-overlay.md` → Write `.ai-runtime-artifacts/specs/...` | 平台原生 plan/spec 工具 |
+
+**为什么用平台原生工具是 bug：**
+
+1. 产物落到 `~/.claude/plans/` 或 Cursor 内部，**不进 git**、不进 `.ai-runtime-artifacts/` FM 元数据、不被 `harness-check.sh` 扫描、不进 review/verification 链
+2. 用户批准时只看到 plan body，**看不到 FM/evidence 段**；与「计划门禁」语义脱节
+3. 同名 `plans/` 在两套目录分裂，后续 `harness-kit check` / `git log` / `requesting-code-review` 全部漏抓
+
+**根因与修复（用户在会话中触发时）：**
+
+- 若 agent 已走原生工具 → 立刻 `cat ~/.claude/plans/<name>.md >> .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`、补 Harness FM（`route: superpowers:writing-plans`、`skills_evidence`、`## Next`），然后从原 native 路径继续；不要把 plan 留在 `~/.claude/plans/`
+- 项目级 opt-in 强阻断：见 `core/extensions/hooks/` 下 `PreToolUse` 钩子（默认未启用；启用见 hooks README）
+
+
+
 ## 用户指定 Skills 的合并规则
 
 用户在任务中指定 skills 时，按下面规则合并：
@@ -214,6 +238,7 @@
 - **强制声明：** 首行 `「Harness：…」`；次行 `Skills:` 格式见 § 阶段指定 skill 必用（Tier 1+ 或 stage skill 时必填）
 - **未声明时的用户干预：** 首句无 `「Harness：…」` → 发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - **跳过门禁时的干预：** `你跳过了阶段门禁。我只要求写方案/计划，不要改代码。写入 .ai-runtime-artifacts/ 后暂停等我确认。`
+- **走平台原生 plan 工具时的干预：** `你用了 Claude Code EnterPlanMode / Cursor Plan 模式，绕过了 Harness。撤回该 plan，Load writing-plans skill 重新写 .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md（FM + Next + dispatch）。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。
 - **Codex**：调用 `omx` 前写清目标、范围、禁止事项和验收标准；`omx` 输出只作为建议，主执行者必须复核后才能落地。

@@ -42,6 +42,7 @@ detect_platform() {
   [[ -d "$project_root/.cursor" ]] && platforms+=("cursor")
   [[ -f "$project_root/CLAUDE.md" || -d "$project_root/.claude" ]] && platforms+=("claude")
   [[ -d "$project_root/.trae" ]] && platforms+=("trae")
+  [[ -d "$project_root/.codex" ]] && platforms+=("codex")
 
   if [[ ${#platforms[@]} -eq 0 ]]; then
     echo "unknown"
@@ -128,9 +129,12 @@ EOF
       mkdir -p "$target_root/.claude/hooks/content"
       cp "$ext_root/content/session-init.md"     "$target_root/.claude/hooks/content/"
       cp "$ext_root/content/subagent-stop.md"    "$target_root/.claude/hooks/content/"
+      cp "$ext_root/content/block-native-plan-mode.md" "$target_root/.claude/hooks/content/" 2>/dev/null || true
       cp "$ext_root/scripts/claude/harness-session-init.sh"     "$target_root/.claude/hooks/"
       cp "$ext_root/scripts/claude/harness-subagent-stop.sh"    "$target_root/.claude/hooks/"
+      cp "$ext_root/scripts/claude/block-native-plan-mode.sh"   "$target_root/.claude/hooks/" 2>/dev/null || true
       chmod +x "$target_root/.claude/hooks/harness-"*.sh 2>/dev/null || true
+      chmod +x "$target_root/.claude/hooks/block-native-plan-mode.sh" 2>/dev/null || true
 
       cat > "$target_root/.claude/settings.json.example" <<'EOF'
 {
@@ -151,6 +155,14 @@ EOF
           { "type": "command", "command": ".claude/hooks/harness-subagent-stop.sh" }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "EnterPlanMode|ExitPlanMode",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/block-native-plan-mode.sh" }
+        ]
+      }
     ]
   },
   "permissions": {
@@ -159,9 +171,41 @@ EOF
   }
 }
 EOF
-      echo "   已投影 hooks 脚本 + content + settings.json.example 到 .claude/"
+      echo "   已投影 hooks 脚本 + content + settings.json.example 到 .claude/（含 PreToolUse 阻断原生 plan）"
       ;;
   esac
+}
+
+project_platform_skills() {
+  local target_root="$1"
+  local platform_dir="$2"
+  local src="$3"
+  local force="${4:-0}"
+  local added=0
+  local skipped=0
+
+  if [[ ! -d "$src" ]]; then
+    return 0
+  fi
+
+  for skill_dir in "$src"/*/; do
+    [[ -d "$skill_dir" ]] || continue
+    [[ -f "$skill_dir/SKILL.md" ]] || continue
+    local skill_name
+    skill_name="$(basename "$skill_dir")"
+    mkdir -p "$target_root/$platform_dir/skills/$skill_name"
+    if [[ "$force" != "1" && -f "$target_root/$platform_dir/skills/$skill_name/SKILL.md" ]]; then
+      echo "   skip: $platform_dir/skills/$skill_name（已存在，--force 覆盖）"
+      skipped=$((skipped + 1))
+      continue
+    fi
+    cp -R "$skill_dir"* "$target_root/$platform_dir/skills/$skill_name/"
+    added=$((added + 1))
+  done
+
+  if [[ "$added" -gt 0 || "$skipped" -gt 0 ]]; then
+    echo "   $platform_dir/skills: +$added 跳过 $skipped"
+  fi
 }
 
 project_mcp() {
@@ -184,46 +228,58 @@ project_mcp() {
 
 project_cursor() {
   local target_root="${1:-.}"
+  local force="${2:-0}"
   local src="$ADAPTERS_DIR/cursor/.cursor"
-  local count=0
+  local added=0
+  local skipped=0
 
   echo "==> 投影 Cursor 平台层: .cursor/"
 
-  # rules
+  # 共享层迁移后的残留清理：旧版 cursor 适配器把 agents 放在 .cursor/agents/，
+  # 新版已统一到 .agents/agents/（共享层），这里一次性清掉。
+  if [[ -d "$target_root/.cursor/agents" ]]; then
+    rm -rf "$target_root/.cursor/agents"
+    echo "   已清理残留 .cursor/agents/（旧版 cursor 平台层 agents 已迁到共享层）"
+  fi
+
+  # rules（用户可定制：默认 skip-if-exists，--force 覆盖）
   if [[ -d "$src/rules" ]]; then
     mkdir -p "$target_root/.cursor/rules"
     for f in "$src/rules"/*.mdc; do
       [[ -f "$f" ]] || continue
+      local name
+      name="$(basename "$f")"
+      if [[ "$force" != "1" && -f "$target_root/.cursor/rules/$name" ]]; then
+        echo "   skip: .cursor/rules/$name（已存在，--force 覆盖）"
+        skipped=$((skipped + 1))
+        continue
+      fi
       cp "$f" "$target_root/.cursor/rules/"
-      count=$((count + 1))
+      added=$((added + 1))
     done
   fi
 
-  # skills (平台特有)
-  if [[ -d "$src/skills" ]]; then
-    for skill_dir in "$src/skills"/*/; do
-      [[ -d "$skill_dir" ]] || continue
-      local skill_name
-      skill_name="$(basename "$skill_dir")"
-      # 跳过空目录
-      [[ -f "$skill_dir/SKILL.md" ]] || continue
-      mkdir -p "$target_root/.cursor/skills/$skill_name"
-      cp -R "$skill_dir"* "$target_root/.cursor/skills/$skill_name/"
-      count=$((count + 1))
-    done
-  fi
+  # skills（共享层 → 平台层 mirror；用户可定制：默认 skip-if-exists，--force 覆盖）
+  local skill_output
+  skill_output="$(project_platform_skills "$target_root" ".cursor" "$ADAPTERS_DIR/agents/.agents/skills" "$force" 2>&1)"
+  [[ -n "$skill_output" ]] && echo "$skill_output"
 
-  # hooks（从 core/extensions 投影；脚本 + content + config 示例）
+  # hooks（从 core/extensions 投影；脚本 + content + config 示例，非用户文件，始终覆盖）
   project_hooks "$target_root" "cursor"
 
-  echo "   已投影 $count 项到 $target_root/.cursor/（不含 hooks 扩展）"
+  echo "   已投影 $added 项到 $target_root/.cursor/（含 hooks 扩展），跳过 $skipped 项"
 }
 
 project_claude() {
   local target_root="${1:-.}"
-  local count=0
+  local force="${2:-0}"
 
   echo "==> 投影 Claude 平台层: .claude/"
+
+  # skills（共享层 → 平台层 mirror；Claude Code 自动发现 .claude/skills/）
+  local skill_output
+  skill_output="$(project_platform_skills "$target_root" ".claude" "$ADAPTERS_DIR/agents/.agents/skills" "$force" 2>&1)"
+  [[ -n "$skill_output" ]] && echo "$skill_output"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   project_hooks "$target_root" "claude"
@@ -254,9 +310,10 @@ usage() {
 用法: harness-project.sh <命令> [选项]
 
 命令:
-  detect                     检测当前平台
-  project [--platform P]     投影共享层 + 平台层（默认自动检测）
-  shared                     仅投影共享层
+  detect                              检测当前平台
+  project [--platform P] [--force]    投影共享层 + 平台层（默认自动检测）
+                                      --force 覆盖已存在的 cursor rules/skills（默认 skip-if-exists）
+  shared                              仅投影共享层
 
 平台: cursor, claude, trae, all
 EOF
@@ -277,9 +334,11 @@ case "$cmd" in
 
   project)
     platform=""
+    force=0
     while [[ $# -gt 0 ]]; do
       case "$1" in
         --platform) platform="$2"; shift 2 ;;
+        --force) force=1; shift ;;
         *) echo "未知选项: $1" >&2; exit 1 ;;
       esac
     done
@@ -305,12 +364,12 @@ case "$cmd" in
 
     # 平台层
     case "$platform" in
-      cursor)  project_cursor "$target_dir" ;;
-      claude)  project_claude "$target_dir" ;;
+      cursor)  project_cursor "$target_dir" "$force" ;;
+      claude)  project_claude "$target_dir" "$force" ;;
       trae)    project_trae "$target_dir" ;;
       all)
-        project_cursor "$target_dir"
-        project_claude "$target_dir"
+        project_cursor "$target_dir" "$force"
+        project_claude "$target_dir" "$force"
         project_trae "$target_dir"
         ;;
       *)

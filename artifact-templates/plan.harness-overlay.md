@@ -16,6 +16,8 @@ approved: false
 
 # Harness overlay（非正文模板）
 
+> ⚠️ **禁止使用平台原生 plan 工具（Claude Code `EnterPlanMode`/`ExitPlanMode`、Cursor Plan 模式）。** 那些工具把 plan 写到 `~/.claude/plans/` 或 Cursor 内部，绕过 Harness 契约、本会话无门禁拦截。必须 Load **`writing-plans` skill** 后用 `Write` 工具落盘到下方「路径」段。详见 `core/routing.md` § 平台原生 plan 工具。
+
 > **正文：** 按已 Load 的 **writing-plans** skill 撰写（Goal / Architecture / Tech Stack、Task 细步、Plan 自检等）。
 > **禁止**用 `artifact-templates/plan.md` 历史短提纲替代 skill 流程。
 > **路径：** `.ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`
