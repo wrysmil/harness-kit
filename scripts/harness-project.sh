@@ -90,6 +90,98 @@ project_shared() {
   echo "   已投影 $count 项到 $target_root/.agents/"
 }
 
+project_hooks() {
+  local target_root="${1:-.}"
+  local platform="${2:-}"
+  local ext_root="$KIT_ROOT/core/extensions/hooks"
+
+  if [[ ! -d "$ext_root" ]] || [[ -z "$platform" ]]; then
+    return 0
+  fi
+
+  case "$platform" in
+    cursor)
+      mkdir -p "$target_root/.cursor/hooks/content"
+      cp "$ext_root/content/session-init.md"     "$target_root/.cursor/hooks/content/"
+      cp "$ext_root/content/subagent-stop.md"    "$target_root/.cursor/hooks/content/"
+      cp "$ext_root/scripts/cursor/harness-session-init.sh"     "$target_root/.cursor/hooks/"
+      cp "$ext_root/scripts/cursor/harness-subagent-stop.sh"    "$target_root/.cursor/hooks/"
+      chmod +x "$target_root/.cursor/hooks/harness-"*.sh 2>/dev/null || true
+
+      cat > "$target_root/.cursor/hooks.json.example" <<'EOF'
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      { "command": ".cursor/hooks/harness-session-init.sh" }
+    ],
+    "subagentStop": [
+      { "command": ".cursor/hooks/harness-subagent-stop.sh" }
+    ]
+  }
+}
+EOF
+      echo "   已投影 hooks 脚本 + content + hooks.json.example 到 .cursor/hooks/"
+      ;;
+
+    claude)
+      mkdir -p "$target_root/.claude/hooks/content"
+      cp "$ext_root/content/session-init.md"     "$target_root/.claude/hooks/content/"
+      cp "$ext_root/content/subagent-stop.md"    "$target_root/.claude/hooks/content/"
+      cp "$ext_root/scripts/claude/harness-session-init.sh"     "$target_root/.claude/hooks/"
+      cp "$ext_root/scripts/claude/harness-subagent-stop.sh"    "$target_root/.claude/hooks/"
+      chmod +x "$target_root/.claude/hooks/harness-"*.sh 2>/dev/null || true
+
+      cat > "$target_root/.claude/settings.json.example" <<'EOF'
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/harness-session-init.sh" }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/harness-subagent-stop.sh" }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [],
+    "deny": []
+  }
+}
+EOF
+      echo "   已投影 hooks 脚本 + content + settings.json.example 到 .claude/"
+      ;;
+  esac
+}
+
+project_mcp() {
+  local target_root="${1:-.}"
+  local mcp_template="$KIT_ROOT/core/extensions/mcp/mcp.servers.template.json"
+  local target_mcp="$target_root/.mcp.json"
+
+  if [[ ! -f "$mcp_template" ]]; then
+    return 0
+  fi
+
+  if [[ -f "$target_mcp" ]]; then
+    echo "   .mcp.json 已存在，跳过（避免覆盖用户配置）"
+    return 0
+  fi
+
+  cp "$mcp_template" "$target_mcp"
+  echo "   已投影 .mcp.json（mcpServers: {}，按需编辑）"
+}
+
 project_cursor() {
   local target_root="${1:-.}"
   local src="$ADAPTERS_DIR/cursor/.cursor"
@@ -107,20 +199,6 @@ project_cursor() {
     done
   fi
 
-  # hooks
-  if [[ -d "$src/hooks" ]]; then
-    mkdir -p "$target_root/.cursor/hooks"
-    for f in "$src/hooks"/*.sh; do
-      [[ -f "$f" ]] || continue
-      cp "$f" "$target_root/.cursor/hooks/"
-      count=$((count + 1))
-    done
-    chmod +x "$target_root/.cursor/hooks/"*.sh 2>/dev/null || true
-  fi
-
-  # hooks.json.example
-  [[ -f "$src/hooks.json.example" ]] && cp "$src/hooks.json.example" "$target_root/.cursor/" && count=$((count + 1))
-
   # skills (平台特有)
   if [[ -d "$src/skills" ]]; then
     for skill_dir in "$src/skills"/*/; do
@@ -135,24 +213,22 @@ project_cursor() {
     done
   fi
 
-  echo "   已投影 $count 项到 $target_root/.cursor/"
+  # hooks（从 core/extensions 投影；脚本 + content + config 示例）
+  project_hooks "$target_root" "cursor"
+
+  echo "   已投影 $count 项到 $target_root/.cursor/（不含 hooks 扩展）"
 }
 
 project_claude() {
   local target_root="${1:-.}"
-  local src="$ADAPTERS_DIR/claude/.agents"
   local count=0
 
-  echo "==> 投影 Claude 平台层"
+  echo "==> 投影 Claude 平台层: .claude/"
 
-  # Claude orchestration skill (合并到共享层)
-  if [[ -d "$src/skills/claude-orchestration" ]]; then
-    mkdir -p "$target_root/.agents/skills/claude-orchestration"
-    cp -R "$src/skills/claude-orchestration/"* "$target_root/.agents/skills/claude-orchestration/"
-    count=$((count + 1))
-  fi
+  # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
+  project_hooks "$target_root" "claude"
 
-  echo "   已投影 $count 项"
+  echo "   已投影 Claude 平台层（hooks 扩展见上）"
 }
 
 project_trae() {
@@ -223,6 +299,9 @@ case "$cmd" in
 
     # 共享层始终投影
     project_shared "$target_dir"
+
+    # MCP 投影（所有平台共用，标准 .mcp.json；用户已有则跳过）
+    project_mcp "$target_dir"
 
     # 平台层
     case "$platform" in

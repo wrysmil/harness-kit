@@ -66,11 +66,15 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 | `project.git.md` | 相对组织 `git-xywh` 的本项目 Git 差异 |
 | `core/routing.md` | 默认路由表、阶段门禁 |
 | `core/harness.md` | 总契约与阅读顺序 |
+| `core/capabilities/` | 抽象原语（DetectPlatform / SpawnWorker / EmitHook / …） |
+| `core/orchestration/` | 编排核心（dispatcher / agents / roles / continuous-loop） |
+| `core/extensions/` | 平台无关扩展抽象（hooks 统一内容 + spec；MCP 模板） |
 | `core/artifacts.md` | `.ai-runtime-artifacts/` 命名与 front matter |
 | `entrypoints/` | 投影到根目录的 `AGENTS.md`、`CLAUDE.md` 等 |
-| `adapters/cursor/` | Cursor：rules、agents、orchestration |
+| `adapters/agents/` | 共享层（`.agents/skills/` + `.agents/agents/`，所有平台共用） |
+| `adapters/cursor/` | Cursor 平台 binding |
+| `adapters/claude/` | Claude Code 平台 binding |
 | `adapters/codex/` | Codex / OMX 适配 |
-| `adapters/agents/` | 通用 `.agents/skills/`（如 `cursor-orchestration`） |
 | `init/` | 接入与 bootstrap 话术 |
 | `artifact-templates/` | 编排模板 + `*-harness-overlay.md`（stage skill 契约）；`spec.md`/`plan.md` 为 stub |
 
@@ -197,14 +201,16 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | 类型 | 路径 |
 |------|------|
 | 顶层契约 | `AGENTS.md` |
-| Claude Code | `CLAUDE.md` |
+| Claude Code | `CLAUDE.md`、`.claude/settings.json`（opt-in hooks） |
 | Gemini | `GEMINI.md` |
-| Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**） |
+| Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**）、`.cursor/hooks.json`（opt-in） |
 | Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
-| Agents / Skills | `.agents/`（含 `cursor-orchestration`） |
+| Agents / Skills | `.agents/`（含 `cursor-orchestration` / `claude-orchestration`） |
+| Hooks 扩展 | `.cursor/hooks/` 或 `.claude/hooks/` + `content/*.md`（来自 `core/extensions/hooks/`，opt-in） |
+| MCP | `.mcp.json`（来自 `core/extensions/mcp/`，按需编辑 server） |
 | Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
 
-Cursor 适配说明：`adapters/cursor/README.md`。
+适配器说明：`adapters/cursor/README.md` / `adapters/claude/README.md`。统一扩展：[core/extensions/README.md](core/extensions/README.md)。
 
 ---
 
@@ -222,15 +228,17 @@ harness-kit/
 │   ├── routing.md
 │   ├── artifacts.md
 │   ├── verification.md
-│   └── runbooks.md
+│   ├── capabilities/          # 抽象原语（DetectPlatform / SpawnWorker / EmitHook …）
+│   ├── orchestration/         # 编排核心（dispatcher / agents / roles）
+│   └── extensions/            # 平台无关扩展（hooks / MCP）
 ├── init/
 ├── entrypoints/
 ├── adapters/
-│   ├── cursor/
-│   │   ├── .cursor/agents/    # harness-coder, harness-implementer, …
-│   │   └── orchestration/
-│   ├── codex/
-│   └── agents/
+│   ├── cursor/                # Cursor 平台 binding
+│   ├── claude/                # Claude Code 平台 binding
+│   ├── codex/                 # Codex / OMX
+│   ├── trae/                  # Trae 骨架
+│   └── agents/                # 共享层（.agents/skills + .agents/agents）
 ├── scripts/
 └── artifact-templates/
 ```
@@ -238,7 +246,12 @@ harness-kit/
 | 目录 | 职责 |
 |------|------|
 | `core/` | 通用规则，不随业务重写 |
-| `adapters/cursor/` | Cursor rules、六套 subagent、dispatcher 工作流 |
+| `core/capabilities/` | 抽象原语（DetectPlatform / SpawnWorker / EmitHook 等）+ 降级协议 |
+| `core/orchestration/` | dispatcher-workflow、roles、agent manifest、continuous-loop |
+| `core/extensions/` | 平台无关扩展抽象（hooks 统一内容、spec、wrapper；MCP 模板） |
+| `adapters/agents/` | 共享层（`.agents/skills/` + `.agents/agents/`，所有平台共用） |
+| `adapters/cursor/` | Cursor 平台 binding（rules / agents manifest / config defaults） |
+| `adapters/claude/` | Claude Code 平台 binding（capability matrix / bindings） |
 | `artifact-templates/` | spec / plan / wu-checklist 等模板 |
 
 ---
@@ -258,12 +271,21 @@ harness-kit/
 ```text
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
-2. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
-3. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后执行 harness-kit/scripts/install-ai-skills.sh。
-4. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
-5. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
-6. 汇总推断项、待确认项和验证结果。
+1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：
+   - 删除 harness-kit/.git/（harness-kit 源仓库的 .git；不要动到项目自身的 .git/）
+   - 如存在 harness-kit/.gitignore、harness-kit/.gitattributes、harness-kit/.gitmodules，一并删除
+   - 在项目根 .gitignore 追加（保留已有内容；不存在则创建）：
+     ```
+     # Agent Harness
+     harness-kit/*
+     .ai-runtime-artifacts/
+     ```
+2. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
+3. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
+4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后执行 harness-kit/scripts/install-ai-skills.sh。
+5. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
+6. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
+7. 汇总推断项、待确认项和验证结果。
 
 详版步骤见 harness-kit/init/bootstrap.prompt.md。
 ```

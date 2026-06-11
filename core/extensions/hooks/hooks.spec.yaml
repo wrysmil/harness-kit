@@ -1,0 +1,35 @@
+# Hook 抽象 spec — 单一来源，由 harness-project.sh 在投影时按平台 binding
+extensions_version: 1
+
+hooks:
+  - name: harness-session-init
+    description: 注入 Harness 路由提示到会话上下文
+    content: content/session-init.md
+    bindings:
+      cursor:
+        event: sessionStart
+        script: scripts/cursor/harness-session-init.sh
+        config_file: .cursor/hooks.json
+        config_field: hooks.sessionStart
+      claude:
+        event: SessionStart
+        matcher: "*"
+        script: scripts/claude/harness-session-init.sh
+        config_file: .claude/settings.json
+        config_field: hooks.SessionStart
+
+  - name: harness-subagent-stop
+    description: 提醒 Leader 追加 DISPATCH 追踪与 plan 勾选
+    content: content/subagent-stop.md
+    bindings:
+      cursor:
+        event: subagentStop
+        script: scripts/cursor/harness-subagent-stop.sh
+        config_file: .cursor/hooks.json
+        config_field: hooks.subagentStop
+      claude:
+        event: SubagentStop
+        matcher: "*"
+        script: scripts/claude/harness-subagent-stop.sh
+        config_file: .claude/settings.json
+        config_field: hooks.SubagentStop

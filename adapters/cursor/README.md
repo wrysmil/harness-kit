@@ -2,7 +2,7 @@
 
 Cursor 适配分两层：
 
-1. **投影层**（bootstrap 复制到项目根）：`.cursor/rules/`、`.cursor/agents/harness-*`、`.cursor/skills/`、`.agents/skills/cursor-orchestration/`
+1. **投影层**（bootstrap 复制到项目根）：`.cursor/rules/`、`.cursor/agents/harness-*`、`.cursor/skills/`、`.agents/skills/cursor-orchestration/`、`.cursor/hooks/`（来自 extensions）
 2. **绑定层**（留在 `harness-kit/adapters/cursor/`）：`bindings.md`、`capability-matrix.yaml`；编排 stub 重定向至 `core/orchestration/`
 
 ## 投影后应具备
@@ -11,6 +11,7 @@ Cursor 适配分两层：
 - `.cursor/agents/harness-*.md`（薄壳 → `core/orchestration/agents/`）
 - `.cursor/skills/` 能力副本；WU skill 偏好 → `core/orchestration/skill-preferences.md`
 - `.agents/skills/cursor-orchestration/SKILL.md`
+- `.cursor/hooks/harness-*.sh` + `content/*.md` + `.cursor/hooks.json.example`（来自 [core/extensions/hooks](../../core/extensions/hooks/README.md)，**opt-in**：手动 `cp hooks.json.example hooks.json` 启用）
 
 ## 关键文档
 
@@ -27,4 +28,8 @@ Cursor 适配分两层：
 
 ## 接入
 
-先 `init/onboarding-handoff.txt`，再投影 `adapters/cursor/.cursor/` 与 `adapters/agents/.agents/`。
+先 `init/onboarding-handoff.txt`，再 `bash harness-kit/scripts/harness-project.sh project`（一次性投影 `.cursor/`、`.agents/`、`.mcp.json`、hooks 扩展）。
+
+## Hooks（opt-in）
+
+详见 [core/extensions/hooks/README.md](../../core/extensions/hooks/README.md)。`harness-project.sh project` 自动复制脚本与 `.example`，**默认不启用**；手动 `cp .cursor/hooks.json.example .cursor/hooks.json && chmod +x .cursor/hooks/*.sh` 启用。

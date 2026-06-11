@@ -63,7 +63,10 @@ capabilities:
     binding: "AskQuestion"
   hooks.session-lifecycle:
     status: supported
-    binding: ".cursor/hooks.json"
+    binding: "core/extensions/hooks/ → .cursor/hooks.json（opt-in；harness-project.sh 生成 .example）"
+  extensions.mcp.servers:
+    status: supported
+    binding: "core/extensions/mcp/mcp.servers.template.json → 项目根 .mcp.json（harness-project.sh 投影；用户已有则跳过）"
   git.worktree-script:
     status: supported
     binding: "git worktree + harness-worktree.sh"

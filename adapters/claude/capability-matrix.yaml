@@ -64,7 +64,10 @@ capabilities:
     binding: "AskUserQuestion 工具（单选/多选 + preview）"
   hooks.session-lifecycle:
     status: supported
-    binding: "PreToolUse/PostToolUse/AskUserQuestion/Stop hooks（.claude/settings.json）"
+    binding: "core/extensions/hooks/ → .claude/settings.json SessionStart/SubagentStop（opt-in；harness-project.sh 生成 .example）"
+  extensions.mcp.servers:
+    status: supported
+    binding: "core/extensions/mcp/mcp.servers.template.json → 项目根 .mcp.json（harness-project.sh 投影；事实标准，Cursor 与 Claude 共用）"
   git.worktree-script:
     status: supported
     binding: "git worktree 共用脚本"
