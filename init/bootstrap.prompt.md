@@ -15,6 +15,26 @@ created_at: 2026-05-14
 
 你正在把 Agent Harness 脚手架接入当前项目。`harness-kit/` 是源头，根目录入口和工具目录都是投影。
 
+## 清理 harness-kit 源仓库残留 + 更新 .gitignore
+
+`harness-kit/` 是从源仓库拷贝过来的，**绝不能把它的 git 元数据也带进新项目**。在开始投影前必须先做：
+
+1. **删除 harness-kit/ 内的 git 元数据**（仅限 `harness-kit/` 内，不要动项目自身的 `.git/`）：
+   - `harness-kit/.git/`（源仓库的 .git 目录）
+   - 存在则一并删除：`harness-kit/.gitignore`、`harness-kit/.gitattributes`、`harness-kit/.gitmodules`
+2. **在项目根 `.gitignore` 追加**（保留已有内容；不存在则创建）：
+
+   ```gitignore
+   # Agent Harness
+   harness-kit/*
+   .ai-runtime-artifacts/
+   ```
+
+   - `harness-kit/*`：不把 harness-kit 目录提交到新项目（接入团队应通过 Git Submodule 或独立仓库管理 harness-kit 升级）
+   - `.ai-runtime-artifacts/`：AI 运行时产物（spec / plan / execution-log / review 等），仅本地使用，不入仓
+
+完成后用 `git check-ignore -v harness-kit .ai-runtime-artifacts` 自检（应分别命中 `harness-kit/*` 和 `.ai-runtime-artifacts/`）。
+
 ## 平台检测
 
 先运行平台检测脚本，确定当前环境：
