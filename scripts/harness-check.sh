@@ -90,6 +90,7 @@ required_kit_files=(
   "core/extensions/mcp/README.md"
   "core/extensions/mcp/mcp.servers.template.json"
   "core/orchestration/continuous-loop.md"
+  "core/orchestration/claude-continuous-loop.md"
   "adapters/agents/.agents/README.md"
   "adapters/cursor/.cursor/rules/ai-entry.mdc"
   "adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc"
@@ -219,6 +220,26 @@ if [[ "$LAYOUT" == "deployed" ]]; then
         missing=1
       fi
     done
+  fi
+
+  # Claude 平台层 hooks 推荐检查（warn only；不阻塞）
+  if [[ "$PLATFORM" == "claude" || "$PLATFORM" == "unknown" ]]; then
+    if [[ -d ".claude" ]]; then
+      claude_hook_warn=0
+      if [[ ! -f ".claude/hooks/harness-session-init.sh" ]] || [[ ! -f ".claude/hooks/harness-subagent-stop.sh" ]]; then
+        echo "warn: .claude/hooks/harness-*.sh 缺失；运行 bash harness-kit/scripts/harness-project.sh project --platform claude 重新投影" >&2
+        claude_hook_warn=1
+      elif [[ -f ".claude/settings.json" ]] && ! grep -q '"hooks"' ".claude/settings.json" 2>/dev/null; then
+        echo "warn: .claude/settings.json 未启用 hooks；将 .claude/settings.json.example 的 hooks 段合并到 .claude/settings.json 启用 harness-session-init / harness-subagent-stop（opt-in）" >&2
+        claude_hook_warn=1
+      elif [[ -f ".claude/settings.json" ]] && ! grep -q 'block-native-plan-mode' ".claude/settings.json" 2>/dev/null; then
+        echo "warn: .claude/settings.json 未启用 block-native-plan-mode PreToolUse 钩子；将示例 PreToolUse 段合并到 settings.json 阻断 EnterPlanMode/ExitPlanMode（见 core/routing.md § 平台原生 plan 工具）" >&2
+        claude_hook_warn=1
+      fi
+      if [[ "$claude_hook_warn" -eq 0 ]]; then
+        echo "ok: .claude/ hooks projection"
+      fi
+    fi
   fi
 
   # 目录
