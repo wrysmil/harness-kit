@@ -4,7 +4,7 @@ route: harness-kit:architecture-decision
 skills: []
 source:
   - AGENTS.md
-  - harness-kit/core/routing.md
+  - core/routing.md
 created_at: <YYYY-MM-DD>
 ---
 

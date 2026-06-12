@@ -8,7 +8,7 @@ skills_evidence:
 dispatch: .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-dispatch.md
 source:
   - AGENTS.md
-  - harness-kit/core/routing.md
+  - core/routing.md
 created_at: <YYYY-MM-DD>
 status: draft
 approved: false

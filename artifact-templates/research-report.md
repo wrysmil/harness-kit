@@ -4,7 +4,7 @@ route: harness-web-investigator
 skills:
   - agent-browser
 source:
-  - harness-kit/core/routing.md
+  - core/routing.md
   - user-query
 created_at: YYYY-MM-DD
 topic: <short-topic-slug>

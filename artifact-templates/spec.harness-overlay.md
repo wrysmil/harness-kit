@@ -7,7 +7,7 @@ skills_evidence:
   - ~/.agents/skills/brainstorming/SKILL.md
 source:
   - AGENTS.md
-  - harness-kit/core/routing.md
+  - core/routing.md
 created_at: <YYYY-MM-DD>
 status: draft
 approved: false

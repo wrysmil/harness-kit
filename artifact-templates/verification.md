@@ -7,7 +7,7 @@ skills_evidence:
   - ~/.agents/skills/verification-before-completion/SKILL.md
 source:
   - AGENTS.md
-  - harness-kit/core/verification.md
+  - core/verification.md
 created_at: <YYYY-MM-DD>
 ---
 
