@@ -366,7 +366,7 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
   scan_paths+=(".ai-runtime-artifacts")
 fi
 
-if rg -n "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" "${scan_paths[@]}" 2>/dev/null; then
+if grep -nE "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" "${scan_paths[@]}" 2>/dev/null; then
   echo "unfinished markers found" >&2
   exit 1
 fi
@@ -387,19 +387,19 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
       in_fm { print }
     ' "$artifact_file")"
     for key in artifact route skills source created_at; do
-      if ! printf '%s\n' "$front_matter" | rg -q "^${key}:"; then
+      if ! printf '%s\n' "$front_matter" | grep -qE "^${key}:"; then
         echo "missing front matter key '$key': $artifact_file" >&2
         artifact_errors=1
       fi
     done
 
-    if printf '%s\n' "$front_matter" | rg -qi '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
+    if printf '%s\n' "$front_matter" | grep -qiE '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
       skill_items="$(printf '%s\n' "$front_matter" | awk '
         /^skills:/ { f = 1; next }
         f && /^[A-Za-z0-9_.-]+:/ { exit }
         f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
       ')"
-      if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | rg -qx '<skill>'; then
+      if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | grep -qxE '<skill>'; then
         echo "empty or placeholder skills (route requires stage skill): $artifact_file" >&2
         artifact_errors=1
       fi
@@ -408,7 +408,7 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
         f && /^[A-Za-z0-9_.-]+:/ { exit }
         f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
       ')"
-      if [[ -z "$evidence_items" ]] || printf '%s\n' "$evidence_items" | rg -q '^(<path|<skill>|\.{3})'; then
+      if [[ -z "$evidence_items" ]] || printf '%s\n' "$evidence_items" | grep -qE '^(<path|<skill>|\.{3})'; then
         echo "missing or placeholder skills_evidence (P1 required for stage-skill route): $artifact_file" >&2
         artifact_errors=1
       fi
@@ -422,9 +422,11 @@ else
   echo "skip: .ai-runtime-artifacts (not initialized)"
 fi
 
-# P2: warn when execution-log looks like a Cursor batch run but omits batch-closeout artifacts (non-fatal)
+# spec §10 门禁：execution-log 声称批次完成但无 collective-test / code-review
+# 引用时升级为 ERROR（gap #6 治本）；含编排上下文但缺尾盘链接仍为 WARN
+closeout_error=0
 if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
-  echo "==> Checking execution-log batch-closeout links (warn only)"
+  echo "==> Checking execution-log batch-closeout (WARN + spec §10 ERROR)"
   closeout_warn=0
   while IFS= read -r elog; do
     [[ -f "$elog" ]] || continue
@@ -432,34 +434,37 @@ if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
     [[ "$base" == "HANDOFF.md" ]] && continue
     [[ "$base" == README.md ]] && continue
     content="$(<"$elog")"
-    if ! printf '%s' "$content" | rg -q 'cursor-orchestration|dispatcher-workflow'; then
+    if ! printf '%s' "$content" | grep -qE 'cursor-orchestration|dispatcher-workflow'; then
       continue
     fi
     missing=()
-    if ! printf '%s' "$content" | rg -q '尾盘门禁|collective-test'; then
+    if ! printf '%s' "$content" | grep -qE '尾盘门禁|collective-test'; then
       missing+=("尾盘门禁或 collective-test 链接")
     fi
-    if ! printf '%s' "$content" | rg -q 'code-review'; then
+    if ! printf '%s' "$content" | grep -qE 'code-review'; then
       missing+=("code-review 链接")
     fi
     if [[ ${#missing[@]} -gt 0 ]]; then
       echo "warn: $elog — Cursor 编排 execution-log 建议含尾盘产物引用（${missing[*]}）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
       closeout_warn=1
     fi
-    if printf '%s' "$content" | rg -qi '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
-      if ! printf '%s' "$content" | rg -q 'collective-test.*PASS|verdict: PASS'; then
-        echo "warn: $elog — 声称批次完成但未引用 collective-test PASS" >&2
-        closeout_warn=1
+    if printf '%s' "$content" | grep -qiE '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
+      if ! printf '%s' "$content" | grep -qE 'collective-test.*PASS|verdict: PASS'; then
+        echo "ERROR: $elog — 声称批次完成但未引用 collective-test PASS（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+        closeout_error=1
       fi
-      if ! printf '%s' "$content" | rg -q 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
-        echo "warn: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED" >&2
-        closeout_warn=1
+      if ! printf '%s' "$content" | grep -qE 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
+        echo "ERROR: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+        closeout_error=1
       fi
     fi
   done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort)
-  if [[ "$closeout_warn" -eq 0 ]]; then
+  if [[ "$closeout_warn" -eq 0 ]] && [[ "$closeout_error" -eq 0 ]]; then
     echo "ok: execution-log batch-closeout (no warnings)"
   fi
+fi
+if [[ "$closeout_error" -ne 0 ]]; then
+  exit 1
 fi
 
 # 检查 artifact-templates/*.md 的 front matter 路径是否真实存在
