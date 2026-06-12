@@ -273,8 +273,28 @@ project_cursor() {
 project_claude() {
   local target_root="${1:-.}"
   local force="${2:-0}"
+  local claude_src="$ADAPTERS_DIR/claude/.claude"
+  local added=0
+  local skipped=0
 
   echo "==> 投影 Claude 平台层: .claude/"
+
+  # rules（用户可定制：默认 skip-if-exists，--force 覆盖；与 .cursor/rules/ 对齐）
+  if [[ -d "$claude_src/rules" ]]; then
+    mkdir -p "$target_root/.claude/rules"
+    for f in "$claude_src/rules"/*.md; do
+      [[ -f "$f" ]] || continue
+      local name
+      name="$(basename "$f")"
+      if [[ "$force" != "1" && -f "$target_root/.claude/rules/$name" ]]; then
+        echo "   skip: .claude/rules/$name（已存在，--force 覆盖）"
+        skipped=$((skipped + 1))
+        continue
+      fi
+      cp "$f" "$target_root/.claude/rules/"
+      added=$((added + 1))
+    done
+  fi
 
   # skills（共享层 → 平台层 mirror；Claude Code 自动发现 .claude/skills/）
   local skill_output
@@ -284,7 +304,7 @@ project_claude() {
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   project_hooks "$target_root" "claude"
 
-  echo "   已投影 Claude 平台层（hooks 扩展见上）"
+  echo "   已投影 $added 项到 $target_root/.claude/rules/（+ hooks 扩展），跳过 $skipped 项"
 }
 
 project_trae() {
