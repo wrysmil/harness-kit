@@ -5,7 +5,16 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git branch *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(bash scripts/harness-check.sh)",
+      "Bash(git -C d:/workspace/ai/harness-kit log --all --oneline)",
+      "Bash(git -C d:/workspace/ai/harness-kit status --short)",
+      "Bash(git -C d:/workspace/ai/harness-kit add docs/diagnosis/2026-06-11-collective-test-code-review-gap.md)",
+      "Bash(git -C d:/workspace/ai/harness-kit commit -m ' *)",
+      "Bash(git -C d:/workspace/ai/harness-kit add core/orchestration/agents/leader.md adapters/claude/bindings.md core/orchestration/claude-continuous-loop.md core/extensions/hooks/content/session-init.md)",
+      "Bash(git -C d:/workspace/ai/harness-kit log --oneline -5)",
+      "Bash(git -C d:/workspace/ai/harness-kit add artifact-templates/code-review.md artifact-templates/collective-test.md)",
+      "Bash(git -C d:/workspace/ai/harness-kit diff scripts/harness-check.sh)"
     ]
   }
 }

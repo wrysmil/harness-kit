@@ -1,13 +1,13 @@
-# Cursor 平台适配（harness-kit）
+# 平台适配（harness-kit）
 
-本文档是 harness-engineer `platform-adapters.md` 的 harness-kit 中文版改编。  
+本文档是 harness-engineer `platform-adapters.md` 的 harness-kit 中文版改编，**多平台并列**。  
 上游版本见 `VENDOR.md`。
 
 ---
 
-## 沟通语言（Cursor）
+## 沟通语言（所有平台）
 
-Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正文使用**中文**。细则见 `harness-kit/core/routing.md` § 沟通语言。
+Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正文使用**中文**。细则见 `harness-kit/core/routing.md` § 沟通语言。**Cursor / Claude / Trae / Codex 一律遵循**。
 
 ## 平台检测
 
@@ -62,7 +62,11 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 ---
 
-## Cursor 默认参数
+## 平台默认参数
+
+阶段门禁见 `harness-kit/core/routing.md` § 阶段门禁。
+
+### Cursor
 
 ```yaml
 max_parallel_agents: 3      # 上限 5；遇限流则降低
@@ -73,7 +77,35 @@ monitoring: 轮询后台 Task 与终端输出
 
 配置模板：`harness-kit/adapters/cursor/.cursor/config.defaults.yaml`
 
-阶段门禁见 `harness-kit/core/routing.md` § 阶段门禁。
+### Claude Code
+
+```yaml
+max_parallel_agents: 3      # 同 Cursor；硬顶 5
+loop_mode: single-pass      # 默认；continuous 需显式 opt-in + HANDOFF（见 claude-continuous-loop.md）
+subagent_spawn: Task(subagent_type=generalPurpose) + .agents/agents/<role>.md  # 共享层
+monitoring: 全部状态落盘到 .ai-runtime-artifacts/，跨会话由 HANDOFF 接力
+hooks: opt-in（.claude/settings.json 合并 hooks 段；默认未启用）
+```
+
+### Trae
+
+```yaml
+max_parallel_agents: 3      # 同上
+loop_mode: single-pass
+subagent_spawn: Trae Agent + .agents/agents/<role>.md
+monitoring: Trae 终端输出
+```
+
+### Codex
+
+```yaml
+max_parallel_agents: 由 omx 控制
+loop_mode: omx ultrawork / single-pass
+subagent_spawn: omx 子代理
+monitoring: omx 内置
+```
+
+> **Codex 不走 Cursor subagent 映射**；保留 `omx ultrawork` 原生路径。
 
 ---
 
@@ -112,17 +144,51 @@ monitoring: 轮询后台 Task 与终端输出
 
 ---
 
-## 限制与缓解
+## 平台限制与缓解
+
+### Cursor
 
 | Cursor 限制 | 缓解 |
 | --- | --- |
 | 无内置 cron | 后台 Task 每 2–3 分钟轮询；可用 `/loop` skill |
 | subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 七套角色 |
 | 无 omx 式模型能力表 | 可选 `model-routing.yaml` |
-| 连续自治循环非原生 | single-pass + `HANDOFF.md` 链接多会话 |
+| 连续自治循环非原生 | `continuous_mode` opt-in；其它走 `HANDOFF.md` 链接多会话 |
+
+### Claude Code
+
+| Claude 限制 | 缓解 |
+| --- | --- |
+| 无内置连续循环 | HANDOFF + DISPATCH-TRACK 跨会话接力（见 `claude-continuous-loop.md`） |
+| 子 agent 仅 `generalPurpose` 一类 | `.agents/agents/<role>.md` 作 prompt 正文，由 prompt 区分角色 |
+| 原生 plan 工具会写 `~/.claude/plans/` 脱管 | `core/extensions/hooks/` 提供 `block-native-plan-mode` PreToolUse 钩子（opt-in） |
+| hooks 需手动合并 `settings.json` | `harness-project.sh project` 生成 `settings.json.example`；`harness-check.sh` 给出 WARN 提醒 |
+| 无独立 `shell` / `ci-investigator` task | 通用任务用 `generalPurpose`；CI 调查降级为 `generalPurpose readonly`（见 `capability-matrix.yaml`） |
+| 项目级 skill 需投影到 `.claude/skills/` | `harness-project.sh project --platform claude` 自动从共享层 mirror |
+
+### Trae
+
+| Trae 限制 | 缓解 |
+| --- | --- |
+| 平台适配器为骨架，能力未完全定义 | 走 `trae-orchestration` skill；待平台演进后补 capability |
+| hooks 机制与 Cursor / Claude 不一致 | 共享 `core/extensions/hooks/content/` 内容，wrapper 由 `scripts/trae/` 单独写（占位） |
+
+### Codex
+
+| Codex 限制 | 缓解 |
+| --- | --- |
+| 不走 Cursor subagent 映射 | 保留 `omx ultrawork` 原生路径；Harness 路由仅在 `omx` 之外叠加 |
+| `omx` 输出为建议 | 主执行者复核后再落地（见 `core/routing.md` 运行约束） |
 
 ---
 
 ## 自检清单（非阻塞）
 
-详见 `CURSOR-PRECHECK.md`（同目录）。
+| 平台 | 预检文件 |
+| --- | --- |
+| **Cursor** | `adapters/cursor/.cursor/CURSOR-PRECHECK.md` |
+| **Claude Code** | `adapters/claude/README.md` § Hooks + 本文件「Claude 限制与缓解」表 |
+| **Trae** | `adapters/trae/README.md`（骨架） |
+| **Codex** | `core/routing.md` § Codex 路径；omx `doctor` 命令 |
+
+通用 harness 文档验证见 `core/verification.md` 与 `scripts/harness-check.sh`。
