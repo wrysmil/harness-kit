@@ -4,7 +4,7 @@ route: superpowers:document-review
 skills:
   - document-review
 skills_evidence:
-  - adapters/cursor/.cursor/skills/document-review/SKILL.md
+  - adapters/agents/.agents/skills/document-review/SKILL.md
 source:
   - 用户提供的文档
 created_at: <YYYY-MM-DD>
