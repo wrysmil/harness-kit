@@ -424,15 +424,42 @@ fi
 
 # spec §10 门禁：execution-log 声称批次完成但无 collective-test / code-review
 # 引用时升级为 ERROR（gap #6 治本）；含编排上下文但缺尾盘链接仍为 WARN
+#
+# 路径位置（gap #1、#2 治本 + Q4.2 风险）：
+# - consumer 项目：closeout 产物在 .ai-runtime-artifacts/execution-logs/*.md
+# - harness-kit 仓库自身：closeout 示例在 docs/runtime/closeouts/*-execution-log.md
+#   （.ai-runtime-artifacts/ 被 .gitignore 排除）
+# 因此 closeout 段扫**两个**位置。
+#
+# 自残保护（gap #11 治本）：
+# harness-kit 仓库（marker = core/orchestration/agents/leader.md，源仓库独有，
+# consumer 用 entrypoints 投影不复制 core/）—— ERROR 改 WARN，避免本仓库
+# closeout 示例**自残**（harness-check 在本仓库跑会扫到示例文件）。
+is_harness_kit_self=0
+if [[ -f "core/orchestration/agents/leader.md" ]]; then
+  is_harness_kit_self=1
+fi
+
 closeout_error=0
-if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
-  echo "==> Checking execution-log batch-closeout (WARN + spec §10 ERROR)"
+if [[ -d ".ai-runtime-artifacts/execution-logs" || -d "docs/runtime/closeouts" ]]; then
+  if [[ "$is_harness_kit_self" -eq 1 ]]; then
+    echo "==> Checking execution-log batch-closeout (WARN only — harness-kit self, 避免自残)"
+  else
+    echo "==> Checking execution-log batch-closeout (WARN + spec §10 ERROR)"
+  fi
   closeout_warn=0
+  # 扫两位置：consumer 侧（.ai-runtime-artifacts/execution-logs/）+ harness-kit 仓库示例（docs/runtime/closeouts/）
   while IFS= read -r elog; do
     [[ -f "$elog" ]] || continue
     base="$(basename "$elog")"
     [[ "$base" == "HANDOFF.md" ]] && continue
     [[ "$base" == README.md ]] && continue
+    # harness-kit 仓库示例文件命名：*-execution-log.md；其他（collective-test / code-review）跳过
+    case "$elog" in
+      docs/runtime/closeouts/*-execution-log.md) ;;
+      .ai-runtime-artifacts/execution-logs/*.md) ;;
+      *) continue ;;
+    esac
     content="$(<"$elog")"
     if ! printf '%s' "$content" | grep -qE 'cursor-orchestration|dispatcher-workflow'; then
       continue
@@ -450,15 +477,25 @@ if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
     fi
     if printf '%s' "$content" | grep -qiE '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
       if ! printf '%s' "$content" | grep -qE 'collective-test.*PASS|verdict: PASS'; then
-        echo "ERROR: $elog — 声称批次完成但未引用 collective-test PASS（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
-        closeout_error=1
+        if [[ "$is_harness_kit_self" -eq 1 ]]; then
+          echo "warn: $elog — harness-kit self — 声称批次完成但未引用 collective-test PASS（不阻断）" >&2
+          closeout_warn=1
+        else
+          echo "ERROR: $elog — 声称批次完成但未引用 collective-test PASS（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+          closeout_error=1
+        fi
       fi
       if ! printf '%s' "$content" | grep -qE 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
-        echo "ERROR: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
-        closeout_error=1
+        if [[ "$is_harness_kit_self" -eq 1 ]]; then
+          echo "warn: $elog — harness-kit self — 声称批次完成但未引用 code-review APPROVE/SKIPPED（不阻断）" >&2
+          closeout_warn=1
+        else
+          echo "ERROR: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+          closeout_error=1
+        fi
       fi
     fi
-  done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort)
+  done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null; find docs/runtime/closeouts -maxdepth 1 -type f -name '*-execution-log.md' 2>/dev/null | sort)
   if [[ "$closeout_warn" -eq 0 ]] && [[ "$closeout_error" -eq 0 ]]; then
     echo "ok: execution-log batch-closeout (no warnings)"
   fi
