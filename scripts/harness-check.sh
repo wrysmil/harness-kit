@@ -471,6 +471,7 @@ fi
 # 目的：挡 gap #3、#4、#5 —— 模板自身 FM 写错路径此前无人发现
 echo "==> Checking artifact-templates FM paths"
 tmpl_errors=0
+tmpl_warn=0
 for tmpl in artifact-templates/*.md; do
   [[ -f "$tmpl" ]] || continue
   base="$(basename "$tmpl")"
