@@ -201,7 +201,7 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | 类型 | 路径 |
 |------|------|
 | 顶层契约 | `AGENTS.md` |
-| Claude Code | `CLAUDE.md`、`.claude/settings.json`（opt-in hooks） |
+| Claude Code | `CLAUDE.md`、`.claude/rules/ai-entry.md`（always-loaded）、`.claude/skills/`（13 个共享 skill 镜像）、`.claude/hooks/` + `content/` + `settings.json.example`（opt-in hooks） |
 | Gemini | `GEMINI.md` |
 | Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**）、`.cursor/hooks.json`（opt-in） |
 | Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
@@ -271,6 +271,7 @@ harness-kit/
 ```text
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
+0. 先问我：「你当前使用哪个 AI 编程工具？」（Cursor / Claude Code / Codex / Trae / Gemini / 其他）。根据我的回答确定平台适配层投影范围，后续步骤仅投影对应平台。
 1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：
    - 删除 harness-kit/.git/（harness-kit 源仓库的 .git；不要动到项目自身的 .git/）
    - 如存在 harness-kit/.gitignore、harness-kit/.gitattributes、harness-kit/.gitmodules，一并删除
@@ -291,6 +292,19 @@ harness-kit/
 ```
 
 初始化完成后应生成或更新四份 `project.*`，并在回复中说明检查结果与待确认项。
+
+**Claude 平台层预期文件（运行 `harness-project.sh project` 后必须全部出现）：**
+
+| 路径 | 性质 | 作用 |
+|------|------|------|
+| `.claude/rules/ai-entry.md` | 必生成 | always-loaded：强制声明 `「Harness：…」`、写文件纪律、同轮禁止 |
+| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser、cursor-orchestration、trae-orchestration |
+| `.claude/hooks/harness-session-init.sh` | opt-in | SessionStart 钩子脚本 |
+| `.claude/hooks/harness-subagent-stop.sh` | opt-in | SubagentStop 钩子脚本 |
+| `.claude/hooks/content/*.md` | opt-in | 钩子提示词内容 |
+| `.claude/settings.json.example` | opt-in | hooks 配置示例（默认不启用；启用需 `cp settings.json.example settings.json` 并合并到 `permissions`） |
+
+任一缺失 → 跑 `bash harness-kit/scripts/harness-project.sh project --platform claude --force` 补投影。
 
 ---
 
