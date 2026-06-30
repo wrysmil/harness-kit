@@ -1,6 +1,6 @@
 # Harness Routing
 
-路由判定与阶段门禁的**单一真相源**。入口文件（`AGENTS.md`、`.cursor/rules/`）只保留指针，细则以本文件为准。
+路由判定与阶段门禁的**单一真相源**。入口文件（`AGENTS.md`、适配器入口）只保留指针，细则以本文件为准。
 
 ## 总原则
 
@@ -16,6 +16,30 @@
 - **Tier 1+** 简单实现：Leader 直做或编排（见 § WU 编排硬触发）。
 - 项目级 skill 优先于通用 skill。
 - **Git 协作**：组织级分支、提交、MR、热修、合流默认 invoke **`git-xywh`** skill；本项目差异与 AI 约束见 `harness-kit/project.git.md`（不将 skill 全文复制进仓库）。
+
+## 平台原生 plan 工具（禁止使用）
+
+**Claude Code 的 `EnterPlanMode` / `ExitPlanMode`、Cursor 的 Plan 模式** 等**平台原生 plan 工具**会把 plan 写到平台私有目录（`~/.claude/plans/`、Cursor 内部），**完全绕过** Harness 的 stage skill 流程、`plan.harness-overlay.md` 契约与 `.ai-runtime-artifacts/plans/` 落盘规则。一旦走原生工具，本会话**无法**做 plan 门禁拦截、executor 不会把 plan 当 Harness 产物、用户也看不到完整 plan body。
+
+**规则：**
+
+| 任务 | 走 Harness | 禁止 |
+| --- | --- | --- |
+| 写实施计划 | Load `writing-plans` skill → `artifact-templates/plan.harness-overlay.md` → Write `.ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md` | Claude Code `EnterPlanMode` / `ExitPlanMode`、Cursor Plan 模式 |
+| 写方案 | Load `brainstorming` skill → `artifact-templates/spec.harness-overlay.md` → Write `.ai-runtime-artifacts/specs/...` | 平台原生 plan/spec 工具 |
+
+**为什么用平台原生工具是 bug：**
+
+1. 产物落到 `~/.claude/plans/` 或 Cursor 内部，**不进 git**、不进 `.ai-runtime-artifacts/` FM 元数据、不被 `harness-check.sh` 扫描、不进 review/verification 链
+2. 用户批准时只看到 plan body，**看不到 FM/evidence 段**；与「计划门禁」语义脱节
+3. 同名 `plans/` 在两套目录分裂，后续 `harness-kit check` / `git log` / `requesting-code-review` 全部漏抓
+
+**根因与修复（用户在会话中触发时）：**
+
+- 若 agent 已走原生工具 → 立刻 `cat ~/.claude/plans/<name>.md >> .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`、补 Harness FM（`route: superpowers:writing-plans`、`skills_evidence`、`## Next`），然后从原 native 路径继续；不要把 plan 留在 `~/.claude/plans/`
+- 项目级 opt-in 强阻断：见 `core/extensions/hooks/` 下 `PreToolUse` 钩子（默认未启用；启用见 hooks README）
+
+
 
 ## 用户指定 Skills 的合并规则
 
@@ -38,7 +62,7 @@
 | 写计划 / 实施计划 | `writing-plans` | 改业务代码、实现、派子 Agent |
 | 开始实现 / 直接做 / 并行执行 | 实现（见路由表） | —（须已过 spec/plan 门禁或属小改动） |
 
-仅说「写方案」→ **只** Write `specs/` 并暂停；不得同轮进入 plan 或实现。细则见 `.cursor/rules/ai-entry.mdc` § 文件写入与阶段门禁。
+仅说「写方案」→ **只** Write `specs/` 并暂停；不得同轮进入 plan 或实现。细则见适配器 `bindings.md` 文件写入门禁绑定。
 
 ### 组合指令（同句多阶段）
 
@@ -71,7 +95,7 @@
 
 ### WU 编排硬触发（Tier 2+，不得 Leader 直做）
 
-满足 **任一** 须 `cursor-orchestration` / `claude-orchestration`（不得仅 Tier 1）：
+满足 **任一** 须编排调度（见适配器 `bindings.md`；不得仅 Tier 1）：
 
 - plan FM 的 `dispatch:` **非** `n/a`，或存在 `*-dispatch.md`
 - plan 内 **≥2** 个可并行 WU / GROUP
@@ -87,13 +111,15 @@
 | 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `superpowers:brainstorming` | 同左 | 同左 | `.ai-runtime-artifacts/specs/` |
 | 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | 同左 | `.ai-runtime-artifacts/plans/` |
 | 多 task 编码 / 并行实现 | `orchestration.dispatch` | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
+
+> 上表 Cursor/Claude/Codex 列为平台特定绑定摘要；完整绑定见各适配器 `bindings.md`。
 | 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | 同左 | `.ai-runtime-artifacts/verifications/` |
-| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` | 同左 + 编排 skill | 同左 + 编排 skill | `.ai-runtime-artifacts/reviews/` |
+| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
 | **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
-| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 + harness-debugger/explorer | 同左 + Task | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
-| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + harness-reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
+| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
+| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
 | 架构决策 | — | architect / critic / planner | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
-| 信息调研 / 网页搜索 | `roles.web-investigator` | omx research | `harness-web-investigator` | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
+| 信息调研 / 网页搜索 | `roles.web-investigator` | omx research | web-investigator | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
 | 文章 / 知识沉淀 / 对外文档 | — | brainstorming + 写作 skill | 同左 | 同左 | `retros/` 或用户指定 |
 | 小改动 / Tier 0 机械修改 | — | 直接处理 | 同左 | 同左 | 无 FM（回复含验证） |
 | Leader 直做 / Tier 1 简单实现 | `skills.stage-load` | 直做 + verification | 同左 | 同左 | `verifications/*-verification-lite.md` |
@@ -112,14 +138,12 @@
 | Leader 直做 / Tier 1 | **①** Load `verification-before-completion` → **②** `project.verification.md` → **③** Write `verification-lite.md` |
 | 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现（Cursor） | `cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`；委派时 §0 WORKTREE-INIT；`core/orchestration/skill-preferences.md` |
-| 多 task 编码 / 并行实现（Claude） | `claude-orchestration` → 同上；Task 绑定见 `adapters/claude/bindings.md` |
-| 多 task 编码（Codex） | `AGENTS.omx.md` + omx 工作流 |
+| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；委派时 §0 WORKTREE-INIT；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
 | 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
-| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；Cursor 委派 `harness-reviewer`（Leader 落盘） |
+| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；委派独立 reviewer（Leader 落盘；见适配器 bindings） |
 | **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** `requesting-code-review` → `artifact-templates/code-review.md` **③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
-| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `core/orchestration/agents/`；Claude 用 Task |
-| 信息调研 / 网页搜索 | 委派 web-investigator（Cursor subagent / Claude Task）→ `core/orchestration/agents/web-investigator.md` |
+| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；委派见适配器 `bindings.md` |
+| 信息调研 / 网页搜索 | 委派 web-investigator → `core/orchestration/agents/web-investigator.md`（见适配器 bindings） |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
@@ -129,14 +153,15 @@
 
 **Skill 产物：** 上表中带 stage skill 的阶段，正文以已 Load 的 `SKILL.md` 为准；`artifact-templates/spec.md` / `plan.md` 仅为 redirect stub。契约与门禁见 `spec.harness-overlay.md`、`plan.harness-overlay.md`；执行图见 `dispatch.harness-overlay.md`。无 stage skill 的编排产物仍用 `artifact-templates/`（execution-log、track、handoff 等）。
 
-### Git worktree（Cursor）
+### Git worktree
 
 | 场景 | worktree | 代码目录 |
 | --- | --- | --- |
-| 小改动 / Leader 主线程直接实现（**不拆 WU、不委派** harness-*） | **跳过** | 主 checkout |
-| `cursor-orchestration` 且将委派写代码类子 Agent | **必须** WORKTREE-INIT | `worktree_path` |
+| 小改动 / Leader 主线程直接实现（**不拆 WU、不委派** worker） | **跳过** | 主 checkout |
+| 编排调度且将委派写代码类 worker | **必须** WORKTREE-INIT | `worktree_path` |
 
-用户说「开始实现」但任务仍属 Leader 直接处理时，**不得**仅为该句创建 worktree。
+用户说「开始实现」但任务仍属 Leader 直接处理时，**不得**仅为该句创建 worktree。  
+具体 worktree 机制见适配器 `bindings.md`。
 
 ### Tier 与小改动判定
 
@@ -167,13 +192,13 @@
 
 **用户说「之后都默认你推荐的就好」** = 仅跳过方案**选择**讨论；**不跳过** spec/plan 写入后的审查暂停，除非用户同时说「spec/plan 也不用等我确认」。
 
-**同轮禁止：** Write `specs/` / `plans/` / `decisions/` 后，**同一轮**不得改业务代码、委派 harness-*、WORKTREE-INIT、Read 并执行 `dispatcher-workflow.md`。
+**同轮禁止：** Write `specs/` / `plans/` / `decisions/` 后，**同一轮**不得改业务代码、委派子 Agent、WORKTREE-INIT、Read 并执行 `dispatcher-workflow.md`。
 
 **暂停时回复须包含：** 产物路径、摘要、以及 artifact 模板 `## Next` 中的选项。
 
-**Cursor 实现阶段：** 仅当走 WU 编排且**委派** harness-* 子 Agent 时：先 **WORKTREE-INIT**，子 Agent cwd = `worktree_path`，主 checkout 不写业务代码。不拆 WU、不派子 Agent 的简单任务在主 checkout 直接做，**不用** worktree。详见 `dispatcher-workflow.md` §0。
+**实现阶段：** 仅当走 WU 编排且**委派** worker 时：先 **WORKTREE-INIT**，worker cwd = `worktree_path`，主 checkout 不写业务代码。不拆 WU、不派 worker 的简单任务在主 checkout 直接做，**不用** worktree。详见 `dispatcher-workflow.md` §0。
 
-**Cursor 交付完成：** 本 GROUP / 批次全部 WU 返回后，**默认进入尾盘**（集体测试 → 集体审查 → Leader 落盘两产物 → 更新 execution-log）。**完成** ≠ 末个 WU 返回；须满足 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4（小改动除外）。
+**交付完成：** 本 GROUP / 批次全部 WU 返回后，**默认进入尾盘**（集体测试 → 集体审查 → Leader 落盘两产物 → 更新 execution-log）。**完成** ≠ 末个 WU 返回；须满足 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4（小改动除外）。
 
 ## Git 协作
 
@@ -181,7 +206,7 @@
 | --- | --- |
 | 组织规范来源 | **`git-xywh` skill**（三主干、五类临时分支、Angular 提交、MR 流程） |
 | 项目差异来源 | **`harness-kit/project.git.md`**（MR 平台、commitlint、是否允许 AI push、Harness 独立 commit 等） |
-| 谁执行 Git | **Leader / 主 Agent**；`harness-coder` / `harness-implementer` 等子 Agent 默认不 commit/push |
+| 谁执行 Git | **Leader / 主 Agent**；`coder` / `implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
 | skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
 | **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `harness-kit/core/runbooks.md` § Git 协作 |
@@ -213,8 +238,9 @@
 - **强制声明：** 首行 `「Harness：…」`；次行 `Skills:` 格式见 § 阶段指定 skill 必用（Tier 1+ 或 stage skill 时必填）
 - **未声明时的用户干预：** 首句无 `「Harness：…」` → 发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - **跳过门禁时的干预：** `你跳过了阶段门禁。我只要求写方案/计划，不要改代码。写入 .ai-runtime-artifacts/ 后暂停等我确认。`
+- **走平台原生 plan 工具时的干预：** `你用了 Claude Code EnterPlanMode / Cursor Plan 模式，绕过了 Harness。撤回该 plan，Load writing-plans skill 重新写 .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md（FM + Next + dispatch）。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。
 - **Codex**：调用 `omx` 前写清目标、范围、禁止事项和验收标准；`omx` 输出只作为建议，主执行者必须复核后才能落地。
-- **Cursor**：委派 `.cursor/agents/harness-*` subagent 前写清 WU 目标、文件列表、禁止事项与 done criteria；子 Agent 输出须由主 Agent 整合并验证后再落地。
+- **Cursor / Claude**：委派 worker 前写清 WU 目标、文件列表、禁止事项与 done criteria；worker 输出须由主 Agent 整合并验证后再落地。具体委派方式见适配器 `bindings.md`。
 - 任何完成声明前必须有验证证据。

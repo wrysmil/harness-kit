@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# 从本机全局 skill 目录同步能力副本到 harness-kit/adapters/cursor/.cursor/skills/
+# 从本机全局 skill 目录同步能力副本到共享层 adapters/agents/.agents/skills/
+# （所有平台层从共享层 mirror 到各自平台目录；不再 vendor 到平台适配器）
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEST="$(cd "$SCRIPT_DIR/../adapters/cursor/.cursor/skills" && pwd)"
+DEST="$(cd "$SCRIPT_DIR/../adapters/agents/.agents/skills" && pwd)"
 
 copy_skill() {
   local name="$1"

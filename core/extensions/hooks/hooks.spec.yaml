@@ -1,0 +1,57 @@
+# Hook 抽象 spec — 单一来源，由 harness-project.sh 在投影时按平台 binding
+extensions_version: 1
+
+hooks:
+  - name: harness-session-init
+    description: 注入 Harness 路由提示到会话上下文
+    content: content/session-init.md
+    bindings:
+      cursor:
+        event: sessionStart
+        script: scripts/cursor/harness-session-init.sh
+        config_file: .cursor/hooks.json
+        config_field: hooks.sessionStart
+      claude:
+        event: SessionStart
+        matcher: "*"
+        script: scripts/claude/harness-session-init.sh
+        config_file: .claude/settings.json
+        config_field: hooks.SessionStart
+      trae:
+        event: sessionStart
+        script: scripts/trae/harness-session-init.sh
+        config_file: .trae/settings.json
+        config_field: hooks.sessionStart
+
+  - name: harness-subagent-stop
+    description: 提醒 Leader plan 勾选 + 追踪落盘 + 尾盘判断（content 见 content/subagent-stop.md）
+    content: content/subagent-stop.md
+    bindings:
+      cursor:
+        event: subagentStop
+        script: scripts/cursor/harness-subagent-stop.sh
+        config_file: .cursor/hooks.json
+        config_field: hooks.subagentStop
+      claude:
+        event: SubagentStop
+        matcher: "*"
+        script: scripts/claude/harness-subagent-stop.sh
+        config_file: .claude/settings.json
+        config_field: hooks.SubagentStop
+      trae:
+        event: subagentStop
+        script: scripts/trae/harness-subagent-stop.sh
+        config_file: .trae/settings.json
+        config_field: hooks.subagentStop
+
+  - name: block-native-plan-mode
+    description: 阻断平台原生 plan 工具（Claude Code EnterPlanMode/ExitPlanMode），强制走 writing-plans skill
+    content: content/block-native-plan-mode.md
+    bindings:
+      claude:
+        event: PreToolUse
+        matcher: "EnterPlanMode|ExitPlanMode"
+        script: scripts/claude/block-native-plan-mode.sh
+        config_file: .claude/settings.json
+        config_field: hooks.PreToolUse
+    notes: "opt-in 强阻断。脚本退码 2 + stderr 反馈给模型；默认未启用，启用见 README § 启用方式。"

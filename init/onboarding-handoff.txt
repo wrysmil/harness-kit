@@ -1,10 +1,29 @@
 请先读取 harness-kit/core/routing.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-1. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件。
-2. 从 harness-kit/adapters/ 投影工具适配目录（含 .cursor/agents/、.cursor/rules/ 与 cursor-orchestration skill）。
-3. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。
-4. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
-5. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
-6. 汇总推断项、待确认项和验证结果。
+1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：删除 harness-kit/.git/（以及存在的 .gitignore / .gitattributes / .gitmodules；不要动项目自身的 .git/），在项目根 .gitignore 追加（保留已有内容） `harness-kit/*` 和 `.ai-runtime-artifacts/` 两条。
+2. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
+3. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
+   **运行后根据检测到的平台检查对应文件（用 test -f / test -d / test -x 自检，缺一即视为投影失败并补跑 --force）：**
+
+   **Claude 平台层文件：**
+   - `.claude/rules/ai-entry.md`（always-loaded；强制声明 + 写文件纪律）
+   - `.claude/skills/` 下 13 个共享 skill 镜像（claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser、cursor-orchestration、trae-orchestration）
+   - `.claude/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`.claude/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
+
+   **Trae 平台层文件：**
+   - `.trae/rules/ai-entry.md`（统一入口）
+   - `.trae/rules/trae-subagent-routing.md`（子 Agent 路由协议）
+   - `.trae/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`.trae/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
+
+   **Cursor 平台层文件：**
+   - `.cursor/rules/ai-entry.mdc`、`.cursor/rules/cursor-subagent-routing.mdc`
+   - `.cursor/hooks/` 及 `hooks.json.example`
+4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。该脚本会按当前平台（harness-project.sh detect 结果）选择性执行：codex → npm + omx setup/doctor + ~/.agents/skills/ 检查；cursor/claude/trae → 仅做对应平台 ~/.<platform>/skills/ 检查（不做 npm 安装）。可用 --platform 显式指定。
+5. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
+6. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
+7. 汇总推断项、待确认项和验证结果；**平台层一段必须逐项列出**（根据检测到的平台）：
+   - Claude：rules 文件数与文件名、skills 镜像数（应有 13）、hooks 脚本数与 `settings.json.example` 是否存在
+   - Trae：rules 文件数与文件名、hooks 脚本数与 `settings.json.example` 是否存在
+   - Cursor：rules 文件数与文件名、hooks 配置是否完整
 
 详版步骤见 harness-kit/init/bootstrap.prompt.md。

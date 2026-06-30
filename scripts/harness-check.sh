@@ -78,51 +78,52 @@ required_kit_files=(
   "entrypoints/GEMINI.md"
   "entrypoints/AGENTS.omx.md"
   "entrypoints/AGENTS.cursor-overlay.md"
-  "adapters/cursor/.cursor/hooks.json.example"
-  "adapters/cursor/.cursor/hooks/harness-session-init.sh"
-  "adapters/cursor/.cursor/hooks/harness-subagent-track-reminder.sh"
-  "adapters/cursor/orchestration/hooks/README.md"
-  "adapters/cursor/orchestration/continuous-loop.md"
+  "core/extensions/README.md"
+  "core/extensions/hooks/README.md"
+  "core/extensions/hooks/hooks.spec.yaml"
+  "core/extensions/hooks/content/session-init.md"
+  "core/extensions/hooks/content/subagent-stop.md"
+  "core/extensions/hooks/scripts/cursor/harness-session-init.sh"
+  "core/extensions/hooks/scripts/cursor/harness-subagent-stop.sh"
+  "core/extensions/hooks/scripts/claude/harness-session-init.sh"
+  "core/extensions/hooks/scripts/claude/harness-subagent-stop.sh"
+  "core/extensions/mcp/README.md"
+  "core/extensions/mcp/mcp.servers.template.json"
+  "core/orchestration/continuous-loop.md"
+  "core/orchestration/claude-continuous-loop.md"
   "adapters/agents/.agents/README.md"
   "adapters/cursor/.cursor/rules/ai-entry.mdc"
   "adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc"
-  "adapters/cursor/.cursor/agents/harness-coder.md"
-  "adapters/cursor/.cursor/agents/harness-implementer.md"
-  "adapters/cursor/.cursor/agents/harness-reviewer.md"
-  "adapters/cursor/.cursor/agents/harness-explorer.md"
-  "adapters/cursor/.cursor/agents/harness-debugger.md"
-  "adapters/cursor/.cursor/agents/harness-test-engineer.md"
-  "adapters/cursor/.cursor/agents/harness-web-investigator.md"
-  "adapters/cursor/.cursor/skills/test-driven-development/SKILL.md"
-  "adapters/cursor/.cursor/skills/verification-before-completion/SKILL.md"
-  "adapters/cursor/.cursor/skills/ui-ux-pro-max/SKILL.md"
-  "adapters/cursor/.cursor/skills/ui-ux-pro-max/scripts/search.py"
-  "adapters/cursor/orchestration/skill-preferences.zh.md"
-  "adapters/cursor/orchestration/agents/test-engineer.md"
+  "adapters/agents/.agents/agents/coder.md"
+  "adapters/agents/.agents/agents/implementer.md"
+  "adapters/agents/.agents/agents/reviewer.md"
+  "adapters/agents/.agents/agents/explorer.md"
+  "adapters/agents/.agents/agents/debugger.md"
+  "adapters/agents/.agents/agents/test-engineer.md"
+  "adapters/agents/.agents/agents/web-investigator.md"
+  "adapters/agents/.agents/skills/test-driven-development/SKILL.md"
+  "adapters/agents/.agents/skills/verification-before-completion/SKILL.md"
+  "adapters/agents/.agents/skills/ui-ux-pro-max/SKILL.md"
+  "adapters/agents/.agents/skills/ui-ux-pro-max/scripts/search.py"
   "scripts/sync-cursor-skills.sh"
+  "scripts/harness-project.sh"
   "adapters/cursor/README.md"
-  "adapters/cursor/orchestration/platform-adapters.zh.md"
-  "adapters/cursor/orchestration/dispatcher-workflow.md"
-  "adapters/cursor/orchestration/config.defaults.yaml"
-  "adapters/cursor/orchestration/VENDOR.md"
-  "adapters/cursor/orchestration/CURSOR-PRECHECK.md"
-  "adapters/cursor/orchestration/context-budget.md"
-  "adapters/cursor/orchestration/model-routing.yaml"
-  "adapters/cursor/orchestration/agents/leader.md"
-  "adapters/cursor/orchestration/agents/coder.md"
-  "adapters/cursor/orchestration/agents/implementer.md"
-  "adapters/cursor/orchestration/agents/reviewer.md"
-  "adapters/cursor/orchestration/agents/debugger.md"
-  "adapters/cursor/orchestration/agents/web-investigator.md"
-  "adapters/cursor/orchestration/runtime/plan-progress-sync.md"
-  "adapters/cursor/orchestration/tracking/schema.md"
+  "core/orchestration/platform-adapters.zh.md"
+  "adapters/cursor/.cursor/config.defaults.yaml"
+  "adapters/cursor/VENDOR.md"
+  "adapters/cursor/.cursor/CURSOR-PRECHECK.md"
+  "core/orchestration/context-budget.md"
+  "core/orchestration/model-routing.yaml"
+  "core/orchestration/runtime/plan-progress-sync.md"
   "adapters/agents/.agents/skills/cursor-orchestration/SKILL.md"
   "adapters/cursor/bindings.md"
   "adapters/cursor/capability-matrix.yaml"
   "adapters/claude/README.md"
   "adapters/claude/bindings.md"
   "adapters/claude/capability-matrix.yaml"
-  "adapters/claude/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/agents/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/trae/bindings.md"
+  "adapters/trae/capability-matrix.yaml"
   "adapters/codex/bindings.md"
   "adapters/codex/capability-matrix.yaml"
   "scripts/install-ai-skills.sh"
@@ -130,23 +131,31 @@ required_kit_files=(
   "scripts/harness-check.sh"
 )
 
-required_deployed_files=(
+# 共享层 deployed 文件（所有平台都需要）
+required_deployed_shared=(
   "AGENTS.md"
   "CLAUDE.md"
   "GEMINI.md"
-  ".cursor/rules/ai-entry.mdc"
-  ".cursor/rules/cursor-subagent-routing.mdc"
-  ".cursor/agents/harness-coder.md"
-  ".cursor/agents/harness-implementer.md"
-  ".cursor/agents/harness-reviewer.md"
-  ".cursor/agents/harness-explorer.md"
-  ".cursor/agents/harness-debugger.md"
-  ".cursor/agents/harness-test-engineer.md"
-  ".cursor/agents/harness-web-investigator.md"
   ".agents/README.md"
+  ".agents/agents/coder.md"
+  ".agents/agents/implementer.md"
+  ".agents/agents/reviewer.md"
+  ".agents/agents/explorer.md"
+  ".agents/agents/debugger.md"
+  ".agents/agents/test-engineer.md"
+  ".agents/agents/web-investigator.md"
   ".agents/skills/cursor-orchestration/SKILL.md"
   ".agents/skills/claude-orchestration/SKILL.md"
+  ".agents/skills/test-driven-development/SKILL.md"
+  ".agents/skills/verification-before-completion/SKILL.md"
   ".ai-runtime-artifacts/README.md"
+  ".mcp.json"
+)
+
+# Cursor 平台层 deployed 文件
+required_deployed_cursor=(
+  ".cursor/rules/ai-entry.mdc"
+  ".cursor/rules/cursor-subagent-routing.mdc"
 )
 
 required_dirs=(
@@ -173,7 +182,8 @@ for rel in "${required_kit_files[@]}"; do
 done
 
 if [[ "$LAYOUT" == "deployed" ]]; then
-  for file in "${required_deployed_files[@]}"; do
+  # 共享层文件
+  for file in "${required_deployed_shared[@]}"; do
     if [[ -f "$file" ]]; then
       echo "ok: $file"
     else
@@ -182,6 +192,37 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     fi
   done
 
+  # Cursor 平台层文件（按需检查）
+  if [[ -d ".cursor" ]]; then
+    for file in "${required_deployed_cursor[@]}"; do
+      if [[ -f "$file" ]]; then
+        echo "ok: $file"
+      else
+        echo "missing: $file" >&2
+        missing=1
+      fi
+    done
+  fi
+
+  # Claude 平台层 hooks 检查（warn only；不阻塞）
+  if [[ -d ".claude" ]]; then
+    claude_hook_warn=0
+    if [[ ! -f ".claude/hooks/harness-session-init.sh" ]] || [[ ! -f ".claude/hooks/harness-subagent-stop.sh" ]]; then
+      echo "warn: .claude/hooks/harness-*.sh 缺失；运行 bash harness-kit/scripts/harness-project.sh project --platform claude 重新投影" >&2
+      claude_hook_warn=1
+    elif [[ -f ".claude/settings.json" ]] && ! grep -q '"hooks"' ".claude/settings.json" 2>/dev/null; then
+      echo "warn: .claude/settings.json 未启用 hooks；将 .claude/settings.json.example 的 hooks 段合并到 .claude/settings.json 启用 harness-session-init / harness-subagent-stop（opt-in）" >&2
+      claude_hook_warn=1
+    elif [[ -f ".claude/settings.json" ]] && ! grep -q 'block-native-plan-mode' ".claude/settings.json" 2>/dev/null; then
+      echo "warn: .claude/settings.json 未启用 block-native-plan-mode PreToolUse 钩子；将示例 PreToolUse 段合并到 settings.json 阻断 EnterPlanMode/ExitPlanMode（见 core/routing.md § 平台原生 plan 工具）" >&2
+      claude_hook_warn=1
+    fi
+    if [[ "$claude_hook_warn" -eq 0 ]]; then
+      echo "ok: .claude/ hooks projection"
+    fi
+  fi
+
+  # 目录
   for dir in "${required_dirs[@]}"; do
     if [[ -d "$dir" ]]; then
       echo "ok: $dir"
@@ -200,28 +241,23 @@ fi
 
 echo "==> Checking harness subagent projection shells"
 agent_errors=0
-agents_dir="$(kit_path adapters/cursor/.cursor/agents)"
-orch_dir="$(kit_path adapters/cursor/orchestration/agents)"
+agents_dir="$(kit_path adapters/agents/.agents/agents)"
 core_orch_dir="$(kit_path core/orchestration/agents)"
 max_projection_lines=80
 
-for projected in "$agents_dir"/harness-*.md; do
+for projected in "$agents_dir"/*.md; do
   [[ -f "$projected" ]] || continue
   rel_projected="${projected#"$ROOT_DIR"/}"
   rel_projected="${rel_projected#./}"
   lines="$(wc -l < "$projected" | tr -d ' ')"
   base="$(basename "$projected" .md)"
-  canonical_name="${base#harness-}"
-  canonical="$orch_dir/${canonical_name}.md"
-  core_canonical="$core_orch_dir/${canonical_name}.md"
-  if [[ -f "$canonical" ]] || [[ -f "$core_canonical" ]]; then
+  core_canonical="$core_orch_dir/${base}.md"
+  if [[ -f "$core_canonical" ]]; then
     if ! grep -qE 'orchestration/agents/|core/orchestration/agents/' "$projected" 2>/dev/null; then
       echo "missing orchestration/agents/ reference: $rel_projected" >&2
       agent_errors=1
     fi
-    ref="$canonical"
-    [[ -f "$core_canonical" ]] && ref="$core_canonical"
-    canon_lines="$(wc -l < "$ref" | tr -d ' ')"
+    canon_lines="$(wc -l < "$core_canonical" | tr -d ' ')"
     max_allowed=$(( canon_lines * 12 / 10 ))
     if [[ "$lines" -gt "$max_allowed" ]]; then
       echo "projection too fat ($lines > $max_allowed vs canonical $canon_lines): $rel_projected" >&2
@@ -237,27 +273,7 @@ if [[ "$agent_errors" -ne 0 ]]; then
   exit 1
 fi
 
-echo "==> Checking orchestration stub redirects"
-stub_errors=0
-for stub in \
-  "$(kit_path adapters/cursor/orchestration/dispatcher-workflow.md)" \
-  "$(kit_path adapters/cursor/orchestration/skill-preferences.zh.md)"; do
-  if [[ -f "$stub" ]]; then
-    if ! grep -q 'core/orchestration/' "$stub" 2>/dev/null; then
-      echo "stub missing core redirect: $stub" >&2
-      stub_errors=1
-    else
-      echo "ok: stub redirect $stub"
-    fi
-  else
-    echo "missing stub: $stub" >&2
-    stub_errors=1
-  fi
-done
-
-if [[ "$stub_errors" -ne 0 ]]; then
-  exit 1
-fi
+echo "==> Checking orchestration stub redirects (skipped — stubs deleted after shared layer migration)"
 
 echo "==> Checking capability matrix coverage"
 matrix_errors=0
@@ -270,7 +286,7 @@ else
   while IFS= read -r cap_line; do
     [[ -n "$cap_line" ]] && capability_ids+=("$cap_line")
   done < <(grep -E '^### [a-z0-9.-]+$' "$registry" | sed 's/^### //')
-  for platform in cursor claude codex; do
+  for platform in cursor claude codex trae; do
     matrix="$(kit_path "adapters/$platform/capability-matrix.yaml")"
     bindings="$(kit_path "adapters/$platform/bindings.md")"
     if [[ ! -f "$matrix" ]]; then
@@ -330,7 +346,7 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
   scan_paths+=(".ai-runtime-artifacts")
 fi
 
-if rg -n "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" "${scan_paths[@]}" 2>/dev/null; then
+if grep -nE "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" "${scan_paths[@]}" 2>/dev/null; then
   echo "unfinished markers found" >&2
   exit 1
 fi
@@ -351,19 +367,19 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
       in_fm { print }
     ' "$artifact_file")"
     for key in artifact route skills source created_at; do
-      if ! printf '%s\n' "$front_matter" | rg -q "^${key}:"; then
+      if ! printf '%s\n' "$front_matter" | grep -qE "^${key}:"; then
         echo "missing front matter key '$key': $artifact_file" >&2
         artifact_errors=1
       fi
     done
 
-    if printf '%s\n' "$front_matter" | rg -qi '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
+    if printf '%s\n' "$front_matter" | grep -qiE '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
       skill_items="$(printf '%s\n' "$front_matter" | awk '
         /^skills:/ { f = 1; next }
         f && /^[A-Za-z0-9_.-]+:/ { exit }
         f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
       ')"
-      if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | rg -qx '<skill>'; then
+      if [[ -z "$skill_items" ]] || printf '%s\n' "$skill_items" | grep -qxE '<skill>'; then
         echo "empty or placeholder skills (route requires stage skill): $artifact_file" >&2
         artifact_errors=1
       fi
@@ -372,7 +388,7 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
         f && /^[A-Za-z0-9_.-]+:/ { exit }
         f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
       ')"
-      if [[ -z "$evidence_items" ]] || printf '%s\n' "$evidence_items" | rg -q '^(<path|<skill>|\.{3})'; then
+      if [[ -z "$evidence_items" ]] || printf '%s\n' "$evidence_items" | grep -qE '^(<path|<skill>|\.{3})'; then
         echo "missing or placeholder skills_evidence (P1 required for stage-skill route): $artifact_file" >&2
         artifact_errors=1
       fi
@@ -386,44 +402,255 @@ else
   echo "skip: .ai-runtime-artifacts (not initialized)"
 fi
 
-# P2: warn when execution-log looks like a Cursor batch run but omits batch-closeout artifacts (non-fatal)
-if [[ -d ".ai-runtime-artifacts/execution-logs" ]]; then
-  echo "==> Checking execution-log batch-closeout links (warn only)"
+# spec §10 门禁：execution-log 声称批次完成但无 collective-test / code-review
+# 引用时升级为 ERROR（gap #6 治本）；含编排上下文但缺尾盘链接仍为 WARN
+#
+# 路径位置（gap #1、#2 治本 + Q4.2 风险）：
+# - consumer 项目：closeout 产物在 .ai-runtime-artifacts/execution-logs/*.md
+# - harness-kit 仓库自身：closeout 示例在 docs/runtime/closeouts/*-execution-log.md
+#   （.ai-runtime-artifacts/ 被 .gitignore 排除）
+# 因此 closeout 段扫**两个**位置。
+#
+# 自残保护（gap #11 治本）：
+# harness-kit 仓库（marker = core/orchestration/agents/leader.md，源仓库独有，
+# consumer 用 entrypoints 投影不复制 core/）—— ERROR 改 WARN，避免本仓库
+# closeout 示例**自残**（harness-check 在本仓库跑会扫到示例文件）。
+is_harness_kit_self=0
+if [[ -f "core/orchestration/agents/leader.md" ]]; then
+  is_harness_kit_self=1
+fi
+
+closeout_error=0
+if [[ -d ".ai-runtime-artifacts/execution-logs" || -d "docs/runtime/closeouts" ]]; then
+  if [[ "$is_harness_kit_self" -eq 1 ]]; then
+    echo "==> Checking execution-log batch-closeout (WARN only — harness-kit self, 避免自残)"
+  else
+    echo "==> Checking execution-log batch-closeout (WARN + spec §10 ERROR)"
+  fi
   closeout_warn=0
+  # 扫两位置：consumer 侧（.ai-runtime-artifacts/execution-logs/）+ harness-kit 仓库示例（docs/runtime/closeouts/）
   while IFS= read -r elog; do
     [[ -f "$elog" ]] || continue
     base="$(basename "$elog")"
     [[ "$base" == "HANDOFF.md" ]] && continue
     [[ "$base" == README.md ]] && continue
+    # harness-kit 仓库示例文件命名：*-execution-log.md；其他（collective-test / code-review）跳过
+    case "$elog" in
+      docs/runtime/closeouts/*-execution-log.md) ;;
+      .ai-runtime-artifacts/execution-logs/*.md) ;;
+      *) continue ;;
+    esac
     content="$(<"$elog")"
-    if ! printf '%s' "$content" | rg -q 'cursor-orchestration|dispatcher-workflow'; then
+    if ! printf '%s' "$content" | grep -qE 'cursor-orchestration|dispatcher-workflow'; then
       continue
     fi
     missing=()
-    if ! printf '%s' "$content" | rg -q '尾盘门禁|collective-test'; then
+    if ! printf '%s' "$content" | grep -qE '尾盘门禁|collective-test'; then
       missing+=("尾盘门禁或 collective-test 链接")
     fi
-    if ! printf '%s' "$content" | rg -q 'code-review'; then
+    if ! printf '%s' "$content" | grep -qE 'code-review'; then
       missing+=("code-review 链接")
     fi
     if [[ ${#missing[@]} -gt 0 ]]; then
       echo "warn: $elog — Cursor 编排 execution-log 建议含尾盘产物引用（${missing[*]}）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
       closeout_warn=1
     fi
-    if printf '%s' "$content" | rg -qi '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
-      if ! printf '%s' "$content" | rg -q 'collective-test.*PASS|verdict: PASS'; then
-        echo "warn: $elog — 声称批次完成但未引用 collective-test PASS" >&2
-        closeout_warn=1
+    if printf '%s' "$content" | grep -qiE '批次交付完成|本 GROUP.*完成|GROUP 交付完成'; then
+      if ! printf '%s' "$content" | grep -qE 'collective-test.*PASS|verdict: PASS'; then
+        if [[ "$is_harness_kit_self" -eq 1 ]]; then
+          echo "warn: $elog — harness-kit self — 声称批次完成但未引用 collective-test PASS（不阻断）" >&2
+          closeout_warn=1
+        else
+          echo "ERROR: $elog — 声称批次完成但未引用 collective-test PASS（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+          closeout_error=1
+        fi
       fi
-      if ! printf '%s' "$content" | rg -q 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
-        echo "warn: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED" >&2
-        closeout_warn=1
+      if ! printf '%s' "$content" | grep -qE 'code-review|verdict: APPROVE|verdict: SKIPPED'; then
+        if [[ "$is_harness_kit_self" -eq 1 ]]; then
+          echo "warn: $elog — harness-kit self — 声称批次完成但未引用 code-review APPROVE/SKIPPED（不阻断）" >&2
+          closeout_warn=1
+        else
+          echo "ERROR: $elog — 声称批次完成但未引用 code-review APPROVE/SKIPPED（spec §10 门禁）。见 docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md" >&2
+          closeout_error=1
+        fi
       fi
     fi
-  done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort)
-  if [[ "$closeout_warn" -eq 0 ]]; then
+  done < <(find .ai-runtime-artifacts/execution-logs -maxdepth 1 -type f -name '*.md' 2>/dev/null; find docs/runtime/closeouts -maxdepth 1 -type f -name '*-execution-log.md' 2>/dev/null | sort)
+  if [[ "$closeout_warn" -eq 0 ]] && [[ "$closeout_error" -eq 0 ]]; then
     echo "ok: execution-log batch-closeout (no warnings)"
   fi
+fi
+if [[ "$closeout_error" -ne 0 ]]; then
+  exit 1
+fi
+
+# 路径合规检查：扫描 docs/superpowers/ 是否有本应属于 .ai-runtime-artifacts/ 的产物文件
+# 目的：检测 AI 是否把产物写错位置（spec/plan/verification/review 等）
+echo "==> Checking artifact path compliance (docs/ vs .ai-runtime-artifacts/)"
+artifact_path_warn=0
+
+# 定义本应属于 .ai-runtime-artifacts/ 的产物文件命名模式（使用 bash glob 避免 grep 依赖）
+# spec: YYYY-MM-DD-*-spec.md 或 YYYY-MM-DD-*-spec-*.md
+# plan: YYYY-MM-DD-*-plan.md 或 YYYY-MM-DD-*-plan-*.md
+# verification: YYYY-MM-DD-*-verification*.md
+# collective-test: YYYY-MM-DD-*-collective-test.md
+# code-review: YYYY-MM-DD-*-code-review.md
+# document-review: YYYY-MM-DD-*-document-review.md
+
+# 扫描 docs/superpowers/specs/
+if [[ -d "docs/superpowers/specs" ]]; then
+  for f in docs/superpowers/specs/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 spec 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-spec.*\.md$ ]]; then
+      echo "warn: spec artifact found in docs/superpowers/specs/ instead of .ai-runtime-artifacts/specs/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/specs/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/plans/
+if [[ -d "docs/superpowers/plans" ]]; then
+  for f in docs/superpowers/plans/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 plan 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-plan.*\.md$ ]]; then
+      echo "warn: plan artifact found in docs/superpowers/plans/ instead of .ai-runtime-artifacts/plans/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/plans/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/verifications/
+if [[ -d "docs/superpowers/verifications" ]]; then
+  for f in docs/superpowers/verifications/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 verification / collective-test 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-verification.*\.md$ ]] || \
+       [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-collective-test\.md$ ]]; then
+      echo "warn: verification artifact found in docs/superpowers/verifications/ instead of .ai-runtime-artifacts/verifications/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/verifications/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/reviews/
+if [[ -d "docs/superpowers/reviews" ]]; then
+  for f in docs/superpowers/reviews/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 review / code-review / document-review 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-review.*\.md$ ]]; then
+      echo "warn: review artifact found in docs/superpowers/reviews/ instead of .ai-runtime-artifacts/reviews/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/reviews/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/decisions/
+if [[ -d "docs/superpowers/decisions" ]]; then
+  for f in docs/superpowers/decisions/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 decision 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-decision.*\.md$ ]]; then
+      echo "warn: decision artifact found in docs/superpowers/decisions/ instead of .ai-runtime-artifacts/decisions/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/decisions/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/retros/
+if [[ -d "docs/superpowers/retros" ]]; then
+  for f in docs/superpowers/retros/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 retro 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-retro.*\.md$ ]]; then
+      echo "warn: retro artifact found in docs/superpowers/retros/ instead of .ai-runtime-artifacts/retros/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/retros/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+if [[ "$artifact_path_warn" -eq 0 ]]; then
+  echo "ok: artifact path compliance"
+fi
+
+# 检查 artifact-templates/*.md 的 front matter 路径是否真实存在
+# 目的：挡 gap #3、#4、#5 —— 模板自身 FM 写错路径此前无人发现
+echo "==> Checking artifact-templates FM paths"
+tmpl_errors=0
+tmpl_warn=0
+for tmpl in artifact-templates/*.md; do
+  [[ -f "$tmpl" ]] || continue
+  base="$(basename "$tmpl")"
+  [[ "$base" == "README.md" ]] && continue
+
+  front_matter="$(awk '
+    NR == 1 && $0 == "---" { in_fm = 1; next }
+    in_fm && $0 == "---" { exit }
+    in_fm { print }
+  ' "$tmpl")"
+
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    # 启发式：跳过明显非仓库内路径（纯 bash glob，不依赖 rg）
+    case "$path" in
+      /*|~*) continue ;;                # 绝对路径 / 用户全局
+      *\<*|*\>*) continue ;;            # 含占位符
+      *' '*|*'（'*|*'）'*|*'，'*) continue ;;  # 含空格 / 全角标点
+      *[!A-Za-z0-9._/-]*) continue ;;   # 含其他非路径字符（含中文自由文本）
+      */*/.*|*.md|*/*/*.md) ;;           # 像仓库内 .md 路径
+      *) continue ;;                     # 不像路径的占位符（如 user-query）
+    esac
+    if [[ ! -e "$path" ]]; then
+      echo "warn: missing skills_evidence path: $path (in $tmpl)" >&2
+      tmpl_warn=1
+    fi
+  done < <(printf '%s\n' "$front_matter" | awk '
+    /^skills_evidence:/ { f = 1; next }
+    f && /^[A-Za-z0-9_.-]+:/ { exit }
+    f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+  ')
+
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    case "$path" in
+      /*|~*) continue ;;
+      *\<*|*\>*) continue ;;
+      *' '*|*'（'*|*'）'*|*'，'*) continue ;;
+      *[!A-Za-z0-9._/-]*) continue ;;
+      */*/.*|*.md|*/*/*.md) ;;
+      *) continue ;;
+    esac
+    if [[ ! -e "$path" ]]; then
+      echo "warn: missing source path: $path (in $tmpl)" >&2
+      tmpl_warn=1
+    fi
+  done < <(printf '%s\n' "$front_matter" | awk '
+    /^source:/ { f = 1; next }
+    f && /^[A-Za-z0-9_.-]+:/ { exit }
+    f && /^[[:space:]]*-[[:space:]]+/ { sub(/^[[:space:]]*-[[:space:]]+/, ""); print }
+  ')
+done
+if [[ "$tmpl_warn" -eq 0 ]]; then
+  echo "ok: artifact-templates FM paths"
 fi
 
 if [[ -f package.json ]]; then
@@ -437,5 +664,6 @@ echo "==> Checking shell scripts"
 bash -n "$(kit_path scripts/install-ai-skills.sh)"
 bash -n "$(kit_path scripts/harness-init.sh)"
 bash -n "$(kit_path scripts/harness-check.sh)"
+bash -n "$(kit_path scripts/harness-project.sh)"
 
 echo "==> Harness check complete"

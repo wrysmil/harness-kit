@@ -97,7 +97,7 @@ WU-01：实现Coder角色基础框架
 
 【允许修改范围】
 仅限以下文件（路径完整）：
-- `harness-kit/adapters/cursor/orchestration/agents/coder.md`
+- `harness-kit/core/orchestration/agents/coder.md`
 - `harness-kit/adapters/cursor/.cursor/agents/harness-coder.md`
 - `harness-kit/docs/superpowers/specs/2026-05-26-coder-role-design.md`
 

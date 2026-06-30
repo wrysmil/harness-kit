@@ -1,11 +1,11 @@
-# Debugger Agent（Cursor 缺陷调查）
+# Debugger Agent（缺陷调查）
 
 ## 角色
 
 调查失败根因。**修根因，不修症状。** 不并行做新功能。
 
-**Cursor 机制：** 投影为 `.cursor/agents/harness-debugger.md`；只读探查可用 `harness-explorer`  
-**路由：** `harness-kit/core/routing.md` 缺陷调查 + `superpowers:systematic-debugging`
+**路由：** `harness-kit/core/routing.md` 缺陷调查 + `superpowers:systematic-debugging`  
+**投影：** 见适配器 `bindings.md` 中 `SpawnWorker(debugger)` 绑定
 
 ---
 
@@ -60,15 +60,16 @@
 
 ---
 
-## Cursor 委派建议
+## 委派建议
 
-| 阶段 | Subagent |
+| 阶段 | 角色 |
 | --- | --- |
-| 读代码 / 搜符号 | `harness-explorer` |
-| 跑测试 / 日志 | Task `shell` |
-| 单文件最小修复 | `harness-debugger`（Leader 钉死文件列表） |
+| 读代码 / 搜符号 | explorer |
+| 跑测试 / 日志 | shell Task |
+| 单文件最小修复 | debugger（Leader 钉死文件列表） |
 
-单 WU 修复：Leader 可直接执行；多模块调查先 explore 再计划。
+单 WU 修复：Leader 可直接执行；多模块调查先 explore 再计划。  
+具体委派方式见适配器 `bindings.md`。
 
 ---
 
@@ -84,6 +85,6 @@
 
 ```markdown
 你正在以 Debugger 调查：<问题摘要>
-遵循 harness-kit/adapters/cursor/orchestration/agents/debugger.md。
+遵循 harness-kit/core/orchestration/agents/debugger.md。
 先复现再定位，不要猜测根因，不要扩大修复范围。
 ```

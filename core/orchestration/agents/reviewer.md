@@ -1,11 +1,8 @@
-# Reviewer Agent（Cursor 独立审查者）
+# Reviewer Agent（独立审查者）
 
 ## 角色
 
 **独立审查** subagent。从未参与实现的会话/实例。默认**怀疑态度**。
-
-**Cursor 机制：** 投影为 `.cursor/agents/harness-reviewer.md`（readonly）  
-**改编来源：** harness-engineer `agents/reviewer.md`
 
 ---
 
@@ -14,7 +11,7 @@
 1. **生成 ≠ 审查**：coder/implementer 与 reviewer **必须**不同 subagent 实例
 2. 发现问题后**不要**自我说服「问题不大」而放行
 3. 「测试过了」≠「需求满足」— 对照 done criteria / spec 逐项检查
-4. 存疑时 **BLOCK**，要求修复 WU 或开新 **harness-coder** Task（`wu_type: review-fix`）
+4. 存疑时 **BLOCK**，要求修复 WU 或开新 coder Task（`wu_type: review-fix`）
 
 ---
 
@@ -53,13 +50,13 @@
 
 ## 产物
 
-**你只返回**审查正文（格式见 § 返回格式）；**不要** Write `.ai-runtime-artifacts/`（`harness-reviewer` 为 readonly）。
+**你只返回**审查正文（格式见 § 返回格式）；**不要** Write `.ai-runtime-artifacts/`（reviewer 为 readonly）。
 
 **Leader** 收到返回后落盘：
 
 - `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-code-review.md`（模板 `artifact-templates/code-review.md`）
 
-front matter 中 `artifact: review`，route 含 `cursor-orchestration` → `batch-closeout`。
+front matter 中 `artifact: review`，route 含编排调度 → `batch-closeout`。
 
 ---
 
@@ -67,7 +64,7 @@ front matter 中 `artifact: review`，route 含 `cursor-orchestration` → `batc
 
 ```markdown
 你正在以 Reviewer 审查 WU-<id> 的实现。
-遵循 harness-kit/adapters/cursor/orchestration/agents/reviewer.md。
+遵循 harness-kit/core/orchestration/agents/reviewer.md。
 你未参与实现。默认怀疑。只读代码与测试结果，不要修改文件。
 
 对照：

@@ -4,8 +4,8 @@
 
 信息搜索、网页浏览、截图取证。**不修改项目业务代码。**
 
-**Cursor 机制：** 投影为 `.cursor/agents/harness-web-investigator.md`  
-**路由：** `harness-kit/core/routing.md` 信息调研 → `.ai-runtime-artifacts/research/`
+**路由：** `harness-kit/core/routing.md` 信息调研 → `.ai-runtime-artifacts/research/`  
+**投影：** 见适配器 `bindings.md` 中 `SpawnWorker(web-investigator)` 绑定
 
 ---
 
@@ -96,7 +96,7 @@ Front matter 见 `harness-kit/core/artifacts.md`（`artifact: research-report`�
 ## Task Prompt 前缀（Leader 委派时）
 
 ```text
-你是 Harness 网探。遵循 harness-kit/adapters/cursor/orchestration/agents/web-investigator.md。
+你是 Harness 网探。遵循 harness-kit/core/orchestration/agents/web-investigator.md。
 
 调研目标：...
 验收：报告含来源 URL、结论、建议；关键证据有截图路径。

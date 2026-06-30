@@ -15,6 +15,36 @@ created_at: 2026-05-14
 
 你正在把 Agent Harness 脚手架接入当前项目。`harness-kit/` 是源头，根目录入口和工具目录都是投影。
 
+## 清理 harness-kit 源仓库残留 + 更新 .gitignore
+
+`harness-kit/` 是从源仓库拷贝过来的，**绝不能把它的 git 元数据也带进新项目**。在开始投影前必须先做：
+
+1. **删除 harness-kit/ 内的 git 元数据**（仅限 `harness-kit/` 内，不要动项目自身的 `.git/`）：
+   - `harness-kit/.git/`（源仓库的 .git 目录）
+   - 存在则一并删除：`harness-kit/.gitignore`、`harness-kit/.gitattributes`、`harness-kit/.gitmodules`
+2. **在项目根 `.gitignore` 追加**（保留已有内容；不存在则创建）：
+
+   ```gitignore
+   # Agent Harness
+   harness-kit/*
+   .ai-runtime-artifacts/
+   ```
+
+   - `harness-kit/*`：不把 harness-kit 目录提交到新项目（接入团队应通过 Git Submodule 或独立仓库管理 harness-kit 升级）
+   - `.ai-runtime-artifacts/`：AI 运行时产物（spec / plan / execution-log / review 等），仅本地使用，不入仓
+
+完成后用 `git check-ignore -v harness-kit .ai-runtime-artifacts` 自检（应分别命中 `harness-kit/*` 和 `.ai-runtime-artifacts/`）。
+
+## 平台检测
+
+先运行平台检测脚本，确定当前环境：
+
+```bash
+bash harness-kit/scripts/harness-project.sh detect
+```
+
+输出为 `cursor`、`claude`、`trae` 或 `unknown`。后续投影按检测结果执行。
+
 ## 投影入口文件
 
 从 `harness-kit/entrypoints/` 投影到项目根目录：
@@ -29,35 +59,109 @@ created_at: 2026-05-14
 
 如果目标文件已存在，先读取现有内容，只合并 Harness 入口，不删除项目已有约束。
 
-## 投影工具适配
+## 投影工具适配（自动化）
 
-从 `harness-kit/adapters/` 投影到项目根目录：
-
-- `harness-kit/adapters/agents/.agents/` -> `.agents/`
-- `harness-kit/adapters/claude/.agents/` -> `.agents/`（合并 claude-orchestration skill）
-- `harness-kit/adapters/cursor/.cursor/` -> `.cursor/`
-
-`harness-kit/adapters/cursor/orchestration/` **不投影**，保留在 harness-kit 内供 AI 读取。
-
-Codex / OMX 适配遵循 `harness-kit/adapters/codex/README.md`。不要把 `.codex/` 当作纯手写模板；它主要由 `omx setup` 生成。
-
-Cursor 编排适配见 `harness-kit/adapters/cursor/README.md`。投影后应存在：
-
-- `.cursor/rules/ai-entry.mdc`（含 § 文件写入与阶段门禁）
-- `.cursor/rules/cursor-subagent-routing.mdc`
-- `.cursor/agents/harness-coder.md`（及 implementer / reviewer / explorer / debugger / test-engineer / web-investigator）
-- `.cursor/skills/`（能力副本；WU 偏好见 `core/orchestration/skill-preferences.md`）
-- `.agents/skills/cursor-orchestration/SKILL.md`
-- `.agents/skills/claude-orchestration/SKILL.md`（Claude Code；源 `adapters/claude/.agents/skills/`）
-
-可选启用 Cursor hooks：
+运行投影脚本，自动检测平台并生成对应目录：
 
 ```bash
-cp harness-kit/adapters/cursor/.cursor/hooks.json.example .cursor/hooks.json
-chmod +x .cursor/hooks/*.sh
+bash harness-kit/scripts/harness-project.sh project
 ```
 
-见 `harness-kit/adapters/cursor/orchestration/hooks/README.md`。
+或手动指定平台：
+
+```bash
+bash harness-kit/scripts/harness-project.sh project --platform cursor
+```
+
+### 投影结构
+
+**共享层（所有平台）：** `adapters/agents/.agents/` -> `.agents/`
+
+```
+.agents/
+├── skills/          ← 11 个共享 skill（TDD、verification、code-review 等）
+├── agents/          ← 7 个 agent manifest（coder、implementer、reviewer 等）
+└── README.md
+```
+
+**Cursor 平台层：** `adapters/cursor/.cursor/` -> `.cursor/`
+
+```
+.cursor/
+├── rules/           ← ai-entry.mdc、cursor-subagent-routing.mdc
+├── hooks/           ← session-init、subagent-track-reminder
+├── skills/          ← git-xywh（组织特有）
+└── hooks.json.example
+```
+
+**Claude 平台层：** 共享 `.agents/` + `.claude/` 三件套
+
+```
+.claude/
+├── rules/                       ← 必生成：ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
+├── skills/                      ← 13 个共享 skill 镜像（claude-orchestration、git-xywh、TDD、verification 等）
+├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
+│   └── content/                 ← 配套 content/*.md
+└── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
+```
+
+**Trae 平台层：** `adapters/trae/.trae/` -> `.trae/`
+
+```
+.trae/
+├── rules/                       ← ai-entry.md、trae-subagent-routing.md
+├── hooks/                       ← session-init、subagent-stop（opt-in）
+└── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
+```
+
+### 投影后验证
+
+**Claude 平台层预期文件清单（必须全部出现，缺一即视为投影失败）：**
+
+```bash
+# 1) rules（always-loaded；Claude Code 会话开始自动加载）
+test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
+
+# 2) skills（共享层 → 平台层 mirror；Claude Code 自动发现）
+test -d .claude/skills/claude-orchestration && echo "OK: skills/claude-orchestration"
+test -d .claude/skills/git-xywh              && echo "OK: skills/git-xywh"
+# 其余 11 个 skill 同理
+
+# 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"
+test -x .claude/hooks/harness-subagent-stop.sh   && echo "OK: hooks/harness-subagent-stop.sh"
+test -f .claude/settings.json.example            && echo "OK: settings.json.example"
+```
+
+**Trae 平台层预期文件清单：**
+
+```bash
+# 1) rules（Trae 统一入口）
+test -f .trae/rules/ai-entry.md                  && echo "OK: rules/ai-entry.md"
+test -f .trae/rules/trae-subagent-routing.md    && echo "OK: rules/trae-subagent-routing.md"
+
+# 2) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+test -x .trae/hooks/harness-session-init.sh      && echo "OK: hooks/harness-session-init.sh"
+test -x .trae/hooks/harness-subagent-stop.sh    && echo "OK: hooks/harness-subagent-stop.sh"
+test -f .trae/settings.json.example              && echo "OK: settings.json.example"
+```
+
+**Cursor 平台层预期文件清单：**
+
+```bash
+# 1) rules
+test -f .cursor/rules/ai-entry.mdc               && echo "OK: rules/ai-entry.mdc"
+test -f .cursor/rules/cursor-subagent-routing.mdc && echo "OK: rules/cursor-subagent-routing.mdc"
+
+# 2) hooks
+test -f .cursor/hooks.json.example               && echo "OK: hooks.json.example"
+```
+
+随后跑：
+
+```bash
+bash harness-kit/scripts/harness-check.sh
+```
 
 ## AI runtime（可选）
 
@@ -112,7 +216,9 @@ bash harness-kit/scripts/harness-check.sh
 
 回复中说明：
 
+- 检测到的平台（`harness-project.sh detect` 输出）。
 - 投影了哪些入口和适配目录。
+- **平台层**实际生成了哪些文件（按 § 投影后验证 根据检测到的平台逐项列：rules/skills/hooks 各自的数量与关键文件名；任一缺失即报告并补投影）。
 - 是否创建了 `.ai-runtime-artifacts/`。
 - 是否执行了 AI runtime 安装或检查。
 - 生成或更新了哪些项目画像文件。

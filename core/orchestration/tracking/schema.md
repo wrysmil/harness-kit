@@ -52,7 +52,19 @@ Tests: <pass/fail 摘要>
 Queue-remaining: WU-03, WU-04
 Reviewer: separate-task | pending
 Worktree: <path or n/a> | Branch: <name or n/a> | Title(zh): <wu_title_zh>
+Closeout: collective-test=<path|pending> verdict=PASS|FAIL|n/a | code-review=<path|pending> verdict=APPROVE|BLOCK|SKIPPED|n/a | status=pending|in-progress|done
 ```
+
+**Closeout 行**（gap #10）：GROUP 收尾时由 Leader 追加，引用 `verifications/*-collective-test.md` 与 `reviews/*-code-review.md` 路径及 verdict。`status=pending` 表示本 GROUP 尚有 WU 未完成；`in-progress` 表示 WU 全部完成、closeout 流程进行中；`done` 表示 A 集体测试 + B 集体审查均通过（或合法 SKIPPED）可声称本 GROUP 交付完成。细则见 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
+
+### 路径位置（consumer 侧 vs harness-kit 仓库）
+
+Closeout 引用的**路径**与仓库的**位置**有关，harness-kit 自身**不**消费此流程：
+
+- **消费者项目**（`harness-init` 出来的项目）：closeout 产物落在 `.ai-runtime-artifacts/verifications/`、`.ai-runtime-artifacts/reviews/`、`.ai-runtime-artifacts/execution-logs/`（**不**入 .gitignore）。`scripts/harness-check.sh` 的 closeout ERROR 门禁段在消费者仓库**会**触发。
+- **harness-kit 仓库自身**：`.ai-runtime-artifacts/` 被 `.gitignore` 排除（设计：harness-kit 是工具/规则，不消费自家 closeout 流程），所以 harness-kit 仓库内 closeout 产物**示例**放 `docs/runtime/closeouts/`（可入库），仅作为 consumer-side 模板参考。harness-check 在 harness-kit 仓库内**不**触发 closeout 段——这是**符合设计**的行为。
+
+> 来源：`docs/runtime/closeouts/2026-06-12-tracking-schema-closeout-collective-test.md` § 路径位置说明。
 
 ---
 

@@ -1,0 +1,4 @@
+{
+  "_comment": "MCP server 配置模板 — 由 harness-project.sh 投影到项目根 .mcp.json。Cursor 与 Claude Code 均读此文件（事实标准）。按需在 mcpServers 下添加 server。",
+  "mcpServers": {}
+}

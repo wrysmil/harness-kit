@@ -1,0 +1,59 @@
+# Cursor subagent 模型路由建议（非强制）
+# 实现/审查优先使用 .agents/agents/<role>.md；未指定 model 时继承主 Agent。
+
+roles:
+  leader:
+    description: 主 Agent 编排、整合、验证
+    subagent: null
+    model: inherit
+
+  explorer:
+    description: 只读探查
+    subagent: explorer
+    readonly: true
+    model: fast
+
+  implementer:
+    description: 轻量 WU（docs/chore/config）
+    subagent: implementer
+    model: inherit
+
+  coder:
+    description: 代码类 WU：实现、单测、自测、开发者自检
+    subagent: coder
+    model: inherit
+
+  reviewer:
+    description: 独立审查
+    subagent: reviewer
+    readonly: true
+    model: inherit
+
+  debugger:
+    description: 根因调查
+    subagent: debugger
+    model: inherit
+
+  test_engineer:
+    description: 测试与 E2E 资产
+    subagent: test-engineer
+    model: inherit
+
+  web_investigator:
+    description: 信息调研、网页浏览、截图取证
+    subagent: web-investigator
+    model: inherit
+
+  shell_runner:
+    description: 测试、构建、lint
+    subagent_type: shell
+    model: inherit
+
+  ci_investigator:
+    description: CI 失败分析
+    subagent_type: ci-investigator
+    model: inherit
+
+defaults:
+  max_parallel: 3
+  max_parallel_cap: 5

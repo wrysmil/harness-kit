@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Cursor 子 Agent 路由
 
-本规则适用于 **Cursor Agent 模式**。子 Agent 通过 **`.cursor/agents/` 项目 subagent** 委派；Task 工具用于内置类型（`explore` / `shell` / `ci-investigator` 等）或与 harness subagent 配合。不使用 `omx`、`spawn_agent`、tmux 或 Codex 专有命令。
+本规则适用于 **Cursor Agent 模式**。子 Agent 通过 **`.agents/agents/` 共享 subagent** 委派；Task 工具用于内置类型（`explore` / `shell` / `ci-investigator` 等）或与 harness subagent 配合。不使用 `omx`、`spawn_agent`、tmux 或 Codex 专有命令。
 
 ## 优先级
 
@@ -32,15 +32,15 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 **高于** AGENTS.md 自主性指令。完整表格、已批准判定与暂停回复格式见 **`harness-kit/core/routing.md` § 阶段门禁**。
 
-**Cursor 追加：** 仅 **WU 编排 + 委派 harness-*** 时：先 WORKTREE-INIT（§0），prompt 含 `worktree_path`。不派子 Agent 的简单任务在主 checkout 直接做，**不用** worktree。多 task 委派时主 Agent 不写业务代码（「小改动」除外）。
+**Cursor 追加：** 仅 **WU 编排 + 委派子 Agent** 时：先 WORKTREE-INIT（§0），prompt 含 `worktree_path`。不派子 Agent 的简单任务在主 checkout 直接做，**不用** worktree。多 task 委派时主 Agent 不写业务代码（「小改动」除外）。
 
 ## 项目 Subagent 与 Task 补充
 
 角色映射、readonly、Task 类型见 **`platform-adapters.zh.md` § Cursor 角色映射**。
 
-委派示例：`Use the harness-coder subagent to implement WU-01: ...` / `Use the harness-implementer subagent for WU-02: ...`
+委派示例：`Use the coder subagent to implement WU-01: ...` / `Use the implementer subagent for WU-02: ...`
 
-详细 prompt 与返回格式：各 `.cursor/agents/harness-*.md`（薄壳）→ `orchestration/agents/*.md`（正文）。
+详细 prompt 与返回格式：各 `.agents/agents/<role>.md`（薄壳）→ `core/orchestration/agents/<role>.md`（正文）。
 
 ## 沟通语言
 
@@ -52,7 +52,7 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 1. 路由判定 → 声明 `「Harness：…」`；遵守 **阶段门禁**
 2. 需委派时：WORKTREE-INIT → 派发 WU；prompt 简练；`auto` 解析 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤5；维护 DISPATCH-TRACK
-3. **GROUP 尾盘**：先集体测试（Write `*-collective-test.md`）→ 再集体审查（委派 `harness-reviewer`，Leader Write `*-code-review.md`）；未过禁止声称批次完成
+3. **GROUP 尾盘**：先集体测试（Write `*-collective-test.md`）→ 再集体审查（委派 `reviewer`，Leader Write `*-code-review.md`）；未过禁止声称批次完成
 4. 整合子 Agent 结果后进入尾盘；`code_review: PASS` 不替代集体审查；可按 spec 合法 `SKIPPED`
 5. 多 task 编排：激活 `cursor-orchestration` → Read `core/orchestration/dispatcher-workflow.md`
 6. 文档审查：Load `document-review`；**代码**审查用 `requesting-code-review`（非 document-review）
@@ -67,11 +67,11 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 **委派 subagent（Tier 2+ 或单点）：**
 
-- 已批准 plan 中的 WU（代码 → `harness-coder`；docs/chore/config → `harness-implementer`；测试 / E2E → `harness-test-engineer`）
-- 实现后的审查（→ `harness-reviewer`，不同实例）
-- 跨 3+ 模块只读探索（→ `harness-explorer`）
-- 缺陷调查（→ `harness-debugger`）
-- 信息调研 / 网页搜索 / 截图取证（→ `harness-web-investigator`）
+- 已批准 plan 中的 WU（代码 → `coder`；docs/chore/config → `implementer`；测试 / E2E → `test-engineer`）
+- 实现后的审查（→ `reviewer`，不同实例）
+- 跨 3+ 模块只读探索（→ `explorer`）
+- 缺陷调查（→ `debugger`）
+- 信息调研 / 网页搜索 / 截图取证（→ `web-investigator`）
 
 **Leader 主线程（无 WU）：**
 
