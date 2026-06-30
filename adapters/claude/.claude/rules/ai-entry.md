@@ -38,6 +38,33 @@
 - **禁止** Shell 写文本（`Set-Content`、`Out-File`、`echo … >`、`type … >`、无 `encoding='utf-8'` 的 Python/Node 一行写文件）
 - 默认 **UTF-8 无 BOM**（含中文）
 
+## 产物落盘（强制）
+
+**所有 AI 过程产物必须写入 `.ai-runtime-artifacts/` 对应子目录，禁止写入其他位置。**
+
+| 产物类型 | 目录 |
+| --- | --- |
+| spec / 方案 | `.ai-runtime-artifacts/specs/` |
+| plan / 计划 | `.ai-runtime-artifacts/plans/` |
+| dispatch / 调度 | `.ai-runtime-artifacts/plans/`（同 stem 的 `*-dispatch.md`） |
+| verification / 验证 | `.ai-runtime-artifacts/verifications/` |
+| collective-test / 集体测试 | `.ai-runtime-artifacts/verifications/*-collective-test.md` |
+| review / 审查 | `.ai-runtime-artifacts/reviews/` |
+| code-review / 代码审查 | `.ai-runtime-artifacts/reviews/*-code-review.md` |
+| execution-log / 执行日志 | `.ai-runtime-artifacts/execution-logs/` |
+| dispatch-track / 追踪 | `.ai-runtime-artifacts/execution-logs/tracking/` |
+| decision / 决策 | `.ai-runtime-artifacts/decisions/` |
+| retro / 复盘 | `.ai-runtime-artifacts/retros/` |
+| research / 调研 | `.ai-runtime-artifacts/research/` |
+
+**禁止：**
+- 把产物写到 `docs/`、`项目根目录`、或其他任意位置
+- 把 plan 写到平台私有目录（如 `~/.claude/plans/`）
+- 使用 `EnterPlanMode` / `ExitPlanMode`（会绕过 `.ai-runtime-artifacts/plans/` 落盘）
+- 用 `docs/superpowers/` 代替 `.ai-runtime-artifacts/`
+
+**例外：** harness-kit 仓库自身（`.gitignore` 排除 `.ai-runtime-artifacts/`）的 closeout 示例可放 `docs/runtime/closeouts/`。
+
 ## 同轮禁止
 
 - Write 了 `specs/` / `plans/` / `decisions/` → **结束本轮**；不得同轮改业务代码、派发、WORKTREE-INIT

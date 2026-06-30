@@ -17,6 +17,11 @@ hooks:
         script: scripts/claude/harness-session-init.sh
         config_file: .claude/settings.json
         config_field: hooks.SessionStart
+      trae:
+        event: sessionStart
+        script: scripts/trae/harness-session-init.sh
+        config_file: .trae/settings.json
+        config_field: hooks.sessionStart
 
   - name: harness-subagent-stop
     description: 提醒 Leader plan 勾选 + 追踪落盘 + 尾盘判断（content 见 content/subagent-stop.md）
@@ -33,6 +38,11 @@ hooks:
         script: scripts/claude/harness-subagent-stop.sh
         config_file: .claude/settings.json
         config_field: hooks.SubagentStop
+      trae:
+        event: subagentStop
+        script: scripts/trae/harness-subagent-stop.sh
+        config_file: .trae/settings.json
+        config_field: hooks.subagentStop
 
   - name: block-native-plan-mode
     description: 阻断平台原生 plan 工具（Claude Code EnterPlanMode/ExitPlanMode），强制走 writing-plans skill

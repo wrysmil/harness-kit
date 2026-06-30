@@ -27,7 +27,7 @@
 
 - **同轮禁止：** Write 了 `specs/` / `plans/` / `decisions/` → **结束本轮**；不得同轮改业务代码。
 - **实现前置：** 用户**单独**说「开始实现 / 直接做 / 并行执行」；或 spec/plan `approved: true`；或 Tier 0 / Tier 1。
-- **Tier 1 完成：** 须 Write `verifications/*-verification-lite.md`。
+- **Tier 1 完成：** 须 Write `.ai-runtime-artifacts/verifications/*-verification-lite.md`。
 - **暂停回复须含：** 产物路径、摘要、`## Next` 选项。
 
 ## 每任务（必做）
@@ -59,3 +59,25 @@ Trae Agent 模式下，通过 `.agents/agents/<role>.md` 共享 subagent 委派�
 - 实现与审查同一 subagent 实例
 - 跳过尾盘集体测试或集体审查
 - Shell 写/改仓库文本文件（须用 Write）
+- **把产物写到 `.ai-runtime-artifacts/` 以外的位置**（spec/plan/verification/review/execution-log 等必须写入对应子目录）
+- 把 plan 写到平台私有目录
+- 用 `docs/superpowers/` 代替 `.ai-runtime-artifacts/`
+
+## 产物落盘目录（强制）
+
+| 产物类型 | 目录 |
+| --- | --- |
+| spec / 方案 | `.ai-runtime-artifacts/specs/` |
+| plan / 计划 | `.ai-runtime-artifacts/plans/` |
+| dispatch / 调度 | `.ai-runtime-artifacts/plans/`（同 stem 的 `*-dispatch.md`） |
+| verification / 验证 | `.ai-runtime-artifacts/verifications/` |
+| collective-test / 集体测试 | `.ai-runtime-artifacts/verifications/*-collective-test.md` |
+| review / 审查 | `.ai-runtime-artifacts/reviews/` |
+| code-review / 代码审查 | `.ai-runtime-artifacts/reviews/*-code-review.md` |
+| execution-log / 执行日志 | `.ai-runtime-artifacts/execution-logs/` |
+| dispatch-track / 追踪 | `.ai-runtime-artifacts/execution-logs/tracking/` |
+| decision / 决策 | `.ai-runtime-artifacts/decisions/` |
+| retro / 复盘 | `.ai-runtime-artifacts/retros/` |
+| research / 调研 | `.ai-runtime-artifacts/research/` |
+
+**例外：** harness-kit 仓库自身（`.gitignore` 排除 `.ai-runtime-artifacts/`）的 closeout 示例可放 `docs/runtime/closeouts/`。

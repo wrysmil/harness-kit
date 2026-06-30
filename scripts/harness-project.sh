@@ -309,18 +309,64 @@ project_claude() {
 
 project_trae() {
   local target_root="${1:-.}"
+  local force="${2:-0}"
   local src="$ADAPTERS_DIR/trae"
+  local trae_src="$src/.trae"
+  local ext_root="$ROOT_DIR/core/extensions/hooks"
+  local added=0
+  local skipped=0
 
   echo "==> 投影 Trae 平台层: .trae/"
 
-  if [[ -d "$src" ]]; then
-    mkdir -p "$target_root/.trae"
-    # 当前 Trae 适配器为骨架，投影 README
-    [[ -f "$src/README.md" ]] && cp "$src/README.md" "$target_root/.trae/"
-    echo "   已投影 Trae 骨架（能力待定义）"
-  else
+  if [[ ! -d "$src" ]]; then
     echo "   Trae 适配器不存在，跳过"
+    return 1
   fi
+
+  mkdir -p "$target_root/.trae"
+
+  # rules（用户可定制：默认 skip-if-exists，--force 覆盖）
+  if [[ -d "$trae_src/rules" ]]; then
+    mkdir -p "$target_root/.trae/rules"
+    for f in "$trae_src/rules"/*.md; do
+      [[ -f "$f" ]] || continue
+      local name
+      name="$(basename "$f")"
+      if [[ "$force" != "1" && -f "$target_root/.trae/rules/$name" ]]; then
+        echo "   skip: .trae/rules/$name（已存在，--force 覆盖）"
+        skipped=$((skipped + 1))
+        continue
+      fi
+      cp "$f" "$target_root/.trae/rules/"
+      added=$((added + 1))
+    done
+  fi
+
+  # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
+  if [[ -d "$ext_root" ]]; then
+    mkdir -p "$target_root/.trae/hooks/content"
+    cp "$ext_root/content/session-init.md"     "$target_root/.trae/hooks/content/"
+    cp "$ext_root/content/subagent-stop.md"   "$target_root/.trae/hooks/content/"
+    cp "$ext_root/scripts/trae/harness-session-init.sh"     "$target_root/.trae/hooks/"
+    cp "$ext_root/scripts/trae/harness-subagent-stop.sh"   "$target_root/.trae/hooks/"
+    chmod +x "$target_root/.trae/hooks/harness-"*.sh 2>/dev/null || true
+
+    cat > "$target_root/.trae/settings.json.example" <<'EOF'
+{
+  "hooks": {
+    "sessionStart": [
+      { "command": ".trae/hooks/harness-session-init.sh" }
+    ],
+    "subagentStop": [
+      { "command": ".trae/hooks/harness-subagent-stop.sh" }
+    ]
+  }
+}
+EOF
+    echo "   已投影 hooks 脚本 + content + settings.json.example 到 .trae/"
+  fi
+
+  echo "   已投影 $added 项到 $target_root/.trae/rules/（+ hooks 扩展），跳过 $skipped 项"
 }
 
 # ─── 主入口 ─────────────────────────────────────────────────
@@ -386,11 +432,11 @@ case "$cmd" in
     case "$platform" in
       cursor)  project_cursor "$target_dir" "$force" ;;
       claude)  project_claude "$target_dir" "$force" ;;
-      trae)    project_trae "$target_dir" ;;
+      trae)    project_trae "$target_dir" "$force" ;;
       all)
         project_cursor "$target_dir" "$force"
         project_claude "$target_dir" "$force"
-        project_trae "$target_dir"
+        project_trae "$target_dir" "$force"
         ;;
       *)
         echo "未知平台: $platform" >&2
@@ -399,6 +445,61 @@ case "$cmd" in
     esac
 
     echo "==> 投影完成"
+    echo
+
+    # 根据实际投影的平台显示检查清单
+    case "$platform" in
+      cursor)
+        echo "==> ✅ Cursor 平台层预期文件清单（缺失即投影失败）："
+        echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK .cursor/rules/ai-entry.mdc" || echo "MISSING .cursor/rules/ai-entry.mdc")"
+        _rules_count="$(ls "$target_dir/.cursor/rules/"*.mdc 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [rules]   共 ${_rules_count} 个 .mdc"
+        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
+        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
+        echo "    [hooks]   $(test -f "$target_dir/.cursor/hooks.json.example" && echo "OK hooks.json.example" || echo "MISSING hooks.json.example")"
+        ;;
+      claude)
+        echo "==> ✅ Claude 平台层预期文件清单（缺失即投影失败）："
+        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK .claude/rules/ai-entry.md" || echo "MISSING .claude/rules/ai-entry.md")"
+        _rules_count="$(ls "$target_dir/.claude/rules/"*.md 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥1）"
+        _skills_count="$(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [skills]  共 ${_skills_count} 个 skill 镜像（应 13）"
+        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
+        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
+        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
+        ;;
+      trae)
+        echo "==> ✅ Trae 平台层预期文件清单（缺失即投影失败）："
+        echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK .trae/rules/ai-entry.md" || echo "MISSING .trae/rules/ai-entry.md")"
+        echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK .trae/rules/trae-subagent-routing.md" || echo "MISSING .trae/rules/trae-subagent-routing.md")"
+        _rules_count="$(ls "$target_dir/.trae/rules/"*.md 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥2）"
+        echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
+        echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
+        echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
+        ;;
+      all)
+        echo "==> ✅ Cursor 平台层："
+        echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK" || echo "MISSING") .cursor/rules/ai-entry.mdc"
+        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-session-init.sh" && echo "OK" || echo "MISSING") harness-session-init.sh"
+        echo "==> ✅ Claude 平台层："
+        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK" || echo "MISSING") .claude/rules/ai-entry.md"
+        echo "    [skills]  $(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
+        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK" || echo "MISSING") settings.json.example"
+        echo "==> ✅ Trae 平台层："
+        echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK" || echo "MISSING") .trae/rules/ai-entry.md"
+        echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK" || echo "MISSING") .trae/rules/trae-subagent-routing.md"
+        echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK" || echo "MISSING") settings.json.example"
+        ;;
+    esac
+
+    echo
+    echo "==> 复制以下 4 行到 init 后的回复中（AI 必读）："
+    echo "    1) 检测到平台: $platform"
+    echo "    2) 共享层 + 平台层投影完成"
+    echo "    3) hooks 扩展已投影（opt-in，未启用）"
+    echo "    4) 运行 'bash harness-kit/scripts/harness-project.sh project --platform $platform --force' 可强制覆盖"
     ;;
 
   *)

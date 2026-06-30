@@ -170,20 +170,6 @@ required_dirs=(
   ".ai-runtime-artifacts/execution-logs/tracking"
 )
 
-# ─── 平台检测 ───────────────────────────────────────────────
-
-detect_deployed_platform() {
-  local platforms=()
-  [[ -d ".cursor" ]] && platforms+=("cursor")
-  [[ -f "CLAUDE.md" || -d ".claude" ]] && platforms+=("claude")
-  [[ -d ".trae" ]] && platforms+=("trae")
-  if [[ ${#platforms[@]} -eq 0 ]]; then
-    echo "unknown"
-  else
-    echo "${platforms[0]}"
-  fi
-}
-
 missing=0
 for rel in "${required_kit_files[@]}"; do
   file="$(kit_path "$rel")"
@@ -196,10 +182,6 @@ for rel in "${required_kit_files[@]}"; do
 done
 
 if [[ "$LAYOUT" == "deployed" ]]; then
-  # 检测平台
-  PLATFORM="$(detect_deployed_platform)"
-  echo "==> detected platform: $PLATFORM"
-
   # 共享层文件
   for file in "${required_deployed_shared[@]}"; do
     if [[ -f "$file" ]]; then
@@ -210,8 +192,8 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     fi
   done
 
-  # Cursor 平台层文件（仅 Cursor 平台检查）
-  if [[ "$PLATFORM" == "cursor" || "$PLATFORM" == "unknown" ]]; then
+  # Cursor 平台层文件（按需检查）
+  if [[ -d ".cursor" ]]; then
     for file in "${required_deployed_cursor[@]}"; do
       if [[ -f "$file" ]]; then
         echo "ok: $file"
@@ -222,23 +204,21 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     done
   fi
 
-  # Claude 平台层 hooks 推荐检查（warn only；不阻塞）
-  if [[ "$PLATFORM" == "claude" || "$PLATFORM" == "unknown" ]]; then
-    if [[ -d ".claude" ]]; then
-      claude_hook_warn=0
-      if [[ ! -f ".claude/hooks/harness-session-init.sh" ]] || [[ ! -f ".claude/hooks/harness-subagent-stop.sh" ]]; then
-        echo "warn: .claude/hooks/harness-*.sh 缺失；运行 bash harness-kit/scripts/harness-project.sh project --platform claude 重新投影" >&2
-        claude_hook_warn=1
-      elif [[ -f ".claude/settings.json" ]] && ! grep -q '"hooks"' ".claude/settings.json" 2>/dev/null; then
-        echo "warn: .claude/settings.json 未启用 hooks；将 .claude/settings.json.example 的 hooks 段合并到 .claude/settings.json 启用 harness-session-init / harness-subagent-stop（opt-in）" >&2
-        claude_hook_warn=1
-      elif [[ -f ".claude/settings.json" ]] && ! grep -q 'block-native-plan-mode' ".claude/settings.json" 2>/dev/null; then
-        echo "warn: .claude/settings.json 未启用 block-native-plan-mode PreToolUse 钩子；将示例 PreToolUse 段合并到 settings.json 阻断 EnterPlanMode/ExitPlanMode（见 core/routing.md § 平台原生 plan 工具）" >&2
-        claude_hook_warn=1
-      fi
-      if [[ "$claude_hook_warn" -eq 0 ]]; then
-        echo "ok: .claude/ hooks projection"
-      fi
+  # Claude 平台层 hooks 检查（warn only；不阻塞）
+  if [[ -d ".claude" ]]; then
+    claude_hook_warn=0
+    if [[ ! -f ".claude/hooks/harness-session-init.sh" ]] || [[ ! -f ".claude/hooks/harness-subagent-stop.sh" ]]; then
+      echo "warn: .claude/hooks/harness-*.sh 缺失；运行 bash harness-kit/scripts/harness-project.sh project --platform claude 重新投影" >&2
+      claude_hook_warn=1
+    elif [[ -f ".claude/settings.json" ]] && ! grep -q '"hooks"' ".claude/settings.json" 2>/dev/null; then
+      echo "warn: .claude/settings.json 未启用 hooks；将 .claude/settings.json.example 的 hooks 段合并到 .claude/settings.json 启用 harness-session-init / harness-subagent-stop（opt-in）" >&2
+      claude_hook_warn=1
+    elif [[ -f ".claude/settings.json" ]] && ! grep -q 'block-native-plan-mode' ".claude/settings.json" 2>/dev/null; then
+      echo "warn: .claude/settings.json 未启用 block-native-plan-mode PreToolUse 钩子；将示例 PreToolUse 段合并到 settings.json 阻断 EnterPlanMode/ExitPlanMode（见 core/routing.md § 平台原生 plan 工具）" >&2
+      claude_hook_warn=1
+    fi
+    if [[ "$claude_hook_warn" -eq 0 ]]; then
+      echo "ok: .claude/ hooks projection"
     fi
   fi
 
@@ -502,6 +482,114 @@ if [[ -d ".ai-runtime-artifacts/execution-logs" || -d "docs/runtime/closeouts" ]
 fi
 if [[ "$closeout_error" -ne 0 ]]; then
   exit 1
+fi
+
+# 路径合规检查：扫描 docs/superpowers/ 是否有本应属于 .ai-runtime-artifacts/ 的产物文件
+# 目的：检测 AI 是否把产物写错位置（spec/plan/verification/review 等）
+echo "==> Checking artifact path compliance (docs/ vs .ai-runtime-artifacts/)"
+artifact_path_warn=0
+
+# 定义本应属于 .ai-runtime-artifacts/ 的产物文件命名模式（使用 bash glob 避免 grep 依赖）
+# spec: YYYY-MM-DD-*-spec.md 或 YYYY-MM-DD-*-spec-*.md
+# plan: YYYY-MM-DD-*-plan.md 或 YYYY-MM-DD-*-plan-*.md
+# verification: YYYY-MM-DD-*-verification*.md
+# collective-test: YYYY-MM-DD-*-collective-test.md
+# code-review: YYYY-MM-DD-*-code-review.md
+# document-review: YYYY-MM-DD-*-document-review.md
+
+# 扫描 docs/superpowers/specs/
+if [[ -d "docs/superpowers/specs" ]]; then
+  for f in docs/superpowers/specs/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 spec 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-spec.*\.md$ ]]; then
+      echo "warn: spec artifact found in docs/superpowers/specs/ instead of .ai-runtime-artifacts/specs/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/specs/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/plans/
+if [[ -d "docs/superpowers/plans" ]]; then
+  for f in docs/superpowers/plans/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 plan 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-plan.*\.md$ ]]; then
+      echo "warn: plan artifact found in docs/superpowers/plans/ instead of .ai-runtime-artifacts/plans/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/plans/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/verifications/
+if [[ -d "docs/superpowers/verifications" ]]; then
+  for f in docs/superpowers/verifications/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 verification / collective-test 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-verification.*\.md$ ]] || \
+       [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-collective-test\.md$ ]]; then
+      echo "warn: verification artifact found in docs/superpowers/verifications/ instead of .ai-runtime-artifacts/verifications/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/verifications/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/reviews/
+if [[ -d "docs/superpowers/reviews" ]]; then
+  for f in docs/superpowers/reviews/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 review / code-review / document-review 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-review.*\.md$ ]]; then
+      echo "warn: review artifact found in docs/superpowers/reviews/ instead of .ai-runtime-artifacts/reviews/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/reviews/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/decisions/
+if [[ -d "docs/superpowers/decisions" ]]; then
+  for f in docs/superpowers/decisions/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 decision 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-decision.*\.md$ ]]; then
+      echo "warn: decision artifact found in docs/superpowers/decisions/ instead of .ai-runtime-artifacts/decisions/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/decisions/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+# 扫描 docs/superpowers/retros/
+if [[ -d "docs/superpowers/retros" ]]; then
+  for f in docs/superpowers/retros/*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    [[ "$base" == README.md ]] && continue
+    # 匹配 retro 命名模式
+    if [[ "$base" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-.+-retro.*\.md$ ]]; then
+      echo "warn: retro artifact found in docs/superpowers/retros/ instead of .ai-runtime-artifacts/retros/: $f" >&2
+      echo "      移动到: .ai-runtime-artifacts/retros/$base" >&2
+      artifact_path_warn=1
+    fi
+  done
+fi
+
+if [[ "$artifact_path_warn" -eq 0 ]]; then
+  echo "ok: artifact path compliance"
 fi
 
 # 检查 artifact-templates/*.md 的 front matter 路径是否真实存在

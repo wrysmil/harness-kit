@@ -55,9 +55,19 @@
 
 对用户回复与子 Agent 协调（派发、整合、追踪）使用**中文**（见 `core/routing.md` § 沟通语言）。
 
-## 产物
+## 产物落盘（强制）
 
-统一写入 `.ai-runtime-artifacts/`（见 `core/artifacts.md`）。
+**所有 AI 过程产物必须写入 `.ai-runtime-artifacts/` 对应子目录，禁止写入其他位置。**
+
+**禁止：**
+- 把产物写到 `docs/`、`项目根目录`、或其他任意位置
+- 把 plan 写到平台私有目录（如 `~/.cursor/plans/`）
+- 用 `docs/superpowers/` 代替 `.ai-runtime-artifacts/`
+- 使用 Cursor 原生 Plan 模式（会绕过 `.ai-runtime-artifacts/plans/` 落盘）
+
+**例外：** harness-kit 仓库自身（`.gitignore` 排除 `.ai-runtime-artifacts/`）的 closeout 示例可放 `docs/runtime/closeouts/`。
+
+详见 `core/artifacts.md`。
 
 **交付完成（Cursor）：** 本 GROUP / 批次 WU 全部返回后，须完成尾盘集体测试 + 集体审查并落盘（见 `docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`）。**完成** ≠ 末个 WU 返回；高于 AGENTS.md「执行至完成」的狭义理解。
 

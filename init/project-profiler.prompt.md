@@ -61,3 +61,4 @@ created_at: 2026-05-14
 - 哪些信息是推断项。
 - 哪些信息需要人工确认。
 - `harness-check` 是否通过。
+- **Claude 平台层实际生成文件清单**（若适用平台为 Claude）：rules 文件名、skills 镜像数、hooks 脚本与 `settings.json.example` 是否存在；缺一即报告并补投影（`bash harness-kit/scripts/harness-project.sh project --platform claude --force`）。

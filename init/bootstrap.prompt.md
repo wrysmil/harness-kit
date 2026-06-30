@@ -94,11 +94,70 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 └── hooks.json.example
 ```
 
-**Claude 平台层：** 共享 `.agents/` + `claude-orchestration` skill
+**Claude 平台层：** 共享 `.agents/` + `.claude/` 三件套
 
-**Trae 平台层：** `adapters/trae/` -> `.trae/`（骨架，能力待定义）
+```
+.claude/
+├── rules/                       ← 必生成：ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
+├── skills/                      ← 13 个共享 skill 镜像（claude-orchestration、git-xywh、TDD、verification 等）
+├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
+│   └── content/                 ← 配套 content/*.md
+└── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
+```
+
+**Trae 平台层：** `adapters/trae/.trae/` -> `.trae/`
+
+```
+.trae/
+├── rules/                       ← ai-entry.md、trae-subagent-routing.md
+├── hooks/                       ← session-init、subagent-stop（opt-in）
+└── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
+```
 
 ### 投影后验证
+
+**Claude 平台层预期文件清单（必须全部出现，缺一即视为投影失败）：**
+
+```bash
+# 1) rules（always-loaded；Claude Code 会话开始自动加载）
+test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
+
+# 2) skills（共享层 → 平台层 mirror；Claude Code 自动发现）
+test -d .claude/skills/claude-orchestration && echo "OK: skills/claude-orchestration"
+test -d .claude/skills/git-xywh              && echo "OK: skills/git-xywh"
+# 其余 11 个 skill 同理
+
+# 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"
+test -x .claude/hooks/harness-subagent-stop.sh   && echo "OK: hooks/harness-subagent-stop.sh"
+test -f .claude/settings.json.example            && echo "OK: settings.json.example"
+```
+
+**Trae 平台层预期文件清单：**
+
+```bash
+# 1) rules（Trae 统一入口）
+test -f .trae/rules/ai-entry.md                  && echo "OK: rules/ai-entry.md"
+test -f .trae/rules/trae-subagent-routing.md    && echo "OK: rules/trae-subagent-routing.md"
+
+# 2) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+test -x .trae/hooks/harness-session-init.sh      && echo "OK: hooks/harness-session-init.sh"
+test -x .trae/hooks/harness-subagent-stop.sh    && echo "OK: hooks/harness-subagent-stop.sh"
+test -f .trae/settings.json.example              && echo "OK: settings.json.example"
+```
+
+**Cursor 平台层预期文件清单：**
+
+```bash
+# 1) rules
+test -f .cursor/rules/ai-entry.mdc               && echo "OK: rules/ai-entry.mdc"
+test -f .cursor/rules/cursor-subagent-routing.mdc && echo "OK: rules/cursor-subagent-routing.mdc"
+
+# 2) hooks
+test -f .cursor/hooks.json.example               && echo "OK: hooks.json.example"
+```
+
+随后跑：
 
 ```bash
 bash harness-kit/scripts/harness-check.sh
@@ -159,6 +218,7 @@ bash harness-kit/scripts/harness-check.sh
 
 - 检测到的平台（`harness-project.sh detect` 输出）。
 - 投影了哪些入口和适配目录。
+- **平台层**实际生成了哪些文件（按 § 投影后验证 根据检测到的平台逐项列：rules/skills/hooks 各自的数量与关键文件名；任一缺失即报告并补投影）。
 - 是否创建了 `.ai-runtime-artifacts/`。
 - 是否执行了 AI runtime 安装或检查。
 - 生成或更新了哪些项目画像文件。
