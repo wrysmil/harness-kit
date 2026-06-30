@@ -42,9 +42,9 @@
 
 | 平台 | 加载 |
 | --- | --- |
-| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`cursor-orchestration` skill |
+| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`orchestration` skill |
 | **Codex / OMX** | `harness-kit/entrypoints/AGENTS.omx.md`（或 omx setup 合并后的 OMX 段落） |
-| **Claude Code** | `CLAUDE.md`、`claude-orchestration` skill、`adapters/claude/bindings.md` |
+| **Claude Code** | `CLAUDE.md`、`orchestration` skill、`adapters/claude/bindings.md` |
 | **Gemini** | `GEMINI.md` |
 
 ## 强制声明
@@ -58,7 +58,7 @@
 | --- | --- | --- | --- |
 | 设计 | `superpowers:brainstorming` | 同左 | 同左 |
 | 计划 | `superpowers:writing-plans` | 同左 | 同左 |
-| 多 task 实现 | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` |
+| 多 task 实现 | `omx ultrawork` | `orchestration` | `orchestration` |
 | 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 | 同左 |
 | 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 |
 | 信息调研 | `web-investigator` | 同左 | Task + web-investigator |

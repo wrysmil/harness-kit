@@ -1,8 +1,8 @@
 ---
 artifact: handoff
-route: cursor-orchestration:dispatcher-workflow
+route: orchestration:dispatcher-workflow
 skills:
-  - cursor-orchestration
+  - orchestration
 source:
   - core/orchestration/tracking/schema.md
 created_at: YYYY-MM-DD

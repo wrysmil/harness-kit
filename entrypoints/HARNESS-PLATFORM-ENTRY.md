@@ -33,4 +33,4 @@
 
 ### Claude Code 专章
 
-多 task 并行实现：`adapters/claude/README.md`、`adapters/claude/bindings.md`；skill：`claude-orchestration`。
+多 task 并行实现：`adapters/claude/README.md`、`adapters/claude/bindings.md`；skill：`orchestration`。

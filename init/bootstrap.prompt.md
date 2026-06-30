@@ -99,7 +99,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 ```
 .claude/
 ├── rules/                       ← 必生成：ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
-├── skills/                      ← 13 个共享 skill 镜像（claude-orchestration、git-xywh、TDD、verification 等）
+├── skills/                      ← 13 个共享 skill 镜像（orchestration、git-xywh、TDD、verification 等）
 ├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
 │   └── content/                 ← 配套 content/*.md
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
@@ -123,7 +123,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
 
 # 2) skills（共享层 → 平台层 mirror；Claude Code 自动发现）
-test -d .claude/skills/claude-orchestration && echo "OK: skills/claude-orchestration"
+test -d .claude/skills/orchestration && echo "OK: skills/orchestration"
 test -d .claude/skills/git-xywh              && echo "OK: skills/git-xywh"
 # 其余 11 个 skill 同理
 

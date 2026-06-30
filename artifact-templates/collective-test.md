@@ -1,6 +1,6 @@
 ---
 artifact: verification
-route: cursor-orchestration:dispatcher-workflow -> batch-closeout
+route: orchestration:dispatcher-workflow -> batch-closeout
 skills:
   - verification-before-completion
 skills_evidence:

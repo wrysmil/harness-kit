@@ -1,10 +1,10 @@
 ---
 artifact: implementation-dispatch
-route: cursor-orchestration:dispatcher-workflow
+route: orchestration:dispatcher-workflow
 plan: .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md
 skills:
   - writing-plans
-  - cursor-orchestration
+  - orchestration
 skills_evidence:
   - ~/.agents/skills/writing-plans/SKILL.md
 source:

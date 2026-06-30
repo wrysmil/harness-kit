@@ -9,7 +9,7 @@ capabilities:
     binding: ".trae/rules/ 首句 Harness 声明"
   orchestration.dispatch:
     status: supported
-    binding: "trae-orchestration → core dispatcher（Trae Agent 模式）"
+    binding: "orchestration → core dispatcher（Trae Agent 模式）"
   orchestration.leader:
     status: supported
     binding: "Trae Agent 模式（自主规划+执行）"

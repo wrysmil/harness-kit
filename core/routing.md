@@ -7,11 +7,13 @@
 - 默认 route 是强制基线。用户指定 skills 或工具时，默认理解为追加要求，不替代本文件的默认 route。
 - 只有当用户明确说“不要使用默认 skills / 只使用某个 skill / 禁用某个 route”时，才允许跳过默认 route，并必须在回复或产物 front matter 中说明原因。
 - 方案设计优先使用 `superpowers:brainstorming`；该阶段向用户提问时**优先**使用环境内 ask 类结构化工具（无则对话提问）。
+  - **需求不明确时**：在 brainstorming 之前先走 `interview-me`（agent-skills）。触发条件：缺少 who/why/success/constraint 中任一项，或需求使用惯例化表述（"做个仪表盘"而非具体描述）。详见 `core/orchestration/dispatcher-workflow.md` § Superpowers 衔接。
+  - **方案设计前必执行 STACK DETECTION**：Load `source-driven-development`，读取 `package.json` / `go.mod` 等依赖文件，输出精确版本清单。产物写入 `.ai-runtime-artifacts/stack/YYYY-MM-DD-stack.md`。
+  - **多 WU 并行前必定义接口契约**：Load `api-and-interface-design`，在 writing-plans 拆分 WU 之前识别 WU 间接口边界，定义端点签名/错误格式/分页约定。产物写入 `.ai-runtime-artifacts/contracts/YYYY-MM-DD-contract-<name>.md`。
 - 已批准设计后的实施计划使用 `superpowers:writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
+  - **全平台**：`orchestration` → `core/orchestration/dispatcher-workflow.md`
   - **Codex CLI**：`omx ultrawork`（`orchestration.dispatch`）
-  - **Cursor**：`cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`
-  - **Claude Code**：`claude-orchestration` → 同上
 - **Tier 0** 单文件机械修改：Leader 直做，无 FM（见 § 任务 Tier）。
 - **Tier 1+** 简单实现：Leader 直做或编排（见 § WU 编排硬触发）。
 - 项目级 skill 优先于通用 skill。
@@ -91,6 +93,8 @@
 
 **Tier 1 触发（任一即须）：** ≥2 写文件；跑过测试/lint；用户说 fix/实现/改 bug；Leader 直做已批准 plan 且不委派 WU。
 
+**Tier 1 自上下文打包（必执行）：** Leader 在开始写代码前必须执行 Self-Context Pack（见 `core/orchestration/dispatcher-workflow.md` §步骤 0.5 Tier 1 自打包）。读取 project.profile.md（L1）、相关 spec 章节（L2）、目标源文件 ≤5 个（L3）、参考范例、明确约束。不执行上下文准备的 Tier 1 实现视为不规范。
+
 **禁止：** 用 Tier 0 规避 Tier 1；用 Tier 1 Leader 直做规避 Tier 2 编排（见下节硬触发）。
 
 ### WU 编排硬触发（Tier 2+，不得 Leader 直做）
@@ -108,14 +112,15 @@
 
 | 任务类型 | Capability | Codex | Cursor | Claude | 产物 |
 | --- | --- | --- | --- | --- | --- |
-| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `superpowers:brainstorming` | 同左 | 同左 | `.ai-runtime-artifacts/specs/` |
+| 需求澄清（按需前置） | `skills.stage-load` | Load `interview-me` → Write intent | 同左 | 同左 | `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md` |
+| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `source-driven-development`（STACK）+ `superpowers:brainstorming` → `api-and-interface-design`（多 WU 时） | 同左 | 同左 | `.ai-runtime-artifacts/specs/` + `stack/` + `contracts/` |
 | 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | 同左 | `.ai-runtime-artifacts/plans/` |
-| 多 task 编码 / 并行实现 | `orchestration.dispatch` | `omx ultrawork` | `cursor-orchestration` | `claude-orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
+| 多 task 编码 / 并行实现 | `orchestration.dispatch` | `context-engineering`（上下文打包）→ `orchestration` | `orchestration` | `orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
 
 > 上表 Cursor/Claude/Codex 列为平台特定绑定摘要；完整绑定见各适配器 `bindings.md`。
 | 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | 同左 | `.ai-runtime-artifacts/verifications/` |
-| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
-| **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + execution-log |
+| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` + `code-review-and-quality` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
+| **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需） | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + `reviews/*-security-review.md` + execution-log |
 | 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
 | 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
 | 架构决策 | — | architect / critic / planner | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
@@ -135,14 +140,15 @@
 | 判定（路由表 / 用户任务） | 再读（按序） |
 | --- | --- |
 | 小改动 / Tier 0 | 无 stage skill；回复须含改动摘要 + 验证命令输出 |
-| Leader 直做 / Tier 1 | **①** Load `verification-before-completion` → **②** `project.verification.md` → **③** Write `verification-lite.md` |
-| 需求澄清 / 方案设计 | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `artifacts.md` → **③** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板（契约见 `spec.harness-overlay.md`）。 |
+| 需求澄清（按需前置） | **①** Load `interview-me` → **②** Write `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md`（FM: route=interview-me, confidence, confirmed）。用户显式确认后才进入方案设计。 |
+| Leader 直做 / Tier 1 | **①** Self-Context Pack（读 `project.profile.md`、相关 spec、目标源文件 ≤5 个、参考范例）→ **②** Load `verification-before-completion` → **③** `project.verification.md` → **④** Write `verification-lite.md` |
+| 需求澄清 / 方案设计 | **①** Load `source-driven-development`（STACK DETECTION：读 `package.json` 等 → Write `.ai-runtime-artifacts/stack/`）→ **②** Load `brainstorming` → **③** `artifacts.md` → **④** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。多 WU 并行时 **⑤** Load `api-and-interface-design` → Write `.ai-runtime-artifacts/contracts/`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；委派时 §0 WORKTREE-INIT；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
+| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
 | 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
-| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` → **②** `artifact-templates/code-review.md`；委派独立 reviewer（Leader 落盘；见适配器 bindings） |
-| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** `requesting-code-review` → `artifact-templates/code-review.md` **③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
-| 缺陷调查 | **①** Load `systematic-debugging` → **②** `project.profile.md`；委派见适配器 `bindings.md` |
+| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** 委派 reviewer；并行 **③** Load `security-and-hardening` → 委派 security-auditor；按需 **④** Load `performance-optimization` → 委派 perf-auditor |
+| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
+| 缺陷调查 | **①** Load `systematic-debugging` → **②** `source-driven-development`（STACK DETECTION）→ **③** `project.profile.md`；委派见适配器 `bindings.md` |
 | 信息调研 / 网页搜索 | 委派 web-investigator → `core/orchestration/agents/web-investigator.md`（见适配器 bindings） |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |

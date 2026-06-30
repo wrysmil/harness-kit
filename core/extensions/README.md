@@ -27,7 +27,7 @@
 
 ## 不在 extensions 范围内
 
-- 编排 skill（`cursor-orchestration` / `claude-orchestration` / `trae-orchestration`）— 已在 `adapters/agents/.agents/skills/`
+- 编排 skill（`orchestration`）— 已在 `.agents/skills/`
 - 子 Agent manifest（coder / implementer / reviewer / …）— 已在 `adapters/agents/.agents/agents/`
 - 入口文件（AGENTS.md / CLAUDE.md / GEMINI.md）— 在 `entrypoints/`
 

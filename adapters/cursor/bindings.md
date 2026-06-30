@@ -18,7 +18,7 @@
 | `EmitHook` | `sessionStart` / `subagentStop`（来自 `core/extensions/hooks/`，写入 `.cursor/hooks.json`） |
 | `LoadSkill(slug)` | Read `.agents/skills/<slug>/SKILL.md`（共享层）或 `.cursor/skills/<slug>/SKILL.md`（平台层覆盖） |
 | `LoadAgent(role)` | Read `.agents/agents/<role>.md`（共享层） |
-| `LoadCapability(orchestration.dispatch)` | `cursor-orchestration` skill → core dispatcher |
+| `LoadCapability(orchestration.dispatch)` | `orchestration` skill → core dispatcher |
 | `LoadExtension(hooks.<name>)` | 读 `core/extensions/hooks/hooks.spec.yaml` `bindings.cursor` 段，复制 wrapper 脚本到 `.cursor/hooks/`，生成 `.cursor/hooks.json.example` |
 | `LoadExtension(mcp.servers)` | 读 `core/extensions/mcp/mcp.servers.template.json`，复制到项目根 `.mcp.json`（已存在则跳过） |
 

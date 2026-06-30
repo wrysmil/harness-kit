@@ -28,16 +28,20 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | agent_role | wu_type | 建议加载的 skill（按序） |
 | --- | --- | --- |
-| coder | feature, bugfix, refactor | test-driven-development, verification-before-completion, requesting-code-review |
-| coder | ui | ui-ux-pro-max, frontend-design, test-driven-development, verification-before-completion, requesting-code-review |
-| coder | review-fix | receiving-code-review, test-driven-development, verification-before-completion, requesting-code-review |
+| coder | feature, bugfix, refactor | test-driven-development, source-driven-development, incremental-implementation, verification-before-completion, requesting-code-review |
+| coder | ui | ui-ux-pro-max, frontend-design, test-driven-development, source-driven-development, incremental-implementation, verification-before-completion, requesting-code-review |
+| coder | api | api-and-interface-design, test-driven-development, source-driven-development, incremental-implementation, verification-before-completion |
+| coder | review-fix | receiving-code-review, test-driven-development, verification-before-completion |
 | implementer | docs, config, chore | **无** |
 | explorer | explore, * | **无** |
 | explorer | investigate | systematic-debugging |
-| debugger | bugfix, * | systematic-debugging, verification-before-completion |
-| debugger | ui-bug | systematic-debugging, verification-before-completion, agent-browser |
+| debugger | bugfix, * | systematic-debugging, source-driven-development, verification-before-completion |
+| debugger | ui-bug | systematic-debugging, source-driven-development, verification-before-completion, agent-browser |
 | web-investigator | research, * | agent-browser |
-| reviewer | review, * | requesting-code-review, verification-before-completion |
+| reviewer | review, * | requesting-code-review, code-review-and-quality, verification-before-completion |
+| security-auditor | review, * | security-and-hardening, verification-before-completion |
+| perf-auditor | review, * | performance-optimization, verification-before-completion |
+| code-simplifier | simplify, * | code-simplification, verification-before-completion |
 | test-engineer | test | test-driven-development, verification-before-completion |
 | test-engineer | e2e | agent-browser, verification-before-completion |
 
@@ -45,7 +49,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 ## 全局禁止（不得传给子 Agent）
 
-`brainstorming`, `writing-plans`, `cursor-orchestration`, `claude-orchestration`, `using-superpowers`, `git-xywh`, `dispatching-parallel-agents`, `subagent-driven-development`
+`brainstorming`, `writing-plans`, `interview-me`, `context-engineering`, `orchestration`, `using-superpowers`, `git-xywh`, `dispatching-parallel-agents`, `subagent-driven-development`
 
 ---
 
@@ -53,13 +57,24 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | slug | 用途 | 来源 |
 | --- | --- | --- |
-| test-driven-development | 先测后实现 | superpowers（副本） |
+| test-driven-development | 先测后实现 | superpowers（副本）+ agent-skills 增强 |
 | verification-before-completion | 完成前须有命令证据 | superpowers（副本） |
-| systematic-debugging | 根因调查 | superpowers（副本） |
-| requesting-code-review | 独立审查 | superpowers（副本） |
+| systematic-debugging | 根因调查 | superpowers（副本）+ agent-skills 增强 |
+| requesting-code-review | 独立审查流程纪律 | superpowers（副本） |
 | receiving-code-review | 按审查意见改代码 | superpowers（副本） |
+| code-review-and-quality | 五轴框架 + 8 种重构模式 | agent-skills（副本） |
+| source-driven-development | 源码驱动：DETECT→FETCH→IMPLEMENT→CITE | agent-skills（副本） |
+| incremental-implementation | WU 内部增量切片 | agent-skills（副本） |
+| doubt-driven-development | 决策时对抗审查（CLAIM→DOUBT→RECONCILE） | agent-skills（副本） |
+| api-and-interface-design | 接口契约定义（Contract First） | agent-skills（副本） |
+| security-and-hardening | OWASP Top 10 + LLM 安全审查 | agent-skills（副本） |
+| performance-optimization | CWV / N+1 / Bundle 性能审查 | agent-skills（副本） |
+| code-simplification | Chesterton's Fence → 逐个简化 | agent-skills（副本） |
+| observability-and-instrumentation | 结构化日志 + RED 指标 + 分布式追踪 | agent-skills（副本） |
+| shipping-and-launch | 发布 Checklist + 回滚方案 | agent-skills（副本） |
 | ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | Trae skills（整目录副本） |
 | frontend-design | UI 实现审美 | 全局复制 |
+| frontend-ui-engineering | a11y / 状态 / 性能工程 | agent-skills（副本） |
 | agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
 
 副本来源登记：见 `adapters/agents/.agents/skills/_vendor-sources.yaml`。
@@ -68,7 +83,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | slug | 说明 |
 | --- | --- |
-| 编排调度 skill | 见适配器 `bindings.md`（cursor-orchestration / claude-orchestration 等） |
+| 编排调度 skill | `orchestration`（统一编排，平台无关）→ `adapters/<platform>/bindings.md` |
 | brainstorming, writing-plans, git-xywh | 用户全局 |
 
 ---
@@ -77,13 +92,17 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | 角色 | agent_role | 典型 wu_type | auto 默认 |
 | --- | --- | --- | --- |
-| Coder | coder | feature / bugfix / refactor | TDD + verification + requesting-code-review |
-| Coder | coder | ui | ui-ux-pro-max + frontend-design + TDD + verification + requesting-code-review |
-| Coder | coder | review-fix | receiving-code-review + TDD + verification + requesting-code-review |
+| Coder | coder | feature / bugfix / refactor | TDD + source-driven + incremental + verification + code-review |
+| Coder | coder | ui | ui-ux-pro-max + frontend-design + TDD + source-driven + incremental + verification + code-review |
+| Coder | coder | api | api-and-interface-design + TDD + source-driven + incremental + verification |
+| Coder | coder | review-fix | receiving-code-review + TDD + verification |
 | 轻量执行 | implementer | docs / chore / config | 无 |
 | 探查者 | explorer | explore | 无 |
-| 调试者 | debugger | bugfix | systematic-debugging + verification |
-| 审查者 | reviewer | review | requesting-code-review + verification |
+| 调试者 | debugger | bugfix | systematic-debugging + source-driven + verification |
+| 审查者 | reviewer | review | code-review + code-review-and-quality + verification |
+| 安全审查 | security-auditor | review | security-and-hardening + verification |
+| 性能审查 | perf-auditor | review | performance-optimization + verification |
+| 代码简化 | code-simplifier | simplify | code-simplification + verification |
 | 测试工程师 | test-engineer | test | TDD + verification |
 | 测试工程师 | test-engineer | e2e | agent-browser + verification |
 | 网探 | web-investigator | research | agent-browser |
@@ -120,9 +139,9 @@ Leader 或子 Agent 看到 **`auto`** 时：
 
 | 字段 | 含义 |
 | --- | --- |
-| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| docs \| config \| test \| e2e \| explore \| review \| investigate \| ui-bug \| **research** |
+| wu_type | feature \| bugfix \| ui \| chore \| refactor \| **review-fix** \| **api** \| docs \| config \| test \| e2e \| explore \| review \| **simplify** \| investigate \| ui-bug \| **research** |
 | wu_skills | 逗号分隔 slug，或 **`auto`**（查本文档 § 默认路由表） |
-| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| test-engineer \| **web-investigator** |
+| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| **security-auditor** \| **perf-auditor** \| **code-simplifier** \| test-engineer \| **web-investigator** |
 
 ---
 

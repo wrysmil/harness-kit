@@ -9,7 +9,7 @@ capabilities:
     binding: "首句 Harness 声明"
   orchestration.dispatch:
     status: supported
-    binding: "claude-orchestration → core dispatcher"
+    binding: "orchestration → core dispatcher"
   orchestration.leader:
     status: supported
     binding: "主会话 Leader"

@@ -39,7 +39,7 @@
 | `.cursor/agents/harness-*.md` | orchestration/agents/* 投影 |
 | `.cursor/skills/*/` 能力副本 | 自全局 superpowers 等复制，见 `_vendor-sources.yaml` |
 | `orchestration/skill-preferences.zh.md` | 任务 ↔ skill 偏好（文档维护，`auto` 查表） |
-| `.agents/skills/cursor-orchestration/SKILL.md` | dispatcher 摘要（指向完整 workflow） |
+| `.agents/skills/orchestration/SKILL.md` | dispatcher 摘要（指向完整 workflow） |
 
 ## 未引入的上游模块
 

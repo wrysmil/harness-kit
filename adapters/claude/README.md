@@ -5,8 +5,8 @@
 ## 接入
 
 1. 根目录 `CLAUDE.md` + `AGENTS.md`
-2. 投影 skill + extensions：`bash harness-kit/scripts/harness-project.sh project`（含 `claude-orchestration` skill、hooks 脚本与配置示例、`.mcp.json`）
-3. 多 task 实现：Load **`claude-orchestration`** → `core/orchestration/dispatcher-workflow.md`
+2. 投影 skill + extensions：`bash harness-kit/scripts/harness-project.sh project`（含 `orchestration` skill、hooks 脚本与配置示例、`.mcp.json`）
+3. 多 task 实现：Load **`orchestration`** → `core/orchestration/dispatcher-workflow.md`
 
 ## 平台检测
 

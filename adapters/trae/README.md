@@ -5,8 +5,8 @@
 ## 接入
 
 1. 根目录 `AGENTS.md`
-2. 投影 skill + extensions：`bash harness-kit/scripts/harness-project.sh project`（含 `trae-orchestration` skill、hooks 脚本与配置示例、`.mcp.json`）
-3. 多 task 实现：Load **`trae-orchestration`** → `core/orchestration/dispatcher-workflow.md`
+2. 投影 skill + extensions：`bash harness-kit/scripts/harness-project.sh project`（含 `orchestration` skill、hooks 脚本与配置示例、`.mcp.json`）
+3. 多 task 实现：Load **`orchestration`** → `core/orchestration/dispatcher-workflow.md`
 
 ## 平台检测
 
@@ -72,7 +72,7 @@ Hook 内容与 Claude/Cursor 完全共享（来自 `core/extensions/hooks/conten
 
 Trae 引用 `adapters/agents/.agents/` 中的共享 skill 和 agent manifest：
 
-- `.agents/skills/trae-orchestration/SKILL.md`
+- `.agents/skills/orchestration/SKILL.md`
 - `.agents/agents/coder.md`
 - `.agents/agents/implementer.md`
 - `.agents/agents/reviewer.md`

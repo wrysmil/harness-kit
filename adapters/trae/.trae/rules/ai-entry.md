@@ -44,7 +44,7 @@
 | 设计 / spec | `brainstorming` skill → `core/artifacts.md` |
 | 计划 | `writing-plans` skill → `artifacts.md` → `artifact-templates/plan.harness-overlay.md` |
 | 验证 / 跑命令 | `verification-before-completion` → `project.verification.md`、`core/verification.md` |
-| 多 task / 已批准 plan + 委派 | `trae-orchestration` → `core/orchestration/dispatcher-workflow.md` |
+| 多 task / 已批准 plan + 委派 | `orchestration` → `core/orchestration/dispatcher-workflow.md` |
 | Leader 直做 / Tier 1 | `verification-before-completion` → Write `verification-lite.md` |
 | Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
 | 改代码 / 验证（实现阶段） | `project.profile.md`、`context-map.md`（涉及模块时） |

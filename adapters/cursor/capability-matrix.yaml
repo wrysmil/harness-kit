@@ -9,7 +9,7 @@ capabilities:
     binding: "首句 Harness 声明"
   orchestration.dispatch:
     status: supported
-    binding: "cursor-orchestration → core/orchestration/dispatcher-workflow.md"
+    binding: "orchestration → core/orchestration/dispatcher-workflow.md"
   orchestration.leader:
     status: supported
     binding: "主 Agent Composer/Agent 模式"

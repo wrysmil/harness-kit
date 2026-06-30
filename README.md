@@ -205,7 +205,7 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | Gemini | `GEMINI.md` |
 | Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**）、`.cursor/hooks.json`（opt-in） |
 | Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
-| Agents / Skills | `.agents/`（含 `cursor-orchestration` / `claude-orchestration`） |
+| Agents / Skills | `.agents/`（含 `orchestration`） |
 | Hooks 扩展 | `.cursor/hooks/` 或 `.claude/hooks/` + `content/*.md`（来自 `core/extensions/hooks/`，opt-in） |
 | MCP | `.mcp.json`（来自 `core/extensions/mcp/`，按需编辑 server） |
 | Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
@@ -298,7 +298,7 @@ harness-kit/
 | 路径 | 性质 | 作用 |
 |------|------|------|
 | `.claude/rules/ai-entry.md` | 必生成 | always-loaded：强制声明 `「Harness：…」`、写文件纪律、同轮禁止 |
-| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser、cursor-orchestration、trae-orchestration |
+| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser |
 | `.claude/hooks/harness-session-init.sh` | opt-in | SessionStart 钩子脚本 |
 | `.claude/hooks/harness-subagent-stop.sh` | opt-in | SubagentStop 钩子脚本 |
 | `.claude/hooks/content/*.md` | opt-in | 钩子提示词内容 |
@@ -377,7 +377,7 @@ harness-kit/
 
 请优先改：
 - `harness-kit/core/orchestration/dispatcher-workflow.md`
-- `harness-kit/adapters/agents/.agents/skills/cursor-orchestration/SKILL.md`（与 dispatcher 一致）
+- `harness-kit/adapters/agents/.agents/skills/orchestration/SKILL.md`（与 dispatcher 一致）
 - 若改路由或门禁：`harness-kit/core/routing.md`
 - 若改 Leader 行为：`orchestration/agents/leader.md`
 - 同步 README § Cursor 编程协作模式 中相关表格

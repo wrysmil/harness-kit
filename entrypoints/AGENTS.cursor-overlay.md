@@ -17,12 +17,12 @@
    - 改代码前 → `project.profile.md`、`context-map.md`（设计阶段须在 brainstorming 澄清**之后**再读）
    - 编排产物 → `artifact-templates/`（execution-log、track、handoff 等，非 spec/plan 正文）
    - Git → **`git-xywh` skill** + `project.git.md`
-   - 多 task 已实现 → `cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`
+   - 多 task 已实现 → `orchestration` → `core/orchestration/dispatcher-workflow.md`
    - 派发 WU（`wu_skills: auto`）→ `core/orchestration/skill-preferences.md`
 
 ## 平台判定
 
-- **Cursor**：`.agents/agents/*.md` + `cursor-orchestration` skill；**不**调用 omx
+- **Cursor**：`.agents/agents/*.md` + `orchestration` skill；**不**调用 omx
 - **Codex CLI**：`harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
 
 ## 子 Agent

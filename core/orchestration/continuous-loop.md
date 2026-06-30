@@ -34,7 +34,7 @@
 与 `harness-kit/core/runbooks.md` § Cursor 编排 Runbook 一致：
 
 ```text
-brainstorming → writing-plans → cursor-orchestration → verification-before-completion
+brainstorming → writing-plans → orchestration → verification-before-completion
 ```
 
 每步产物写入 `.ai-runtime-artifacts/`。并行编排维护 `execution-logs/tracking/`。
@@ -50,7 +50,7 @@ brainstorming → writing-plans → cursor-orchestration → verification-before
 | 0 初始化 | Leader 读 routing + PROGRESS | `execution-logs/PROGRESS.md`（可选） |
 | 1 需求/设计 | Load **brainstorming** → spec（勿仅用 Task explore 代替） | `specs/` 或 research 摘要 |
 | 2 计划 | writing-plans | `plans/` |
-| 3 实现 | cursor-orchestration | `execution-logs/` + 代码 |
+| 3 实现 | orchestration | `execution-logs/` + 代码 |
 | 4 验证 | verification + reviewer Task | `verifications/` |
 | 5 反思 | Leader 摘要 | `retros/` |
 

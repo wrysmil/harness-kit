@@ -11,7 +11,7 @@
 | `EmitHook` | `SessionStart` / `SubagentStop`（来自 `core/extensions/hooks/`，写入 `.claude/settings.json`） |
 | `LoadSkill(slug)` | Read `.agents/skills/<slug>/SKILL.md`；或 `Skill("<slug>")` 若已注册 |
 | `LoadAgent(role)` | Read `.agents/agents/<role>.md` 作 Task prompt |
-| `LoadCapability(orchestration.dispatch)` | `claude-orchestration` skill → core dispatcher |
+| `LoadCapability(orchestration.dispatch)` | `orchestration` skill → core dispatcher |
 | `LoadExtension(hooks.<name>)` | 读 `core/extensions/hooks/hooks.spec.yaml` `bindings.claude` 段，复制 wrapper 脚本到 `.claude/hooks/`，合并到 `.claude/settings.json` |
 | `LoadExtension(mcp.servers)` | 读 `core/extensions/mcp/mcp.servers.template.json`，复制到项目根 `.mcp.json`（已存在则跳过） |
 

@@ -115,13 +115,13 @@ required_kit_files=(
   "core/orchestration/context-budget.md"
   "core/orchestration/model-routing.yaml"
   "core/orchestration/runtime/plan-progress-sync.md"
-  "adapters/agents/.agents/skills/cursor-orchestration/SKILL.md"
+  "adapters/agents/.agents/skills/orchestration/SKILL.md"
   "adapters/cursor/bindings.md"
   "adapters/cursor/capability-matrix.yaml"
   "adapters/claude/README.md"
   "adapters/claude/bindings.md"
   "adapters/claude/capability-matrix.yaml"
-  "adapters/agents/.agents/skills/claude-orchestration/SKILL.md"
+  "adapters/agents/.agents/skills/orchestration/SKILL.md"
   "adapters/trae/bindings.md"
   "adapters/trae/capability-matrix.yaml"
   "adapters/codex/bindings.md"
@@ -144,8 +144,8 @@ required_deployed_shared=(
   ".agents/agents/debugger.md"
   ".agents/agents/test-engineer.md"
   ".agents/agents/web-investigator.md"
-  ".agents/skills/cursor-orchestration/SKILL.md"
-  ".agents/skills/claude-orchestration/SKILL.md"
+  ".agents/skills/orchestration/SKILL.md"
+  ".agents/skills/orchestration/SKILL.md"
   ".agents/skills/test-driven-development/SKILL.md"
   ".agents/skills/verification-before-completion/SKILL.md"
   ".ai-runtime-artifacts/README.md"
@@ -324,11 +324,11 @@ fi
 
 routing_file="$(kit_path core/routing.md)"
 if [[ -f "$routing_file" ]]; then
-  if ! grep -q 'claude-orchestration' "$routing_file" 2>/dev/null; then
-    echo "routing missing claude-orchestration column/reference" >&2
+  if ! grep -q 'orchestration' "$routing_file" 2>/dev/null; then
+    echo "routing missing orchestration column/reference" >&2
     matrix_errors=1
   else
-    echo "ok: routing claude-orchestration"
+    echo "ok: routing orchestration"
   fi
 fi
 
@@ -373,7 +373,7 @@ if [[ -d ".ai-runtime-artifacts" ]]; then
       fi
     done
 
-    if printf '%s\n' "$front_matter" | grep -qiE '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|cursor-orchestration)'; then
+    if printf '%s\n' "$front_matter" | grep -qiE '^route:.*(brainstorming|writing-plans|verification-before-completion|git-xywh|orchestration)'; then
       skill_items="$(printf '%s\n' "$front_matter" | awk '
         /^skills:/ { f = 1; next }
         f && /^[A-Za-z0-9_.-]+:/ { exit }
@@ -441,7 +441,7 @@ if [[ -d ".ai-runtime-artifacts/execution-logs" || -d "docs/runtime/closeouts" ]
       *) continue ;;
     esac
     content="$(<"$elog")"
-    if ! printf '%s' "$content" | grep -qE 'cursor-orchestration|dispatcher-workflow'; then
+    if ! printf '%s' "$content" | grep -qE 'orchestration|dispatcher-workflow'; then
       continue
     fi
     missing=()

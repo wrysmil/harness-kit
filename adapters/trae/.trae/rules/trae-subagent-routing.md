@@ -18,7 +18,7 @@
 Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 ```
 
-多 task 实现示例：`「Harness：trae-orchestration:dispatcher-workflow」`
+多 task 实现示例：`「Harness：orchestration:dispatcher-workflow」`
 
 ## 阶段门禁（Trae 强制）
 
@@ -52,12 +52,12 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 2. 需委派时：WORKTREE-INIT → 派发 WU；prompt 简练；`auto` 解析 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤3；维护 DISPATCH-TRACK
 3. **GROUP 尾盘**：先集体测试（Write `*-collective-test.md`）→ 再集体审查（委派 `reviewer`，Leader Write `*-code-review.md`）；未过禁止声称批次完成
 4. 整合子 Agent 结果后进入尾盘；`code_review: PASS` 不替代集体审查；可按 spec 合法 `SKIPPED`
-5. 多 task 编排：激活 `trae-orchestration` → Read `core/orchestration/dispatcher-workflow.md`
+5. 多 task 编排：激活 `orchestration` → Read `core/orchestration/dispatcher-workflow.md`
 6. 文档审查：Load `document-review`；**代码**审查用 `requesting-code-review`（非 document-review）
 
 ## 何时委派 vs Leader 直做（Tier）
 
-**Tier 2+ — 必须编排（`trae-orchestration`）：** 见 `routing.md` § WU 编排硬触发。Leader **不得**主线程写业务代码。
+**Tier 2+ — 必须编排（`orchestration`）：** 见 `routing.md` § WU 编排硬触发。Leader **不得**主线程写业务代码。
 
 **Tier 1 — Leader 直做：** 未命中硬触发；≥2 写文件或 fix/实现类。主 checkout；Write `verification-lite.md`；**不** WORKTREE / DISPATCH-TRACK。
 

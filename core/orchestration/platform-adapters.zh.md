@@ -170,7 +170,7 @@ monitoring: omx 内置
 
 | Trae 限制 | 缓解 |
 | --- | --- |
-| 平台适配器为骨架，能力未完全定义 | 走 `trae-orchestration` skill；待平台演进后补 capability |
+| 平台适配器为骨架，能力未完全定义 | 走 `orchestration` skill；待平台演进后补 capability |
 | hooks 机制与 Cursor / Claude 不一致 | 共享 `core/extensions/hooks/content/` 内容，wrapper 由 `scripts/trae/` 单独写（占位） |
 
 ### Codex

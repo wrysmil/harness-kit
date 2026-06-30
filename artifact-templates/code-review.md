@@ -1,12 +1,12 @@
 ---
 artifact: review
-route: cursor-orchestration:dispatcher-workflow -> batch-closeout
+route: orchestration:dispatcher-workflow -> batch-closeout
 skills:
   - requesting-code-review
-  - cursor-orchestration
+  - orchestration
 skills_evidence:
   - adapters/agents/.agents/skills/requesting-code-review/SKILL.md
-  - adapters/agents/.agents/skills/cursor-orchestration/SKILL.md
+  - .agents/skills/orchestration/SKILL.md
 source:
   - .ai-runtime-artifacts/plans/<YYYY-MM-DD>-<topic>-plan.md
   - docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md

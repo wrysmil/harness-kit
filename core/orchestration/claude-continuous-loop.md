@@ -75,7 +75,7 @@ Claude 配置示例（`.harness/settings.local.json` 或项目约定）：
 | 0 初始化 | 新会话首句：读 `HANDOFF.md` + `DISPATCH-TRACK-*.md` 末段 | 状态恢复 |
 | 1 需求/设计 | Load **`brainstorming`** → spec | `specs/` |
 | 2 计划 | Load **`writing-plans`** | `plans/` |
-| 3 实现 | Load **`claude-orchestration`** → dispatcher | `execution-logs/` + 代码 |
+| 3 实现 | Load **`orchestration`** → dispatcher | `execution-logs/` + 代码 |
 | 4 验证 | Load **`verification-before-completion`** → reviewer Task | `verifications/` + `reviews/` |
 | 5 反思 | Leader 摘要 | `retros/` |
 | **6 接力（HANDOFF）** | Leader 写 `HANDOFF.md` 末段 `## Next` + 更新 `PROGRESS.md` | `HANDOFF.md` + `PROGRESS.md` |

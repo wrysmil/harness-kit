@@ -1,8 +1,8 @@
 ---
 artifact: execution-log
-route: cursor-orchestration:dispatcher-workflow
+route: orchestration:dispatcher-workflow
 skills:
-  - cursor-orchestration
+  - orchestration
 source:
   - <对应的 spec 或 plan 路径>
 created_at: <YYYY-MM-DD>
@@ -18,7 +18,7 @@ worktree:
 
 ## 实际路由
 
-<声明实际使用的工作流：cursor-orchestration:dispatcher-workflow / omx ultrawork / 直接编码 / ...>
+<声明实际使用的工作流：orchestration:dispatcher-workflow / omx ultrawork / 直接编码 / ...>
 
 ## 变更文件
 

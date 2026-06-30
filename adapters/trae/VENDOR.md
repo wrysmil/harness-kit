@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 | --- | --- |
-| 上游 skill | trae-orchestration |
+| 上游 skill | orchestration |
 | 版本 | 1.0.0 |
 | 源路径 | `harness-kit` |
 | 改编日期 | 2026-06-16 |
