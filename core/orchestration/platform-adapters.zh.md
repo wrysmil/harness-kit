@@ -7,7 +7,7 @@
 
 ## 沟通语言（所有平台）
 
-Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正文使用**中文**。细则见 `harness-kit/core/routing.md` § 沟通语言。**Cursor / Claude / Trae / Codex 一律遵循**。
+Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正文使用**中文**。细则见 `harness-kit/core/routing.md` § 沟通语言。**Cursor / Claude / Trae 一律遵循**。
 
 ## 平台检测
 
@@ -16,10 +16,9 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 | Cursor 工作区 + `.cursor/rules/` | cursor |
 | CLAUDE.md 会话 + Skill 工具 + 无 Cursor | claude |
 | Trae 工作区 + `.trae/rules/` | trae |
-| Codex CLI + `omx` | codex |
 | 否则 | generic |
 
-在 execution-log 的 front matter 中记录 `platform: cursor | claude | trae | codex | generic`。
+在 execution-log 的 front matter 中记录 `platform: cursor | claude | trae | generic`。
 
 ---
 
@@ -96,17 +95,6 @@ subagent_spawn: Trae Agent + .agents/agents/<role>.md
 monitoring: Trae 终端输出
 ```
 
-### Codex
-
-```yaml
-max_parallel_agents: 由 omx 控制
-loop_mode: omx ultrawork / single-pass
-subagent_spawn: omx 子代理
-monitoring: omx 内置
-```
-
-> **Codex 不走 Cursor subagent 映射**；保留 `omx ultrawork` 原生路径。
-
 ---
 
 ## Claude 角色映射
@@ -137,13 +125,6 @@ monitoring: omx 内置
 
 ---
 
-## Codex 路径（并存）
-
-当平台为 **codex** 时，并行实现仍走 `omx ultrawork`（见 `harness-kit/core/routing.md`）。  
-**不要**在 Codex 会话中强制 Cursor subagent 映射。
-
----
-
 ## 平台限制与缓解
 
 ### Cursor
@@ -152,7 +133,7 @@ monitoring: omx 内置
 | --- | --- |
 | 无内置 cron | 后台 Task 每 2–3 分钟轮询；可用 `/loop` skill |
 | subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 七套角色 |
-| 无 omx 式模型能力表 | 可选 `model-routing.yaml` |
+| 无平台原生模型路由 | 可选 `model-routing.yaml` |
 | 连续自治循环非原生 | `continuous_mode` opt-in；其它走 `HANDOFF.md` 链接多会话 |
 
 ### Claude Code
@@ -173,13 +154,6 @@ monitoring: omx 内置
 | 平台适配器为骨架，能力未完全定义 | 走 `orchestration` skill；待平台演进后补 capability |
 | hooks 机制与 Cursor / Claude 不一致 | 共享 `core/extensions/hooks/content/` 内容，wrapper 由 `scripts/trae/` 单独写（占位） |
 
-### Codex
-
-| Codex 限制 | 缓解 |
-| --- | --- |
-| 不走 Cursor subagent 映射 | 保留 `omx ultrawork` 原生路径；Harness 路由仅在 `omx` 之外叠加 |
-| `omx` 输出为建议 | 主执行者复核后再落地（见 `core/routing.md` 运行约束） |
-
 ---
 
 ## 自检清单（非阻塞）
@@ -189,6 +163,5 @@ monitoring: omx 内置
 | **Cursor** | `adapters/cursor/.cursor/CURSOR-PRECHECK.md` |
 | **Claude Code** | `adapters/claude/README.md` § Hooks + 本文件「Claude 限制与缓解」表 |
 | **Trae** | `adapters/trae/README.md`（骨架） |
-| **Codex** | `core/routing.md` § Codex 路径；omx `doctor` 命令 |
 
 通用 harness 文档验证见 `core/verification.md` 与 `scripts/harness-check.sh`。

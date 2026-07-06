@@ -16,7 +16,7 @@
 
 ## 缺陷修复
 
-1. 使用 `superpowers:systematic-debugging` 或 omx debugger 路由复现并定位。
+1. 使用 `superpowers:systematic-debugging` 路由复现并定位。
 2. 写清根因、影响范围和修复方案。
 3. **修复实现：** 使用编排调度或主 Agent 直做（单 WU 修复；见适配器 `bindings.md`）
 4. 编码完成后产出 `execution-log` 到 `.ai-runtime-artifacts/execution-logs/`。
@@ -26,7 +26,7 @@
 ## 架构决策
 
 1. 读取 `harness-kit/project.profile.md` 和相关代码。
-2. 必要时用 omx architect / critic / planner 组合做对比。
+2. 读取 `harness-kit/project.profile.md` 和相关代码。
 3. 决策写入 `.ai-runtime-artifacts/decisions/`。
 4. 决策必须包含接受方案、拒绝方案、约束和风险。
 

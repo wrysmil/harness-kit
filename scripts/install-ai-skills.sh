@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # 按当前平台选择性安装/检查 AI runtime 与 skill。
-# codex: npm install -g oh-my-codex + omx setup/doctor + ~/.agents/skills/ 检查
 # cursor: ~/.cursor/skills/ 检查
 # claude: ~/.claude/skills/ 检查
 # trae:   ~/.trae/skills/   检查
@@ -9,7 +8,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 PLATFORM=""
-OH_MY_CODEX_PACKAGE="${OH_MY_CODEX_PACKAGE:-oh-my-codex}"
 
 SUPERPOWERS_SKILLS=(brainstorming writing-plans systematic-debugging test-driven-development verification-before-completion)
 ORG_SKILLS=(git-xywh)
@@ -18,13 +16,12 @@ usage() {
   cat <<'EOF'
 用法: install-ai-skills.sh [--platform P]
 
-平台: codex, cursor, claude, trae
-默认: 自动检测（harness-project.sh detect；unknown 时回退到 `command -v omx`）
+平台: cursor, claude, trae
+默认: 自动检测（harness-project.sh detect）
 
 环境变量:
   STRICT_SUPERPOWERS=1   缺 superpowers skill 时退出码 2
   STRICT_ORG_SKILLS=1    缺 org skill（git-xywh）时退出码 2
-  OH_MY_CODEX_PACKAGE    自定义 npm 包名（默认 oh-my-codex）
 EOF
 }
 
@@ -40,14 +37,10 @@ done
 
 if [[ -z "$PLATFORM" ]]; then
   PLATFORM="$(bash "$SCRIPT_DIR/harness-project.sh" detect 2>/dev/null || echo unknown)"
-  # 软信号: 装了 omx 但没项目标记 → 视为 codex（首次安装 codex runtime 的场景）
-  if [[ "$PLATFORM" == "unknown" ]] && command -v omx >/dev/null 2>&1; then
-    PLATFORM="codex"
-  fi
 fi
 
 if [[ -z "$PLATFORM" || "$PLATFORM" == "unknown" ]]; then
-  echo "无法自动检测平台，请用 --platform 指定: codex, cursor, claude, trae" >&2
+  echo "无法自动检测平台，请用 --platform 指定: cursor, claude, trae" >&2
   exit 1
 fi
 
@@ -100,58 +93,6 @@ MSG
   esac
 }
 
-# ─── codex: npm + omx + skill 检查 ─────────────────────────
-
-install_codex() {
-  echo "==> Installing ${OH_MY_CODEX_PACKAGE} globally"
-  if ! npm install -g "$OH_MY_CODEX_PACKAGE"; then
-    cat <<'MSG' >&2
-
-Failed to install oh-my-codex.
-
-Check npm registry access and permissions, then rerun:
-  bash harness-kit/scripts/install-ai-skills.sh
-MSG
-    exit 1
-  fi
-
-  if ! command -v omx >/dev/null 2>&1; then
-    cat <<'MSG' >&2
-
-oh-my-codex installed, but `omx` is not on PATH.
-Check your npm global bin directory, then rerun:
-  omx setup
-  omx doctor
-MSG
-    exit 1
-  fi
-
-  echo "==> Running omx setup"
-  if ! omx setup; then
-    cat <<'MSG' >&2
-
-`omx setup` failed. Fix the reported setup issue, then rerun:
-  bash harness-kit/scripts/install-ai-skills.sh
-MSG
-    exit 1
-  fi
-
-  echo "==> Running omx doctor"
-  if ! omx doctor; then
-    cat <<'MSG' >&2
-
-`omx doctor` reported problems. Fix the reported issues, then rerun:
-  bash harness-kit/scripts/install-ai-skills.sh
-MSG
-    exit 1
-  fi
-
-  echo "==> Checking superpowers skills (codex path: ~/.agents/skills/)"
-  check_skill_set superpowers "$HOME/.agents/skills" "${SUPERPOWERS_SKILLS[@]}"
-  echo "==> Checking organization skills (git-xywh)"
-  check_skill_set org "$HOME/.agents/skills" "${ORG_SKILLS[@]}"
-}
-
 # ─── 其他平台: 只做 skill 存在性检查 ───────────────────────
 
 check_cursor() {
@@ -175,7 +116,6 @@ check_trae() {
 # ─── 分发 ──────────────────────────────────────────────────
 
 case "$PLATFORM" in
-  codex)  install_codex ;;
   cursor) check_cursor ;;
   claude) check_claude ;;
   trae)   check_trae ;;

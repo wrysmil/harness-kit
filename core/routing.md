@@ -13,7 +13,6 @@
 - 已批准设计后的实施计划使用 `superpowers:writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
   - **全平台**：`orchestration` → `core/orchestration/dispatcher-workflow.md`
-  - **Codex CLI**：`omx ultrawork`（`orchestration.dispatch`）
 - **Tier 0** 单文件机械修改：Leader 直做，无 FM（见 § 任务 Tier）。
 - **Tier 1+** 简单实现：Leader 直做或编排（见 § WU 编排硬触发）。
 - 项目级 skill 优先于通用 skill。
@@ -111,29 +110,29 @@
 
 ## 路由表
 
-| 任务类型 | Capability | Codex | Cursor | Claude | 产物 |
-| --- | --- | --- | --- | --- | --- |
-| 需求澄清（按需前置） | `skills.stage-load` | Load `interview-me` → Write intent | 同左 | 同左 | `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md` |
-| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `source-driven-development`（STACK）+ `superpowers:brainstorming` → `api-and-interface-design`（多 WU 时） | 同左 | 同左 | `.ai-runtime-artifacts/specs/` + `stack/` + `contracts/` |
-| 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | 同左 | `.ai-runtime-artifacts/plans/` |
-| 多 task 编码 / 并行实现 | `orchestration.dispatch` | `context-engineering`（上下文打包）→ `orchestration` | `orchestration` | `orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
+| 任务类型 | Capability | Cursor | Claude | 产物 |
+| --- | --- | --- | --- | --- |
+| 需求澄清（按需前置） | `skills.stage-load` | Load `interview-me` → Write intent | 同左 | `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md` |
+| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `source-driven-development`（STACK）+ `superpowers:brainstorming` → `api-and-interface-design`（多 WU 时） | 同左 | `.ai-runtime-artifacts/specs/` + `stack/` + `contracts/` |
+| 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | `.ai-runtime-artifacts/plans/` |
+| 多 task 编码 / 并行实现 | `orchestration.dispatch` | `orchestration` | `orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
 
-> 上表 Cursor/Claude/Codex 列为平台特定绑定摘要；完整绑定见各适配器 `bindings.md`。
-| 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | 同左 | `.ai-runtime-artifacts/verifications/` |
-| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` + `code-review-and-quality` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
-| **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需） | 同左 | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + `reviews/*-security-review.md` + execution-log |
-| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` 或 omx debugger | 同左 | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
-| 验证 / 修复循环 | — | omx verify/fix 或 `verification-before-completion` | 同左 + reviewer | 同左 + reviewer Task | `verifications/` + `reviews/` |
-| 架构决策 | — | architect / critic / planner | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
-| 信息调研 / 网页搜索 | `roles.web-investigator` | omx research | web-investigator | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
-| 文章 / 知识沉淀 / 对外文档 | — | brainstorming + 写作 skill | 同左 | 同左 | `retros/` 或用户指定 |
-| 小改动 / Tier 0 机械修改 | — | 直接处理 | 同左 | 同左 | 无 FM（回复含验证） |
-| Leader 直做 / Tier 1 简单实现 | `skills.stage-load` | 直做 + verification | 同左 | 同左 | `verifications/*-verification-lite.md` |
-| 建分支 / 提交 / rebase / MR·PR | `git.worktree-script` + git-xywh | `git-xywh` + `project.git.md` | 同左 | 同左 | 无（或 MR 链接） |
-| 热修 / 提测线 / 合流 / 标签 | — | `git-xywh` + `project.git.md` | 同左 | 同左 | 无 |
-| Harness 脚手架变更 | — | `git-xywh` chore | 同左 | 同左 | 与业务 commit 分离 |
-| **发布上线 / Ship Gate（尾盘后）** | `orchestration.ship` | `shipping-and-launch` + `observability-and-instrumentation` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/*-ship-check.md` + `retros/` |
-| 文档审查 | — | `superpowers:document-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
+> 上表 Cursor/Claude 列为平台特定绑定摘要；完整绑定见各适配器 `bindings.md`。
+| 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | `.ai-runtime-artifacts/verifications/` |
+| 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` + `code-review-and-quality` | 同左 | `.ai-runtime-artifacts/reviews/` |
+| **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需） | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + `reviews/*-security-review.md` + execution-log |
+| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
+| 验证 / 修复循环 | — | `verification-before-completion` | 同左 + reviewer | `verifications/` + `reviews/` |
+| 架构决策 | — | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
+| 信息调研 / 网页搜索 | `roles.web-investigator` | web-investigator | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
+| 文章 / 知识沉淀 / 对外文档 | — | brainstorming + 写作 skill | 同左 | `retros/` 或用户指定 |
+| 小改动 / Tier 0 机械修改 | — | 直接处理 | 同左 | 无 FM（回复含验证） |
+| Leader 直做 / Tier 1 简单实现 | `skills.stage-load` | 直做 + verification | 同左 | `verifications/*-verification-lite.md` |
+| 建分支 / 提交 / rebase / MR·PR | `git.worktree-script` + git-xywh | `git-xywh` + `project.git.md` | 同左 | 无（或 MR 链接） |
+| 热修 / 提测线 / 合流 / 标签 | — | `git-xywh` + `project.git.md` | 同左 | 无 |
+| Harness 脚手架变更 | — | `git-xywh` chore | 同左 | 与业务 commit 分离 |
+| **发布上线 / Ship Gate（尾盘后）** | `orchestration.ship` | `shipping-and-launch` + `observability-and-instrumentation` | 同左 | `.ai-runtime-artifacts/reviews/*-ship-check.md` + `retros/` |
+| 文档审查 | — | `superpowers:document-review` | 同左 | `.ai-runtime-artifacts/reviews/` |
 
 ## 按判定加载
 
@@ -250,6 +249,5 @@
 - **走平台原生 plan 工具时的干预：** `你用了 Claude Code EnterPlanMode / Cursor Plan 模式，绕过了 Harness。撤回该 plan，Load writing-plans skill 重新写 .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md（FM + Next + dispatch）。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。
-- **Codex**：调用 `omx` 前写清目标、范围、禁止事项和验收标准；`omx` 输出只作为建议，主执行者必须复核后才能落地。
-- **Cursor / Claude**：委派 worker 前写清 WU 目标、文件列表、禁止事项与 done criteria；worker 输出须由主 Agent 整合并验证后再落地。具体委派方式见适配器 `bindings.md`。
+- **Cursor / Claude / Trae**：委派 worker 前写清 WU 目标、文件列表、禁止事项与 done criteria；worker 输出须由主 Agent 整合并验证后再落地。具体委派方式见适配器 `bindings.md`。
 - 任何完成声明前必须有验证证据。

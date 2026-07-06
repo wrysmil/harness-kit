@@ -2,7 +2,7 @@
 
 ## Context
 
-harness-kit 的五个平台适配器（cursor / claude / codex / trae / agents）存在**文档与实际能力不匹配**的问题：
+harness-kit 的五个平台适配器（cursor / claude / trae / agents）存在**文档与实际能力不匹配**的问题：
 - Claude Code 的 `hooks` 和 `structured-ask` 被错误标为 `manual`/`degraded`
 - Trae 的能力被错误标为全部 `degraded` + `"待定义"`
 - Cursor 的 `orchestration/` 目录包含大量**平台无关逻辑**（context-budget、continuous-loop），应该下沉到 `core/`
@@ -44,14 +44,6 @@ Trae 平台实际能力（基于调研）：
 - `skills.stage-load` → 已正确绑定 `Read SKILL.md`
 
 同步修正 `adapters/trae/bindings.md` 和 `adapters/trae/README.md`（去掉"骨架"标记）。
-
-### 1.3 Codex 适配器复核
-
-文件：`adapters/codex/capability-matrix.yaml`
-
-当前状态基本合理（大部分 `supported`，少数 `degraded`/`manual`），但需要确认：
-- `interaction.structured-ask` 是否确实 `degraded`（Codex CLI 有无类似提问机制）
-- `hooks.session-lifecycle` 是否确实 `manual`
 
 ---
 
@@ -96,7 +88,6 @@ adapters/<platform>/
 
 - **Cursor**：保持现有 `.cursor/` 结构，新增的 core 迁移文件留 stub
 - **Claude**：补充 `.claude/` 目录（如需要放 hooks 配置示例）
-- **Codex**：保持精简（三个标准文件），按需补充
 - **Trae**：补充 `.trae/rules/` 目录结构
 
 ### 2.3 修改后完整目录结构
@@ -180,11 +171,6 @@ harness-kit/
 │   │   ├── capability-matrix.yaml     ★ 修正：structured-ask → supported
 │   │   └── README.md                  ★ 修正差异表
 │   │
-│   ├── codex/
-│   │   ├── bindings.md
-│   │   ├── capability-matrix.yaml     ★ 复核：structured-ask / hooks 状态
-│   │   └── README.md
-│   │
 │   ├── cursor/
 │   │   ├── .cursor/
 │   │   │   ├── hooks/
@@ -259,7 +245,7 @@ harness-kit/
 
 ## 实施顺序
 
-1. **修正 capability-matrix.yaml**（claude / trae / codex 复核）
+1. **修正 capability-matrix.yaml**（claude / trae）
 2. **修正对应的 README.md 和 bindings.md**
 3. **迁移共享文件到 core/orchestration/**（context-budget.md、continuous-loop.md、platform-adapters.zh.md、model-routing.yaml 共享结构）
 4. **迁移 git-xywh/ 到 adapters/agents/.agents/skills/**（含审查报告和 _meta.json）

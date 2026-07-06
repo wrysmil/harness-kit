@@ -76,7 +76,6 @@ required_kit_files=(
   "entrypoints/HARNESS-PLATFORM-ENTRY.md"
   "entrypoints/CLAUDE.md"
   "entrypoints/GEMINI.md"
-  "entrypoints/AGENTS.omx.md"
   "entrypoints/AGENTS.cursor-overlay.md"
   "core/extensions/README.md"
   "core/extensions/hooks/README.md"
@@ -116,8 +115,6 @@ required_kit_files=(
   ".agents/skills/orchestration/SKILL.md"
   "adapters/trae/bindings.md"
   "adapters/trae/capability-matrix.yaml"
-  "adapters/codex/bindings.md"
-  "adapters/codex/capability-matrix.yaml"
   "scripts/install-ai-skills.sh"
   "scripts/harness-init.sh"
   "scripts/harness-check.sh"
@@ -278,7 +275,7 @@ else
   while IFS= read -r cap_line; do
     [[ -n "$cap_line" ]] && capability_ids+=("$cap_line")
   done < <(grep -E '^### [a-z0-9.-]+$' "$registry" | sed 's/^### //')
-  for platform in cursor claude codex trae; do
+  for platform in cursor claude trae; do
     matrix="$(kit_path "adapters/$platform/capability-matrix.yaml")"
     bindings="$(kit_path "adapters/$platform/bindings.md")"
     if [[ ! -f "$matrix" ]]; then

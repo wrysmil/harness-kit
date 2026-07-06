@@ -18,7 +18,7 @@ worktree:
 
 ## 实际路由
 
-<声明实际使用的工作流：orchestration:dispatcher-workflow / omx ultrawork / 直接编码 / ...>
+<声明实际使用的工作流：orchestration:dispatcher-workflow / 直接编码 / ...>
 
 ## 变更文件
 

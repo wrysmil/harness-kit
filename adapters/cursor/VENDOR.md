@@ -28,12 +28,11 @@
 | `agents/debugger.md` | `agents/debugger.md` |
 | `tracking/schema.md` | `runtime/status-management.md` |
 | `context-budget.md` | `runtime/context-engineering.md` |
-| `model-routing.yaml` | `platform-adapters` + OMX 模型表（手写） |
+| `model-routing.yaml` | `platform-adapters` + 模型路由表（手写） |
 | `artifact-templates/dispatch-track.md` 等 | 新建（harness-kit 产物契约） |
 | `continuous-loop.md` | `runtime/loop.md`（摘要 + harness-kit 映射） |
 | `orchestration/hooks/README.md` | `runtime/hook-system.md` |
 | `.cursor/hooks.json.example` | 新建（Cursor 原生 hooks） |
-| `entrypoints/AGENTS.omx.md` | 自 `entrypoints/AGENTS.md` 拆分 |
 | `config.defaults.yaml` | `CONFIG.yaml`（简化） |
 | `.cursor/rules/cursor-subagent-routing.mdc` | Rule 1–15 + platform-adapters + 阶段门禁 |
 | `.cursor/agents/harness-*.md` | orchestration/agents/* 投影 |

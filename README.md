@@ -36,7 +36,7 @@
 Harness 工程化常卡在「起步」：规则散落、各工具各一套、验证标准不统一。Harness Kit 的目标是：
 
 1. **降低接入成本** — 将 `harness-kit/` 放入项目，把初始化话术交给 AI 即可。
-2. **统一多工具入口** — 同一套规范投影到 Cursor、Codex、Claude Code、Gemini 等环境。
+2. **统一多工具入口** — 同一套规范投影到 Cursor、Claude Code、Gemini 等环境。
 3. **可迁移、可沉淀** — 规范在 `harness-kit/` 中迭代，团队可逐步优化为自有资产。
 
 ---
@@ -44,7 +44,7 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 ## 与单纯使用 Skill 的区别
 
 许多团队从 **harness-engineer**、**superpowers** 等 Agent Skill 起步：能力装在 Skill 里，主要靠对话里临时提醒 AI「按某 skill 做」。  
-**Harness Kit** 把「这个项目怎么干」写进仓库里的 `harness-kit/`，换电脑、换同事、换 Cursor/Codex，拉同一份代码就能沿用同一套规则。
+**Harness Kit** 把「这个项目怎么干」写进仓库里的 `harness-kit/`，换电脑、换同事、换 Cursor/Claude Code，拉同一份代码就能沿用同一套规则。
 
 | 维度 | 仅使用 Skill | Harness Kit |
 |------|-------------|-------------|
@@ -74,7 +74,6 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 | `adapters/agents/` | 共享层（`.agents/skills/` + `.agents/agents/`，所有平台共用） |
 | `adapters/cursor/` | Cursor 平台 binding |
 | `adapters/claude/` | Claude Code 平台 binding |
-| `adapters/codex/` | Codex / OMX 适配 |
 | `init/` | 接入与 bootstrap 话术 |
 | `artifact-templates/` | 编排模板 + `*-harness-overlay.md`（stage skill 契约）；`spec.md`/`plan.md` 为 stub |
 
@@ -82,8 +81,7 @@ Harness 工程化常卡在「起步」：规则散落、各工具各一套、验
 
 ## Cursor 编程协作模式
 
-Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」固定下来：**Leader 统筹 + 子 Agent 分工 + 有界 WU**。  
-（Codex 上等价编排为 `omx ultrawork`。）
+Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」固定下来：**Leader 统筹 + 子 Agent 分工 + 有界 WU**。
 
 ### 总览
 
@@ -208,7 +206,6 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | Agents / Skills | `.agents/`（含 `orchestration`） |
 | Hooks 扩展 | `.cursor/hooks/` 或 `.claude/hooks/` + `content/*.md`（来自 `core/extensions/hooks/`，opt-in） |
 | MCP | `.mcp.json`（来自 `core/extensions/mcp/`，按需编辑 server） |
-| Codex / OMX | `.codex/`（主要由 `omx setup` 生成） |
 
 适配器说明：`adapters/cursor/README.md` / `adapters/claude/README.md`。统一扩展：[core/extensions/README.md](core/extensions/README.md)。
 
@@ -236,7 +233,6 @@ harness-kit/
 ├── adapters/
 │   ├── cursor/                # Cursor 平台 binding
 │   ├── claude/                # Claude Code 平台 binding
-│   ├── codex/                 # Codex / OMX
 │   ├── trae/                  # Trae 骨架
 │   └── agents/                # 共享层（.agents/skills + .agents/agents）
 ├── scripts/
@@ -271,7 +267,7 @@ harness-kit/
 ```text
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-0. 先问我：「你当前使用哪个 AI 编程工具？」（Cursor / Claude Code / Codex / Trae / Gemini / 其他）。根据我的回答确定平台适配层投影范围，后续步骤仅投影对应平台。
+0. 先问我：「你当前使用哪个 AI 编程工具？」（Cursor / Claude Code / Trae / Gemini / 其他）。根据我的回答确定平台适配层投影范围，后续步骤仅投影对应平台。
 1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：
    - 删除 harness-kit/.git/（harness-kit 源仓库的 .git；不要动到项目自身的 .git/）
    - 如存在 harness-kit/.gitignore、harness-kit/.gitattributes、harness-kit/.gitmodules，一并删除
@@ -334,7 +330,7 @@ harness-kit/
    - 投影层：`harness-kit/adapters/cursor/.cursor/agents/`、`.cursor/rules/` → bootstrap 后到项目根 `.cursor/`
    深读与投影须一致；改 agent 时同步 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`。
 3. 凡影响「谁来做、何时停、派谁」的变更，必须同步：
-   - `harness-kit/core/routing.md`（Codex / Cursor 并列列）
+   - `harness-kit/core/routing.md`（Cursor / Claude 并列列）
    - `harness-kit/entrypoints/AGENTS.md` 路由摘要（如需要）
    - `harness-kit/adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc`
    - 本 README § Cursor 编程协作模式（角色表、WU 表、Reviewer 规则等）
@@ -382,7 +378,6 @@ harness-kit/
 - 若改 Leader 行为：`orchestration/agents/leader.md`
 - 同步 README § Cursor 编程协作模式 中相关表格
 
-不要改 Codex `omx ultrawork` 路径，除非我明确要求 Codex 侧对齐。
 ```
 
 ### 话术 C：调整现有 Agent（不改名、不新增文件）

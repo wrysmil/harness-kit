@@ -8,9 +8,8 @@
 **Harness 尾盘优先（Cursor）：** 「完成」指本 GROUP / 批次已通过**集体测试**与**集体审查**并落盘（`collective-test` + `code-review`），而非末个 WU 返回即可停。见 `harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
 **Tier 1 Leader 直做：** 须 Write `verifications/*-verification-lite.md`，不得零落盘。见 `routing.md` § 任务 Tier。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
-并行子任务：Codex 用原生子代理；Cursor 用 `.agents/agents/<role>.md` 共享 subagent（见 `harness-kit/.agents/`）；Claude / Trae 同理。
+并行子任务：Cursor 用 `.agents/agents/<role>.md` 共享 subagent（见 `harness-kit/.agents/`）；Claude / Trae 同理。
 <!-- 自主性指令结束 -->
-<!-- omx:generated:agents-md -->
 
 <!-- 项目 Harness 覆盖层 — 请勿删除 -->
 在开展任务专项工作之前，按 **Route-first** 加载 `harness-kit/`（勿预读全集）。
@@ -31,38 +30,37 @@
 `harness-kit/` 层负责项目边界、产物契约、验证门禁与迁移可移植性。  
 默认 harness 路由是强制基线。若用户指定技能或工具，将其视为对 `harness-kit/core/routing.md` 的附加项，除非用户明确要求跳过、禁用或仅使用其他路由。
 
-当本 AGENTS.md 被 omx 重新生成时，**保留本覆盖层**；OMX 正文以 `harness-kit/entrypoints/AGENTS.omx.md` 为准重新合并或引用。
+
 <!-- 项目 Harness 覆盖层结束 -->
 
 # Agent Harness 顶层契约
 
-本文件是**工具中立**的 Harness 入口。平台专章分列，避免 Cursor 误读 OMX/tmux 指令。
+本文件是**工具中立**的 Harness 入口。平台专章分列，避免 Cursor 误读其他平台指令。
 
 ## 平台专章
 
 | 平台 | 加载 |
 | --- | --- |
 | **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`orchestration` skill |
-| **Codex / OMX** | `harness-kit/entrypoints/AGENTS.omx.md`（或 omx setup 合并后的 OMX 段落） |
 | **Claude Code** | `CLAUDE.md`、`orchestration` skill、`adapters/claude/bindings.md` |
 | **Gemini** | `GEMINI.md` |
 
 ## 强制声明
 
 每个任务第一句：`「Harness：<route 或 Tier 0/1>」`；stage skill / Tier 1+ 次行 `Skills:`（见 `routing.md` § 阶段指定 skill 必用）。  
-路由表见 `harness-kit/core/routing.md`（含 Capability / Codex / Cursor / Claude 列）。
+路由表见 `harness-kit/core/routing.md`（含 Capability / Cursor / Claude 列）。
 
 ## 路由摘要
 
-| 任务 | Codex | Cursor | Claude |
-| --- | --- | --- | --- |
-| 设计 | `superpowers:brainstorming` | 同左 | 同左 |
-| 计划 | `superpowers:writing-plans` | 同左 | 同左 |
-| 多 task 实现 | `omx ultrawork` | `orchestration` | `orchestration` |
-| 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 | 同左 |
-| 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 | 同左 |
-| 信息调研 | `web-investigator` | 同左 | Task + web-investigator |
-| Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 | 同左 |
+| 任务 | Cursor | Claude |
+| --- | --- | --- |
+| 设计 | `superpowers:brainstorming` | 同左 |
+| 计划 | `superpowers:writing-plans` | 同左 |
+| 多 task 实现 | `orchestration` | `orchestration` |
+| 验证 / 集体测试 | `superpowers:verification-before-completion` | 同左 |
+| 尾盘（批次收尾） | `verification-before-completion` → `requesting-code-review` | 同左 |
+| 信息调研 | `web-investigator` | Task + web-investigator |
+| Git（提交 / 分支 / MR） | `git-xywh` + `project.git.md` | 同左 |
 
 涉及提交、分支、MR 时由 **Leader** invoke `git-xywh`；子 Agent 默认不 commit。组织规范在 skill，项目差异在 `project.git.md`。
 
@@ -73,8 +71,3 @@
 ## 可选：Continuous Loop
 
 长期自治循环（opt-in）：见 `harness-kit/core/orchestration/continuous-loop.md`。
-
-## OMX 正文
-
-Codex / omx 会话的完整编排契约见 **`harness-kit/entrypoints/AGENTS.omx.md`**。  
-`omx setup` 可能将 OMX 内容写回根 `AGENTS.md`；合并后须保留上文 Harness 覆盖层与平台专章表。

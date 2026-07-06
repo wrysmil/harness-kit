@@ -12,19 +12,14 @@ mkdir -p "$tmp/home/.claude/skills/git-xywh"
 echo stub > "$tmp/home/.claude/skills/verification-before-completion/SKILL.md"
 echo stub > "$tmp/home/.claude/skills/git-xywh/SKILL.md"
 
-# stub npm/omx 避免真装
+# stub npm 避免真装
 mkdir -p "$tmp/bin"
 cat > "$tmp/bin/npm" <<'EOF'
 #!/usr/bin/env bash
 echo "(stub npm)"
 exit 0
 EOF
-cat > "$tmp/bin/omx" <<'EOF'
-#!/usr/bin/env bash
-echo "(stub omx: $*)"
-exit 0
-EOF
-chmod +x "$tmp/bin/npm" "$tmp/bin/omx"
+chmod +x "$tmp/bin/npm"
 
 export HOME="$tmp/home"
 export PATH="$tmp/bin:$PATH"
@@ -53,7 +48,7 @@ echo "$out" | grep -q "missing: brainstorming" && check "other superpowers still
 echo "$out" | grep -q "==> AI skills 安装/检查完成" && check "reached final echo" true || check "reached final echo" false
 
 echo ""
-echo "=== 2. cursor path: no skills, only check (no npm/omx call) ==="
+echo "=== 2. cursor path: no skills, only check ==="
 mkdir -p "$tmp/sb2/.cursor"
 cd "$tmp/sb2"
 out=$(bash "$KIT/scripts/install-ai-skills.sh" --platform cursor 2>&1)
@@ -71,43 +66,11 @@ echo "$out" | grep -q "trae path: ~/.trae/skills/" && check "trae path" true || 
 echo "$out" | grep -q "==> AI skills 安装/检查完成" && check "reached final echo" true || check "reached final echo" false
 
 echo ""
-echo "=== 4. codex auto-detect via .codex marker (stub npm/omx) ==="
-mkdir -p "$tmp/sb4/.codex"
-cd "$tmp/sb4"
-out=$(bash "$KIT/scripts/install-ai-skills.sh" 2>&1)
-echo "$out" | grep -q "目标平台: codex" && check "codex auto-detected" true || check "codex auto-detected" false
-echo "$out" | grep -q "Installing oh-my-codex" && check "npm install called" true || check "npm install called" false
-echo "$out" | grep -q "omx setup" && check "omx setup called" true || check "omx setup called" false
-echo "$out" | grep -q "omx doctor" && check "omx doctor called" true || check "omx doctor called" false
-echo "$out" | grep -q "==> AI skills 安装/检查完成" && check "reached final echo" true || check "reached final echo" false
-
-echo ""
-echo "=== 5. unknown platform with no omx on PATH → fail ==="
+echo "=== 5. unknown platform → fail ==="
 mkdir -p "$tmp/sb5"
 cd "$tmp/sb5"
-# 用最小 PATH 排除 omx 软信号
 out=$(env -i HOME="$HOME" PATH="/usr/bin:/bin" bash "$KIT/scripts/install-ai-skills.sh" 2>&1 || true)
 echo "$out" | grep -q "无法自动检测平台" && check "error message shown" true || check "error message shown" false
-
-echo ""
-echo "=== 6. unknown platform with omx on PATH → codex soft signal ==="
-# Put fake omx in PATH so the soft-signal kicks in
-mkdir -p "$tmp/sb6"
-cd "$tmp/sb6"
-out=$(PATH="$tmp/bin:$PATH" bash "$KIT/scripts/install-ai-skills.sh" 2>&1)
-echo "$out" | grep -q "目标平台: codex" && check "omx-soft-signal → codex" true || check "omx-soft-signal → codex" false
-
-echo ""
-echo "=== 7. --platform codex with STRICT_SUPERPOWERS=1, missing → exit 2 ==="
-mkdir -p "$tmp/sb7/.codex"
-cd "$tmp/sb7"
-export STRICT_SUPERPOWERS=1
-set +e
-out=$(bash "$KIT/scripts/install-ai-skills.sh" --platform codex 2>&1)
-ec=$?
-set -e
-echo "$out" | grep -q "missing: brainstorming" && check "missing reported" true || check "missing reported" false
-check "exit code is 2" "[ $ec -eq 2 ]"
 
 echo ""
 echo "============================================="

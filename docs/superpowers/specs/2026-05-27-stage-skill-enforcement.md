@@ -3,7 +3,7 @@ artifact: spec
 title: "阶段指定 Skill 必用（Stage Skill Binding）"
 date: 2026-05-27
 status: approved
-platform: cursor | codex
+platform: cursor
 route: harness-kit:internal
 ---
 
@@ -90,7 +90,6 @@ route: harness-kit:internal
 | 需求澄清 / 方案设计 / 行为变更 | `brainstorming` | `specs/*.md` |
 | 实施计划 | `writing-plans` | `plans/*.md` |
 | 多 task 编码（Cursor） | `cursor-orchestration` | execution-log + 代码 |
-| 多 task 编码（Codex） | `omx` 工作流（等价能力，见 AGENTS.omx） | 同左 |
 | 代码审查 / 验证 | `verification-before-completion` | `verifications/*.md` |
 | 缺陷调查 | `systematic-debugging`（+ 委派子 Agent 时另见 WU skill） | spec 或 verification |
 | 验证 / 修复循环 | `verification-before-completion`（+ 可选 reviewer） | verification |
@@ -247,7 +246,7 @@ skills_evidence:
 | --- | --- |
 | `adapters/cursor/.cursor/hooks/harness-session-init.sh` | 注入一句阶段 skill 提醒 |
 | `adapters/cursor/orchestration/hooks/README.md` | 说明与 P2 关系 |
-| `entrypoints/AGENTS.omx.md` | Codex 侧同等短句 |
+
 
 ---
 
@@ -313,7 +312,7 @@ skills_evidence:
 | --- | --- | --- |
 | **P0** | §7.1 | 路由契约 + 产物校验 + 短 overlay |
 | **P1** | §7.2 | 派发与 subagent 返回闭环 |
-| **P2** | §7.3 | Hooks 提醒；Codex 对齐 |
+| **P2** | §7.3 | Hooks 提醒 |
 
 **建议：** P0 单独 commit `feat(harness-kit): stage skill binding (P0)`；P1 跟进。
 
@@ -326,7 +325,7 @@ skills_evidence:
 | 本机未安装 superpowers，全 skipped | `install-ai-skills.sh` + 产物记录 skipped；用户知悉降级 |
 | 模型仍跳过 Read | `harness-check` + Leader 不整合 + 用户纠偏句 |
 | 提示变长 | 仅用 §8 短块，细节留在本 spec 不深拷进 rules |
-| 与 omx 路由用词不一致 | P2 在 AGENTS.omx 增加同义一句 |
+
 
 ---
 
@@ -334,7 +333,6 @@ skills_evidence:
 
 1. **P2 Hooks** 是否启用 fail-closed？（默认：仅 fail-open 提醒）
 2. **`skills_evidence` 是否 P0 必填**，还是 P1 再强制？
-3. **Codex** 是否在 P0 同步 AGENTS.omx，还是 P2？
 
 ---
 

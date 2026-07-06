@@ -8,7 +8,6 @@
 - 本文件（registry.md）
 - `adapters/cursor/capability-matrix.yaml`
 - `adapters/claude/capability-matrix.yaml`
-- `adapters/codex/capability-matrix.yaml`
 
 校验命令：`grep -c "### " core/capabilities/registry.md` 应等于各 YAML 中 `capabilities:` 下的 key 数量。
 
@@ -147,14 +146,14 @@
 - **Requires:** 设计阶段澄清
 - **Produces:** 用户选择
 - **Forbidden:** 一次多问
-- **Degraded:** Claude/Codex 对话式单选
+- **Degraded:** Claude 对话式单选
 
 ### hooks.session-lifecycle
 
 - **Requires:** 用户配置 hook
 - **Produces:** 本地 hook 日志
 - **Forbidden:** 失败阻断主路径
-- **Degraded:** Claude/Codex manual
+- **Degraded:** Claude manual
 
 ### artifacts.verification-lite
 
@@ -168,7 +167,7 @@
 - **Requires:** 将委派写代码类 worker
 - **Produces:** worktree 创建/清理脚本执行
 - **Forbidden:** 有委派却跳过 worktree 初始化
-- **Degraded:** Codex/generic 手动 git worktree
+- **Degraded:** generic 手动 git worktree
 
 ### verification.collective-test
 

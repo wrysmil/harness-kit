@@ -25,7 +25,6 @@ git status --short
 
 ```bash
 yarn ai:install-skills
-omx doctor
 ```
 
 如果这些命令涉及全局安装或本机环境修改，执行前要明确说明影响；不能执行时，至少运行静态检查并说明原因。

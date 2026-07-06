@@ -6,11 +6,10 @@
 
 ### Runtime Layer
 
-由 `oh-my-codex` / `omx` 和 AI 工具运行时管理：
+由 AI 工具运行时管理：
 
 - `AGENTS.md`
-- `.codex/`
-- omx skills、prompts、agents、hooks
+- 平台 skills、prompts、agents、hooks
 
 这层负责多 Agent 编排、workflow 调度和运行时能力。
 

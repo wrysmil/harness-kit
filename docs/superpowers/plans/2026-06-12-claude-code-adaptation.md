@@ -306,7 +306,7 @@ description: 统一 AI 入口（Claude Code 平台）
 1. `harness-kit/core/routing.md` — 路由、阶段门禁、按判定加载（强制）
 2. 本文件 § 文件写入与阶段门禁（强制）
 3. `.claude/rules/claude-subagent-routing.md` — Task 委派
-4. 根目录 `AGENTS.md` / `CLAUDE.md` — Harness 覆盖层有效；OMX 专章忽略
+4. 根目录 `AGENTS.md` / `CLAUDE.md` — Harness 覆盖层有效
 
 ## 文件写入与阶段门禁
 
@@ -378,7 +378,7 @@ description: 统一 AI 入口（Claude Code 平台）
 | `.cursor/hooks.json` | `.claude/settings.json` |
 | `.cursor/rules/*.mdc` | `.claude/rules/*.md` |
 
-并在「禁止」一节增加一条：**禁止**在 Claude Code 中调用 `omx` CLI 或 `cursor-*` 系列 subagent 名称。
+并在「禁止」一节增加一条：**禁止**在 Claude Code 中调用 `cursor-*` 系列 subagent 名称。
 
 - [ ] **Step 4.4：本地提交**
 
@@ -840,7 +840,7 @@ git commit -m "feat(core): skill loading order — Claude Code 1st"
 - [ ] **Step 9.2：在 `core/harness.md` § 顶部声明加一行**
 
 ```markdown
-> **主平台：Claude Code**（`adapters/claude/`）。Cursor 适配器保留作历史参考；Codex 走 `omx ultrawork`。
+> **主平台：Claude Code**（`adapters/claude/`）。Cursor 适配器保留作历史参考。
 ```
 
 - [ ] **Step 9.3：本地提交**
@@ -859,7 +859,7 @@ git commit -m "feat(core): declare Claude Code as primary platform"
 
 - [ ] **Step 10.1：定位「平台检测」段**
 
-在文件中找到说明 `platform: cursor | claude | codex | generic` 的位置。
+在文件中找到说明 `platform: cursor | claude | generic` 的位置。
 
 - [ ] **Step 10.2：在「平台检测」一节顶部加注**
 
@@ -970,7 +970,6 @@ git commit -m "feat(core): routing — Claude Code first + platform hook table"
 - 同轮写完 spec/plan/decision 又改业务代码
 - Leader 主线程写业务代码（非小改动）
 - 实现与审查同 Task 实例
-- 用 `omx` CLI（Codex 平台专用）
 - 用 `.cursor/agents/harness-*`（Cursor 平台专用）
 
 ## 投影路径
@@ -993,7 +992,7 @@ git commit -m "feat(core): routing — Claude Code first + platform hook table"
 | Claude Code | `CLAUDE.md`、`.claude/rules/`、`.claude/agents/harness-*`、`.claude/skills/`、`.claude/settings.json`（**主平台**） |
 ```
 
-并把表格顺序改为：Claude Code → Cursor → Codex / OMX → Gemini。
+并把表格顺序改为：Claude Code → Cursor → Gemini。
 
 - [ ] **Step 11.4：更新 `entrypoints/HARNESS-PLATFORM-ENTRY.md`**
 
@@ -1457,7 +1456,7 @@ bash harness-kit/scripts/harness-check.sh 2>&1 | tee /tmp/harness-check-2026-06-
 git status
 ```
 
-期望：`nothing to commit, working tree clean`（`.idea/`、`.omx/` 等已忽略或保留为 untracked）。
+期望：`nothing to commit, working tree clean`（`.idea/` 等已忽略或保留为 untracked）。
 
 - [ ] **Step 19.4：跑 git log 检视提交序列**
 

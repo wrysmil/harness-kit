@@ -20,7 +20,7 @@ assumptions:
   - 默认粒度为「每个已批准 plan 的执行图（dispatch）一个 Git worktree」
   - 编排产物（`.ai-runtime-artifacts/`）留在主仓库 checkout；业务代码变更在 worktree 内完成
   - Git 操作由 Leader 执行；子 Agent 默认不 commit / push（延续 `project.git.md`）
-  - 平台优先 Cursor；Codex/OMX 路径仅记录差异，本 spec 不强制实现
+  - 平台优先 Cursor；其他平台路径仅记录差异，本 spec 不强制实现
 ---
 
 # Git Worktree 执行图级隔离
@@ -92,7 +92,7 @@ Harness Cursor 编排已有 **逻辑执行图**（`GROUP` / `WU`，写在 `*-dis
 - 不替代 dispatch 的「并行 WU 文件所有权」规则（仍必须写清允许修改文件）。
 - 不默认让子 Agent 执行 `git commit` / `push`。
 - 不在本 spec 实现自动 merge 到 `main` / `develop`（仍走 `git-xywh` + 人工/显式指令）。
-- 不强制 Codex `omx ultrawork` 路径在本期实现同等 worktree（仅留扩展点）。
+- 不强制其他平台路径在本期实现同等 worktree（仅留扩展点）。
 
 ---
 

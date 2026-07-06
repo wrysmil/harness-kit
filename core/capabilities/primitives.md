@@ -4,7 +4,7 @@
 
 | 原语 | 契约摘要 | 典型产物/副作用 |
 | --- | --- | --- |
-| `DetectPlatform()` | 返回 `cursor \| claude \| codex \| generic` | execution-log FM `platform` |
+| `DetectPlatform()` | 返回 `cursor \| claude \| trae \| generic` | execution-log FM `platform` |
 | `LoadCapability(id)` | 按 routing 加载 core 文档 / stage skill | 回复次行 `Skills:` |
 | `StageGate(phase)` | 写入 specs/plans/decisions 后暂停 | 模板 `## Next` |
 | `SpawnWorker(role, wu, context)` | 隔离上下文；不得继承 Leader 全历史 | WU 返回 `wu_status` + `### Skills 使用` |

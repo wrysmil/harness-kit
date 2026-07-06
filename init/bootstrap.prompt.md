@@ -37,7 +37,7 @@ created_at: 2026-05-14
 
 ## 平台检测
 
-先运行平台检测脚本，确定当前环境：
+运行平台检测脚本，确定当前环境：
 
 ```bash
 bash harness-kit/scripts/harness-project.sh detect
@@ -50,7 +50,6 @@ bash harness-kit/scripts/harness-project.sh detect
 从 `harness-kit/entrypoints/` 投影到项目根目录：
 
 - `harness-kit/entrypoints/AGENTS.md` -> `AGENTS.md`
-- `harness-kit/entrypoints/AGENTS.omx.md` -> 保留在 harness-kit 内，或 Codex 项目合并进 `AGENTS.md`
 - `harness-kit/entrypoints/AGENTS.cursor-overlay.md` -> 保留在 harness-kit 内（Cursor 深读）
 - `harness-kit/entrypoints/CLAUDE.md` -> `CLAUDE.md`
 - `harness-kit/entrypoints/GEMINI.md` -> `GEMINI.md`
@@ -166,7 +165,7 @@ bash harness-kit/scripts/harness-check.sh
 
 ## AI runtime（可选）
 
-如需安装或检查 AI runtime（`oh-my-codex` / `omx`、superpowers、组织 skill `git-xywh` 等），先说明会修改哪些本机环境，再由你执行：
+如需安装或检查 AI runtime（superpowers、组织 skill `git-xywh` 等），先说明会修改哪些本机环境，再由你执行：
 
 ```bash
 bash harness-kit/scripts/install-ai-skills.sh

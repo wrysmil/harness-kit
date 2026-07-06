@@ -3,7 +3,7 @@ artifact: spec
 title: "文档审查与质量改进方案"
 date: 2026-05-27
 status: approved
-platform: cursor | codex
+platform: cursor
 route: harness-kit:internal
 ---
 
@@ -332,11 +332,11 @@ route: harness-kit:internal
 
 ### 4.1 新增路由
 
-| 任务类型 | Codex Route | Cursor Route | 产物 |
-|---------|-------------|--------------|------|
-| 文档审查 | `superpowers:document-review` | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
-| 自测评审 | `superpowers:self-review` | `superpowers:self-review` | `.ai-runtime-artifacts/verifications/` |
-| Leader审查协调 | `superpowers:leader-review-coordination` | `superpowers:leader-review-coordination` | `.ai-runtime-artifacts/reviews/` |
+| 任务类型 | Cursor Route | 产物 |
+|---------|--------------|------|
+| 文档审查 | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
+| 自测评审 | `superpowers:self-review` | `.ai-runtime-artifacts/verifications/` |
+| Leader审查协调 | `superpowers:leader-review-coordination` | `.ai-runtime-artifacts/reviews/` |
 
 ### 4.2 按判定加载更新
 

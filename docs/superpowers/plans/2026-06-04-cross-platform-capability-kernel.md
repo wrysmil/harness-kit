@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans. Steps use checkbox (`- [ ]`) syntax.
 
-**Goal:** Core-first 能力内核；Cursor/Claude/Codex 各一适配器 + capability-matrix；Claude 可跑通编排主路径。
+**Goal:** Core-first 能力内核；Cursor/Claude 各一适配器 + capability-matrix；Claude 可跑通编排主路径。
 
 **Architecture:** 编排语义上提 `core/orchestration/`；`core/capabilities/` 登记 ID 与契约；适配器仅 bindings + matrix + 薄壳 skill/投影。
 
@@ -49,10 +49,6 @@
 
 - [x] claude-orchestration skill + routing 四平台列
 - [x] entrypoints 更新
-
-### Task 5: P4 — Codex 适配器
-
-- [x] omx 映射 + matrix
 
 ### Task 6: P5 — harness-check 扩展
 

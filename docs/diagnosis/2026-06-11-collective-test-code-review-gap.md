@@ -181,11 +181,11 @@ ls d:/workspace/ai/harness-kit/adapters/agents/.agents/skills/ | head
 **证据：**
 - spec front matter `platform: cursor`。
 - [spec §4](docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md#L63-L95) 标题直接叫"尾盘标准流程（Cursor）"；§4 文本中只描述 Cursor 的执行步骤。
-- [spec §7.1 路由表](docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md#L268-L276) Cursor Route 列写 `cursor-orchestration` / `requesting-code-review` / `verification-before-completion`，**没有 Claude / Codex / Trae 列**。
+- [spec §7.1 路由表](docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md#L268-L276) Cursor Route 列写 `cursor-orchestration` / `requesting-code-review` / `verification-before-completion`，**没有 Claude / Trae 列**。
 - 仓库 [commit 185e4e4](https://github.com) 已做 core-first 重构：[core/orchestration/dispatcher-workflow.md](core/orchestration/dispatcher-workflow.md) 已是平台无关；[core/routing.md:13-14](core/routing.md#L13) 把 `Cursor: cursor-orchestration`、`Claude: claude-orchestration` 并列。
-- 各平台适配器（`adapters/claude/bindings.md`、`adapters/codex/bindings.md`、`adapters/trae/bindings.md`）**没有**对应的尾盘流程描述。
+- 各平台适配器（`adapters/claude/bindings.md`、`adapters/trae/bindings.md`）**没有**对应的尾盘流程描述。
 
-**实际后果：** spec 描述的"尾盘流程"只对 Cursor 平台完整；Claude / Codex / Trae 用户**没有对应的 spec 章节**。`routing.md` 的尾盘路由是平台无关的，但**只引用 cursor-orchestration 时代**的 spec。
+**实际后果：** spec 描述的"尾盘流程"只对 Cursor 平台完整；Claude / Trae 用户**没有对应的 spec 章节**。`routing.md` 的尾盘路由是平台无关的，但**只引用 cursor-orchestration 时代**的 spec。
 
 ---
 
@@ -230,7 +230,7 @@ hooks 描述未更新  ─┘
 | P1 | 把 closeout 链接 warn **至少**对"声称批次完成"的 execution-log 升级为 `error`（gap #6） | 小；但会立刻让 `b229a1a` 等历史 commit 失合规，需配合 reset 或豁免 |
 | P1 | hooks.spec.yaml 修正 `harness-subagent-stop` 描述为实际行为（gap #7） | 一行改；spec §9 Phase 4 [x] 取消或重述 |
 | P1 | spec §9 Phase 4 改写为"已纳入路由行 / 已落盘模板，未启用自动提醒"——承认与实现差异（gap #7 的另一面） | 文字修订 |
-| P2 | 补 spec 的 Claude / Codex / Trae 章节（gap #9）；或将 spec 改为 platform-agnostic 化 | 文档工作量大；与 refactor 同步 |
+| P2 | 补 spec 的 Claude / Trae 章节（gap #9）；或将 spec 改为 platform-agnostic 化 | 文档工作量大；与 refactor 同步 |
 | P2 | `tracking/schema.md` 增加 closeout 字段（gap #10）；harness-check 加 tracking 扫描 | schema 变更要带 migration 思路 |
 | P2 | 跑一次"真 GROUP"（含 ≥2 WU）并落盘**真实产物**，把 harness-kit 自身从"规范方"变成"先例方"（gap #1、#2） | 最重；但**唯一**能让下游有样例可参考 |
 

@@ -2,7 +2,7 @@
 
 > 本文件是 **harness-kit 仓库根** 的 `AGENTS.md`。  
 > 详细入口与跨平台规则见 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`。  
-> 本文件与 `harness-kit/entrypoints/AGENTS.md` 同源；OMX 专章在本仓库忽略。
+> 本文件与 `harness-kit/entrypoints/AGENTS.md` 同源。
 
 ## 仓库性质
 

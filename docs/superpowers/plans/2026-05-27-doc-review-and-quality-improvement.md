@@ -315,9 +315,9 @@ created_at: <YYYY-MM-DD>
 
 在路由表新增一行：
 
-| 任务类型 | Codex Route | Cursor Route | 产物 |
-|---------|-------------|--------------|------|
-| 文档审查 | `superpowers:document-review` | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
+| 任务类型 | Cursor Route | 产物 |
+|---------|--------------|------|
+| 文档审查 | `superpowers:document-review` | `.ai-runtime-artifacts/reviews/` |
 
 在「按判定加载」表新增：
 

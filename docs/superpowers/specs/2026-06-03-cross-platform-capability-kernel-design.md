@@ -20,18 +20,18 @@ related:
 
 ## 1. 背景与问题
 
-Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、产物契约、阶段门禁）+ **平台适配层**（`adapters/cursor/`、`adapters/codex/`）可让同一仓库在 Cursor 与 Codex 间迁移规则。
+Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、产物契约、阶段门禁）+ **平台适配层**（`adapters/cursor/`）可让同一仓库在 Cursor 平台运行规则。
 
 当前缺口：
 
 | 现象 | 影响 |
 | --- | --- |
 | 编排语义集中在 `adapters/cursor/orchestration/` | Claude Code 只能读入口 `CLAUDE.md`，**无**与 `cursor-orchestration:dispatcher-workflow` 对等的绑定 |
-| 路由表「多 task 实现」列只有 Codex / Cursor | Claude Code 会话落入 **generic**（顺序执行 + 人工确认），无法享受 WU 并行、尾盘、DISPATCH-TRACK |
+| 路由表「多 task 实现」列只有 Cursor | Claude Code 会话落入 **generic**（顺序执行 + 人工确认），无法享受 WU 并行、尾盘、DISPATCH-TRACK |
 | 角色 prompt 与 dispatcher 步骤与 Cursor 投影耦合 | 新平台接入需复制大段 MD，**违反**高内聚低耦合 |
 | 无能力级 parity 清单 | 「尽量全量」（范围 D）无法审计哪些已等价、哪些降级 |
 
-**诉求：** 以 **Core-first** 建立 Capability Kernel；各平台 **一个适配器目录** 只做运行时绑定；**并行 Agent、worktree、尾盘、阶段门禁** 等语义在 Core 定义一次，Cursor / Claude Code / Codex 分别映射。
+**诉求：** 以 **Core-first** 建立 Capability Kernel；各平台 **一个适配器目录** 只做运行时绑定；**并行 Agent、worktree、尾盘、阶段门禁** 等语义在 Core 定义一次，Cursor / Claude Code 分别映射。
 
 ## 2. 决策摘要（已确认）
 
@@ -40,7 +40,7 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 | 范围 | **D**：Cursor Harness 能力尽量全量语义等价；平台不具备时 **显式降级**（`degraded` / `manual`），禁止静默省略 |
 | 真相源 | **A — Core-first**：能力契约与编排语义在 `core/`；适配器仅映射 |
 | 架构 | **方案 1 + 轻量 capability-matrix**：编排上提 Core；`adapters/*/capability-matrix.yaml` 做 parity 审计 |
-| 参考实现 | Cursor 保持首个完整 binding；**Claude Code 为第二实现**；Codex 对齐既有 `omx ultrawork` |
+| 参考实现 | Cursor 保持首个完整 binding；**Claude Code 为第二实现** |
 
 ## 3. 目标与非目标
 
@@ -50,7 +50,7 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 2. **能力可枚举**：每项能力有稳定 ID（如 `orchestration.parallel-wu`），契约说明输入/输出/门禁/产物。
 3. **适配器可替换**：新增平台 = 新增 `adapters/<platform>/` + matrix 行，**不** fork routing 或 dispatcher 正文。
 4. **Claude Code 可跑通主路径**：已批准 plan → WORKTREE-INIT（若委派写代码）→ 并行 WU → DISPATCH-TRACK → 尾盘两产物 → execution-log 关闭。
-5. **产物不变**：`.ai-runtime-artifacts/` 路径与 front matter 规则保持；`platform: cursor | claude | codex | generic` 区分运行时。
+5. **产物不变**：`.ai-runtime-artifacts/` 路径与 front matter 规则保持；`platform: cursor | claude | generic` 区分运行时。
 
 ### 3.2 非目标（首版）
 
@@ -77,11 +77,11 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 └───────────────────────────────┬──────────────────────────────────┘
                                 │ implements
         ┌───────────────────────┼───────────────────────┐
-        ▼                       ▼                       ▼
- adapters/cursor/        adapters/claude/         adapters/codex/
- bindings.md             bindings.md              bindings.md
- capability-matrix.yaml  capability-matrix.yaml   capability-matrix.yaml
- 投影 .cursor/*           CLAUDE 专章 + skills      omx / AGENTS.omx
+        ▼                       ▼
+ adapters/cursor/        adapters/claude/
+ bindings.md             bindings.md
+ capability-matrix.yaml  capability-matrix.yaml
+ 投影 .cursor/*           CLAUDE 专章 + skills
 ```
 
 **依赖方向（强制）：**
@@ -126,7 +126,7 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 
 | 原语 | 契约摘要 | 典型产物/副作用 |
 | --- | --- | --- |
-| `DetectPlatform()` | 返回 `cursor \| claude \| codex \| generic` | execution-log FM `platform` |
+| `DetectPlatform()` | 返回 `cursor \| claude \| generic` | execution-log FM `platform` |
 | `LoadCapability(id)` | 按 routing 判定加载 core 文档 / stage skill | 回复次行 `Skills:` |
 | `StageGate(phase)` | 写入 specs/plans/decisions 后暂停 | 模板 `## Next` |
 | `SpawnWorker(role, wu, context)` | 隔离上下文；不得继承 Leader 全历史 | WU 返回 `wu_status` + `### Skills 使用` |
@@ -184,14 +184,14 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 
 ### 6.2 物理层（Adapter 绑定）
 
-| 逻辑原语 | Cursor | Claude Code | Codex |
-| --- | --- | --- | --- |
-| `SpawnWorker(coder)` | `Use harness-coder subagent` | `Task` + `core/orchestration/agents/coder.md` 正文作 prompt | omx worker / 等价 |
-| `SpawnWorker(reviewer)` | `harness-reviewer`（readonly） | 新 Task 实例 + readonly 约束 | omx reviewer 路由 |
-| `ParallelBatch` | 并行 Task，≤5 | 并行 `Task`（`dispatching-parallel-agents` 对齐） | `omx ultrawork` |
-| `WorktreeInit` | `scripts/harness-worktree.sh` | **同一脚本** | 同左或 routing 跳过 |
-| `StructuredAsk` | `AskQuestion` | 对话式选择题（degraded） | 对话 |
-| `EmitHook` | `.cursor/hooks.json` | manual / 无 | manual |
+| 逻辑原语 | Cursor | Claude Code |
+| --- | --- | --- |
+| `SpawnWorker(coder)` | `Use harness-coder subagent` | `Task` + `core/orchestration/agents/coder.md` 正文作 prompt |
+| `SpawnWorker(reviewer)` | `harness-reviewer`（readonly） | 新 Task 实例 + readonly 约束 |
+| `ParallelBatch` | 并行 Task，≤5 | 并行 `Task`（`dispatching-parallel-agents` 对齐） |
+| `WorktreeInit` | `scripts/harness-worktree.sh` | **同一脚本** |
+| `StructuredAsk` | `AskQuestion` | 对话式选择题（degraded） |
+| `EmitHook` | `.cursor/hooks.json` | manual / 无 |
 
 **并行策略（Core 统一）：**
 
@@ -206,7 +206,7 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 | --- | --- | --- | --- |
 | 设计 | `brainstorming` | superpowers | StructuredAsk 绑定 |
 | 计划 | `writing-plans` | superpowers | — |
-| 多 task 实现 | `orchestration.dispatch` | — | `cursor-orchestration` / **`claude-orchestration`** / omx |
+| 多 task 实现 | `orchestration.dispatch` | — | `cursor-orchestration` / **`claude-orchestration`** |
 | 验证 | `verification-before-completion` | superpowers | — |
 | 审查 | `requesting-code-review` | superpowers | SpawnWorker(reviewer) |
 
@@ -241,10 +241,7 @@ harness-kit/
 │   │   ├── README.md
 │   │   ├── bindings.md
 │   │   ├── capability-matrix.yaml
-│   │   └── .agents/skills/claude-orchestration/SKILL.md
-│   └── codex/
-│       ├── bindings.md
-│       └── capability-matrix.yaml
+│   │       └── .agents/skills/claude-orchestration/SKILL.md
 └── entrypoints/
     ├── HARNESS-PLATFORM-ENTRY.md    # 增加 claude 专章指针
     └── AGENTS.md                    # 路由表四列 → capability ID
@@ -284,9 +281,9 @@ capabilities:
 
 `core/routing.md` 路由表增加 **Capability** 列（工具名列保留为「当前默认 binding」）：
 
-| 任务类型 | Capability | Cursor binding | Claude binding | Codex binding |
-| --- | --- | --- | --- | --- |
-| 多 task 编码 | `orchestration.dispatch` | `cursor-orchestration` | `claude-orchestration` | `omx ultrawork` |
+| 任务类型 | Capability | Cursor binding | Claude binding |
+| --- | --- | --- | --- |
+| 多 task 编码 | `orchestration.dispatch` | `cursor-orchestration` | `claude-orchestration` |
 | … | … | … | … | … |
 
 **平台检测（统一）：**
@@ -295,7 +292,6 @@ capabilities:
 | --- | --- |
 | Cursor 工作区 + `.cursor/agents/harness-*` | cursor |
 | `CLAUDE.md` 会话 + Skill 工具 + 无 Cursor | claude |
-| Codex CLI + `omx` | codex |
 | 否则 | generic（顺序 + manual 标注） |
 
 ## 10. Claude Code 适配器（首版交付重点）
@@ -350,8 +346,7 @@ Task("WU-02: …", …)                                 # 并行发起
 | **P1** | 搬迁 `dispatcher-workflow`、`agents/*`、`tracking/schema` → `core/orchestration/`；cursor 留 stub | 中：链接更新 |
 | **P2** | `adapters/cursor/bindings.md` + matrix；瘦身 `.cursor/agents` 为薄壳 | 中：投影需重跑 |
 | **P3** | 新增 `adapters/claude/` + `claude-orchestration` skill；更新 routing / README | 目标交付 |
-| **P4** | `adapters/codex/bindings.md` + matrix 与 omx 对齐审计 | 低 |
-| **P5** | `harness-check` matrix 校验；废弃 cursor/orchestration stub | 低 |
+| **P4** | `harness-check` matrix 校验；废弃 cursor/orchestration stub | 低 |
 
 **不阻塞 P3：** P1/P2 可并行；Claude 绑定可读 core 新路径，即使 cursor stub 仍在。
 

@@ -42,7 +42,6 @@ detect_platform() {
   [[ -d "$project_root/.cursor" ]] && platforms+=("cursor")
   [[ -f "$project_root/CLAUDE.md" || -d "$project_root/.claude" ]] && platforms+=("claude")
   [[ -d "$project_root/.trae" ]] && platforms+=("trae")
-  [[ -d "$project_root/.codex" ]] && platforms+=("codex")
 
   if [[ ${#platforms[@]} -eq 0 ]]; then
     echo "unknown"

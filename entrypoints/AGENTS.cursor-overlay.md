@@ -1,5 +1,4 @@
 <!-- Cursor Harness 覆盖层 — 投影到 AGENTS.md 或单独加载 -->
-<!-- 与 OMX 专章并存；Cursor 会话以本文件为准，忽略 AGENTS.md 中的 omx/tmux/spawn 段落 -->
 
 # Cursor 执行契约（Harness Kit）
 
@@ -22,8 +21,7 @@
 
 ## 平台判定
 
-- **Cursor**：`.agents/agents/*.md` + `orchestration` skill；**不**调用 omx
-- **Codex CLI**：`harness-kit/entrypoints/AGENTS.omx.md` + `omx ultrawork`
+- **Cursor**：`.agents/agents/*.md` + `orchestration` skill
 
 ## 子 Agent
 

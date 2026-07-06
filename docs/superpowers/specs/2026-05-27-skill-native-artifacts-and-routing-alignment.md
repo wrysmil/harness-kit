@@ -3,7 +3,7 @@ artifact: spec
 title: "Skill 原生产物 + 路由对齐（合并方案）"
 date: 2026-05-27
 status: draft
-platform: cursor | codex
+platform: cursor
 route: harness-kit:internal
 relates_to:
   - docs/superpowers/specs/2026-05-27-stage-skill-enforcement.md
@@ -157,7 +157,6 @@ Harness 一律管辖：目录、front matter、阶段门禁、校验；不管辖
 | **需求澄清 / 方案设计** | **①** Load `brainstorming`（Read `SKILL.md`）→ **②** `core/artifacts.md` → **③**（**已决议：允许**）skill 澄清已起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming；**禁止**用 `artifact-templates/spec.md` 当正文模板。 |
 | **实施计划** | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；**④** 并行时另写 `*-dispatch.md`（模板 `dispatch.harness-overlay.md`，§6.3）。 |
 | 多 task 编码（Cursor） | `cursor-orchestration` skill → `dispatcher-workflow.md`；派发 WU 时 `skill-preferences.zh.md` |
-| 多 task 编码（Codex） | `AGENTS.omx.md` + omx 文档 |
 | **代码审查 / 验证** | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
 | **缺陷调查** | **①** Load `systematic-debugging` → **②** `project.profile.md`；Cursor 委派见 `orchestration/agents/` |
 | 信息调研 | 委派 `harness-web-investigator` → `web-investigator.md`；产物用 `research-report.md` |
@@ -353,7 +352,7 @@ GROUP-1:
 | `artifact-templates/review.md` / `retro.md` | 新建 |
 | `artifact-templates/investigation.md` | 缺陷调查薄模板 |
 | `harness-check.sh` | 可选：spec 正文含「方案对比」等关键字（脆弱，默认不做） |
-| `entrypoints/AGENTS.omx.md` | 若合并进根 AGENTS，Cursor 侧强调忽略「裸技能名不激活」句 |
+
 | 项目 `.cursor/rules` 一句 | `brainstorming` / `writing-plans` 落盘路径覆盖 |
 
 ---
