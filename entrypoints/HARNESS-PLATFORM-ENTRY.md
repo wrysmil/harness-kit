@@ -34,3 +34,19 @@
 ### Claude Code 专章
 
 多 task 并行实现：`adapters/claude/README.md`、`adapters/claude/bindings.md`；skill：`orchestration`。
+
+## 参考资料索引
+
+以下参考资料统一存放在 `harness-kit/references/`（集中式），供各 skill 在对应路由阶段按需加载：
+
+| 文件 | 用途 | 被引用的 skill |
+|------|------|---------------|
+| `harness-kit/references/definition-of-done.md` | 项目级完成定义（20+ 检查项） | `verification-before-completion`, `incremental-implementation`, `shipping-and-launch` |
+| `harness-kit/references/testing-patterns.md` | 测试模式（AAA、Mock 层次、反模式） | `test-driven-development`, `debugging-and-error-recovery` |
+| `harness-kit/references/security-checklist.md` | Web 安全 + OWASP/LLM Top 10 | `security-and-hardening`, `code-review-and-quality`, `shipping-and-launch` |
+| `harness-kit/references/performance-checklist.md` | Web 性能（CWV、前后端清单） | `performance-optimization`, `code-review-and-quality`, `shipping-and-launch` |
+| `harness-kit/references/orchestration-patterns.md` | 编排模式 + 反模式 + 决策流 | `orchestration`, `doubt-driven-development` |
+| `harness-kit/references/observability-checklist.md` | 可观测性（RED/USE、日志/指标/告警） | `observability-and-instrumentation` |
+| `harness-kit/references/accessibility-checklist.md` | WCAG 2.1 AA 无障碍检查 | `frontend-ui-engineering`, `shipping-and-launch` |
+
+> 来源：[agent-skills](https://github.com/addyosmani/agent-skills) `references/` 目录，保持同步。

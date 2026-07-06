@@ -31,7 +31,7 @@ description: 多任务并行编排调度。已批准 plan +「开始实现」后
 
 **尾盘：** collective-test → 并行扇出 reviewer + security-auditor（+ perf-auditor 按需）→ Leader 落盘产物。
 
-**编排模式参考：** `references/orchestration-patterns.md`（来自 agent-skills，定义 5 种编排模式与反模式）。
+**编排模式参考：** `harness-kit/references/orchestration-patterns.md`（来自 agent-skills，定义 5 种编排模式与反模式）。
 
 ## 禁止
 
