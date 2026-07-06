@@ -70,7 +70,7 @@ Hook 内容与 Claude/Cursor 完全共享（来自 `core/extensions/hooks/conten
 
 ## 共享层
 
-Trae 引用 `adapters/agents/.agents/` 中的共享 skill 和 agent manifest：
+Trae 引用 `.agents/` 中的共享 skill 和 agent manifest：
 
 - `.agents/skills/orchestration/SKILL.md`
 - `.agents/agents/coder.md`

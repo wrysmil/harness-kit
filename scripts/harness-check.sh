@@ -91,16 +91,8 @@ required_kit_files=(
   "core/extensions/mcp/mcp.servers.template.json"
   "core/orchestration/continuous-loop.md"
   "core/orchestration/claude-continuous-loop.md"
-  "adapters/agents/.agents/README.md"
   "adapters/cursor/.cursor/rules/ai-entry.mdc"
   "adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc"
-  "adapters/agents/.agents/agents/coder.md"
-  "adapters/agents/.agents/agents/implementer.md"
-  "adapters/agents/.agents/agents/reviewer.md"
-  "adapters/agents/.agents/agents/explorer.md"
-  "adapters/agents/.agents/agents/debugger.md"
-  "adapters/agents/.agents/agents/test-engineer.md"
-  "adapters/agents/.agents/agents/web-investigator.md"
   ".agents/skills/test-driven-development/SKILL.md"
   ".agents/skills/verification-before-completion/SKILL.md"
   ".agents/skills/ui-ux-pro-max/SKILL.md"
@@ -241,7 +233,7 @@ fi
 
 echo "==> Checking harness subagent projection shells"
 agent_errors=0
-agents_dir="$(kit_path adapters/agents/.agents/agents)"
+agents_dir="$(kit_path .agents/agents)"
 core_orch_dir="$(kit_path core/orchestration/agents)"
 max_projection_lines=80
 

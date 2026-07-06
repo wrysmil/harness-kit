@@ -48,7 +48,7 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 共享 skill（`.agents/skills/`）与平台 skill（`.cursor/skills/`）：见 `core/orchestration/skill-preferences.md`。
 
-源模板：`harness-kit/adapters/agents/.agents/`（bootstrap 投影到项目根 `.agents/`）。
+源模板：`harness-kit/.agents/`（bootstrap 投影到项目根 `.agents/`）。
 
 详细 prompt 与返回格式见各文件及 `orchestration/agents/`（Leader 参考）。
 

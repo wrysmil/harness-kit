@@ -377,7 +377,7 @@ harness-kit/
 
 请优先改：
 - `harness-kit/core/orchestration/dispatcher-workflow.md`
-- `harness-kit/adapters/agents/.agents/skills/orchestration/SKILL.md`（与 dispatcher 一致）
+- `harness-kit/.agents/skills/orchestration/SKILL.md`（与 dispatcher 一致）
 - 若改路由或门禁：`harness-kit/core/routing.md`
 - 若改 Leader 行为：`orchestration/agents/leader.md`
 - 同步 README § Cursor 编程协作模式 中相关表格

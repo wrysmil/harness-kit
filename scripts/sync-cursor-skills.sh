@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 从本机全局 skill 目录同步能力副本到共享层 adapters/agents/.agents/skills/
+# 从本机全局 skill 目录同步能力副本到共享层 .agents/skills/
 # （所有平台层从共享层 mirror 到各自平台目录；不再 vendor 到平台适配器）
 set -euo pipefail
 

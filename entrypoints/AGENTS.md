@@ -8,7 +8,7 @@
 **Harness 尾盘优先（Cursor）：** 「完成」指本 GROUP / 批次已通过**集体测试**与**集体审查**并落盘（`collective-test` + `code-review`），而非末个 WU 返回即可停。见 `harness-kit/docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md`。
 **Tier 1 Leader 直做：** 须 Write `verifications/*-verification-lite.md`，不得零落盘。见 `routing.md` § 任务 Tier。
 若受阻，尝试替代方案。仅在真正歧义或具有破坏性时才提问。
-并行子任务：Codex 用原生子代理；Cursor 用 `.agents/agents/<role>.md` 共享 subagent（见 `harness-kit/adapters/agents/`）；Claude / Trae 同理。
+并行子任务：Codex 用原生子代理；Cursor 用 `.agents/agents/<role>.md` 共享 subagent（见 `harness-kit/.agents/`）；Claude / Trae 同理。
 <!-- 自主性指令结束 -->
 <!-- omx:generated:agents-md -->
 

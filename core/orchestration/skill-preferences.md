@@ -77,7 +77,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | frontend-ui-engineering | a11y / 状态 / 性能工程 | agent-skills（副本） |
 | browser-testing-with-devtools | 浏览器测试与 DevTools 调试（需 chrome-devtools MCP） | agent-skills |
 
-副本来源登记：见 `adapters/agents/.agents/skills/_vendor-sources.yaml`。
+副本来源登记：见 `.agents/skills/_vendor-sources.yaml`。
 
 ### 仅 Leader / 不在子 Agent 列表
 

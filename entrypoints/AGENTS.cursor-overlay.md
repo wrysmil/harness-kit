@@ -27,7 +27,7 @@
 
 ## 子 Agent
 
-共享 subagent 位于 `.agents/agents/`（bootstrap 从 `harness-kit/adapters/agents/.agents/agents/` 投影）：
+共享 subagent 位于 `.agents/agents/`（bootstrap 从 `harness-kit/.agents/agents/` 投影）：
 
 - `coder` — 代码类 WU（plan 批准后）
 - `implementer` — 轻量 WU（docs/chore/config）

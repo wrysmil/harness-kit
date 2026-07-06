@@ -75,7 +75,8 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 
 ### 投影结构
 
-**共享层（所有平台）：** `adapters/agents/.agents/` -> `.agents/`
+**共享层（所有平台）：** `.agents/`（bootstrapped from harness-kit）
+
 
 ```
 .agents/
@@ -171,7 +172,7 @@ bash harness-kit/scripts/harness-check.sh
 bash harness-kit/scripts/install-ai-skills.sh
 ```
 
-见 `harness-kit/adapters/agents/.agents/README.md`。
+见 `harness-kit/.agents/README.md`。
 
 ## 初始化项目画像
 
