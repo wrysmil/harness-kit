@@ -4,7 +4,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEST="$(cd "$SCRIPT_DIR/../adapters/agents/.agents/skills" && pwd)"
+DEST="$(cd "$SCRIPT_DIR/../.agents/skills" && pwd)"
 
 copy_skill() {
   local name="$1"
@@ -38,7 +38,7 @@ copy_skill systematic-debugging "$HOME/.agents/skills/systematic-debugging/SKILL
 copy_skill_dir requesting-code-review "$HOME/.agents/skills/requesting-code-review"
 copy_skill receiving-code-review "$HOME/.agents/skills/receiving-code-review/SKILL.md"
 copy_skill frontend-design "$HOME/.cursor/skills/frontend-design/SKILL.md"
-copy_skill agent-browser "$HOME/.agents/skills/agent-browser/SKILL.md"
+copy_skill browser-testing-with-devtools "$HOME/.agents/skills/browser-testing-with-devtools/SKILL.md"
 copy_skill_dir ui-ux-pro-max "$HOME/.trae/skills/ui-ux-pro-max"
 
 echo "==> Done (skill 偏好清单见 orchestration/skill-preferences.zh.md，非 skill 文件)"

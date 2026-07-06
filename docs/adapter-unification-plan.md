@@ -147,7 +147,7 @@ harness-kit/
 │   │       │   ├── test-engineer.md
 │   │       │   └── web-investigator.md
 │   │       └── skills/
-│   │           ├── agent-browser/
+│   │           ├── browser-testing-with-devtools/
 │   │           ├── claude-orchestration/
 │   │           ├── cursor-orchestration/
 │   │           ├── document-review/

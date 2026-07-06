@@ -37,7 +37,7 @@
 
 - 声称通过前**实际运行**测试命令
 - 不擅自 `git commit` / `push`
-- `wu_type: e2e`：**必须先 Read** `agent-browser` SKILL（`auto` 已含）；执行序：Playwright MCP → agent-browser → CLI
+- `wu_type: e2e`：**必须先 Read** `browser-testing-with-devtools` SKILL（`auto` 已含）；执行序：Playwright MCP → browser-testing-with-devtools → CLI
 - 不修改 plan / tracking；返回 `wu_status`
 
 ---
@@ -73,7 +73,7 @@ test
 ### 验证
 - 命令: ...
 - 结果: pass | fail
-- e2e_via: playwright-mcp | agent-browser | cli | n/a
+- e2e_via: playwright-mcp | browser-testing-with-devtools | cli | n/a
 
 ### Skills 使用
 - 已加载: ...

@@ -43,7 +43,7 @@
 | --- | --- |
 | `adapters/claude/.claude/settings.json` | 投影用 Claude 平台配置（钩子、permissions） |
 | `adapters/claude/.claude/settings.local.json.example` | 接入项目时可覆盖的 local 模板 |
-| `adapters/claude/.claude/skills/<slug>/SKILL.md` | 10 个能力副本：TDD / verification / debugging / code-review / receiving-code-review / ui-ux-pro-max / frontend-design / agent-browser / git-xywh / document-review |
+| `adapters/claude/.claude/skills/<slug>/SKILL.md` | 10 个能力副本：TDD / verification / debugging / code-review / receiving-code-review / ui-ux-pro-max / frontend-design / browser-testing-with-devtools / git-xywh / document-review |
 | `adapters/claude/.claude/hooks/session-init.sh` | 注入 Harness 首行提示（SessionStart 钩子） |
 | `adapters/claude/.claude/hooks/subagent-track-reminder.sh` | 提醒 Leader 同步 plan/tracking（SubagentStop 钩子） |
 | `adapters/claude/agents/harness-<role>.md` | 7 个角色薄壳（`harness-coder` / `implementer` / `reviewer` / `explorer` / `debugger` / `test-engineer` / `web-investigator`），指向 core 正文 |
@@ -265,7 +265,7 @@ Task:
 
 - [ ] **Step 3.7：创建 `adapters/claude/agents/harness-test-engineer.md`**
 
-`model: sonnet`；正文引用 `core/orchestration/agents/test-engineer.md`。E2E 必 Load `agent-browser`。
+`model: sonnet`；正文引用 `core/orchestration/agents/test-engineer.md`。E2E 必 Load `browser-testing-with-devtools`。
 
 - [ ] **Step 3.8：创建 `adapters/claude/agents/harness-web-investigator.md`**
 
@@ -511,7 +511,7 @@ git commit -m "feat(claude-adapter): add SessionStart + SubagentStop hooks + set
 - Create: `adapters/claude/.claude/skills/receiving-code-review/SKILL.md`
 - Create: `adapters/claude/.claude/skills/ui-ux-pro-max/SKILL.md`
 - Create: `adapters/claude/.claude/skills/frontend-design/SKILL.md`
-- Create: `adapters/claude/.claude/skills/agent-browser/SKILL.md`
+- Create: `adapters/claude/.claude/skills/browser-testing-with-devtools/SKILL.md`
 - Create: `adapters/claude/.claude/skills/git-xywh/SKILL.md`
 - Create: `adapters/claude/.claude/skills/document-review/SKILL.md`
 - Create: `adapters/claude/.claude/skills/_vendor-sources.yaml`

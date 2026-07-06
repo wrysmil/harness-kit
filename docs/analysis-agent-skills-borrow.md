@@ -15,7 +15,7 @@
 | **安全审查** | Reviewer 五轴之一 | 独立技能 + 独立 agent + OWASP全量 + LLM Top 10 | 大 | 🔴 高 |
 | **测试策略** | TDD + test-engineer agent | TDD + Prove-It + browser-devtools + testing-patterns参考 | 中 | 🟡 中 |
 | **调试方法** | systematic-debugging skill | debugging-and-error-recovery + Stop-the-Line | 小 | 🟢 低 |
-| **浏览器测试** | agent-browser skill | browser-testing-with-devtools + DevTools MCP 全量 | 中 | 🟡 中 |
+| **浏览器测试** | browser-testing-with-devtools skill | browser-testing-with-devtools + DevTools MCP 全量（已替代 agent-browser） | 中 | 🟢 低 |
 | **完成定义** | verification-before-completion | definition-of-done.md (5段20+检查项) | 中 | 🔴 高 |
 | **反合理化表** | 无 | 每个 skill 内建防跳过机制 | 大 | 🔴 高 |
 | **编排模式** | dispatch + parallel + collective | parallel fan-out + merge + 模式/反模式文档 | 小 | 🟡 中 |
@@ -125,9 +125,9 @@ agent-skills Prove-It: 复现Bug → 写失败测试 → 确认失败 → 修复
 
 ### 3.2 Browser-Testing-with-DevTools
 
-harness-kit 有 `agent-browser` skill 但 agent-skills 版本更全面：
+harness-kit 已用 `browser-testing-with-devtools` 替代 `agent-browser`：
 
-| 能力 | harness-kit agent-browser | agent-skills browser-testing-with-devtools |
+| 能力 | harness-kit browser-testing-with-devtools | agent-skills browser-testing-with-devtools |
 |------|--------------------------|-------------------------------------------|
 | 截图 | ✓ | ✓ |
 | DOM 检查 | - | ✓ |
@@ -138,7 +138,7 @@ harness-kit 有 `agent-browser` skill 但 agent-skills 版本更全面：
 | 安全边界 | 无 | 严格（浏览器内容=不信任数据） |
 | Profile 隔离 | 无 | 独立 Chrome Profile |
 
-**建议：** 增强 `agent-browser` skill，借鉴 DevTools 深度集成和安全边界模型
+**已完成：** `agent-browser` 已被 `browser-testing-with-devtools` 完整替代，含 DevTools 深度集成和安全边界模型
 
 ### 3.3 Testing Patterns 参考文档
 
@@ -289,7 +289,7 @@ harness-kit 的 skills 格式不统一。**建议：** 制定 harness-kit 的 Sk
 | 改动 | 借鉴来源 | 影响范围 |
 |------|---------|---------|
 | 11. Code Simplification skill | code-simplification | 新 skill + 命令 |
-| 12. 浏览器测试 DevTools 深度集成 | browser-testing-with-devtools | agent-browser skill |
+| 12. 浏览器测试 DevTools 深度集成 | browser-testing-with-devtools | 已完成（替换 agent-browser） |
 | 13. Testing Patterns 参考文档 | testing-patterns.md | 新 references/ |
 | 14. 编排模式/反模式文档 | orchestration-patterns.md | 新 references/ |
 | 15. 可观测性 instrumentation | observability-and-instrumentation | 新 skill |

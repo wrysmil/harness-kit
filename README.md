@@ -121,7 +121,7 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | **Leader** | 主会话 | 和你对接、拆任务、派活、整合结果、**对甲方汇报**、Git 提交 | 大规模亲自写业务代码 |
 | **Coder** | `harness-coder` | 写代码 + **单测** + 轻量审查 + 自检 | E2E/集成测试、改 plan、终审 |
 | **Implementer** | `harness-implementer` | 文档 / 配置 / chore | 代码闭环、改 plan |
-| **Test Engineer** | `harness-test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 agent-browser） | 改业务实现 |
+| **Test Engineer** | `harness-test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 browser-testing-with-devtools） | 改业务实现 |
 | **Reviewer** | `harness-reviewer` | 独立 code review（只读） | 与写代码的 Agent 同一实例 |
 | **Explorer / Debugger** | 探查 / 排障 | 摸底、查 bug | — |
 
@@ -298,7 +298,7 @@ harness-kit/
 | 路径 | 性质 | 作用 |
 |------|------|------|
 | `.claude/rules/ai-entry.md` | 必生成 | always-loaded：强制声明 `「Harness：…」`、写文件纪律、同轮禁止 |
-| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser |
+| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、browser-testing-with-devtools |
 | `.claude/hooks/harness-session-init.sh` | opt-in | SessionStart 钩子脚本 |
 | `.claude/hooks/harness-subagent-stop.sh` | opt-in | SubagentStop 钩子脚本 |
 | `.claude/hooks/content/*.md` | opt-in | 钩子提示词内容 |

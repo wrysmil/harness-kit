@@ -63,6 +63,7 @@
 | 写方案 / 出方案 / 设计一下 | `brainstorming` | 改业务代码、写 plan、实现、派子 Agent |
 | 写计划 / 实施计划 | `writing-plans` | 改业务代码、实现、派子 Agent |
 | 开始实现 / 直接做 / 并行执行 | 实现（见路由表） | —（须已过 spec/plan 门禁或属小改动） |
+| 发布 / 上线 / 提测 / 预发 / 灰度 | Ship Gate（见路由表） | 改业务代码、新 feature |
 
 仅说「写方案」→ **只** Write `specs/` 并暂停；不得同轮进入 plan 或实现。细则见适配器 `bindings.md` 文件写入门禁绑定。
 
@@ -131,6 +132,7 @@
 | 建分支 / 提交 / rebase / MR·PR | `git.worktree-script` + git-xywh | `git-xywh` + `project.git.md` | 同左 | 同左 | 无（或 MR 链接） |
 | 热修 / 提测线 / 合流 / 标签 | — | `git-xywh` + `project.git.md` | 同左 | 同左 | 无 |
 | Harness 脚手架变更 | — | `git-xywh` chore | 同左 | 同左 | 与业务 commit 分离 |
+| **发布上线 / Ship Gate（尾盘后）** | `orchestration.ship` | `shipping-and-launch` + `observability-and-instrumentation` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/*-ship-check.md` + `retros/` |
 | 文档审查 | — | `superpowers:document-review` | 同左 | 同左 | `.ai-runtime-artifacts/reviews/` |
 
 ## 按判定加载
@@ -153,6 +155,7 @@
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
+| **发布上线 / Ship Gate（尾盘后）** | **①** Load `shipping-and-launch` → Pre-Launch Checklist → **②** Load `observability-and-instrumentation` → 埋点/告警/日志检查 → **③** Write `.ai-runtime-artifacts/reviews/YYYY-MM-DD-ship-check.md`（FM: route=orchestration.ship, artifact=ship-check） |
 | 文档审查 | **①** Load `document-review` → **②** 根据文档类型加载 `review-rules/*.md` |
 
 **禁止：** 在未判定 route 前预读 `core/orchestration/dispatcher-workflow.md`、`skill-preferences.md` 或全套 `project.*`。

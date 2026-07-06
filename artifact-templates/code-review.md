@@ -5,7 +5,7 @@ skills:
   - requesting-code-review
   - orchestration
 skills_evidence:
-  - adapters/agents/.agents/skills/requesting-code-review/SKILL.md
+  - .agents/skills/requesting-code-review/SKILL.md
   - .agents/skills/orchestration/SKILL.md
 source:
   - .ai-runtime-artifacts/plans/<YYYY-MM-DD>-<topic>-plan.md

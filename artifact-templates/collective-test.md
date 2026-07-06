@@ -4,7 +4,7 @@ route: orchestration:dispatcher-workflow -> batch-closeout
 skills:
   - verification-before-completion
 skills_evidence:
-  - adapters/agents/.agents/skills/verification-before-completion/SKILL.md
+  - .agents/skills/verification-before-completion/SKILL.md
 source:
   - project.verification.md
   - docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md

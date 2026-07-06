@@ -7,7 +7,7 @@
 
    **Claude 平台层文件：**
    - `.claude/rules/ai-entry.md`（always-loaded；强制声明 + 写文件纪律）
-   - `.claude/skills/` 下 13 个共享 skill 镜像（claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、agent-browser、cursor-orchestration、trae-orchestration）
+   - `.claude/skills/` 下 13 个共享 skill 镜像（claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、browser-testing-with-devtools、cursor-orchestration、trae-orchestration）
    - `.claude/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`.claude/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
 
    **Trae 平台层文件：**

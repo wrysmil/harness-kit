@@ -36,14 +36,14 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | explorer | explore, * | **无** |
 | explorer | investigate | systematic-debugging |
 | debugger | bugfix, * | systematic-debugging, source-driven-development, verification-before-completion |
-| debugger | ui-bug | systematic-debugging, source-driven-development, verification-before-completion, agent-browser |
-| web-investigator | research, * | agent-browser |
+| debugger | ui-bug | systematic-debugging, source-driven-development, verification-before-completion, browser-testing-with-devtools |
+| web-investigator | research, * | browser-testing-with-devtools |
 | reviewer | review, * | requesting-code-review, code-review-and-quality, verification-before-completion |
 | security-auditor | review, * | security-and-hardening, verification-before-completion |
 | perf-auditor | review, * | performance-optimization, verification-before-completion |
 | code-simplifier | simplify, * | code-simplification, verification-before-completion |
 | test-engineer | test | test-driven-development, verification-before-completion |
-| test-engineer | e2e | agent-browser, verification-before-completion |
+| test-engineer | e2e | browser-testing-with-devtools, verification-before-completion |
 
 ---
 
@@ -75,7 +75,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | ui-ux-pro-max | UI/UX 设计系统与可检索设计库 | Trae skills（整目录副本） |
 | frontend-design | UI 实现审美 | 全局复制 |
 | frontend-ui-engineering | a11y / 状态 / 性能工程 | agent-skills（副本） |
-| agent-browser | 浏览器自动化（需 `infsh`） | 全局复制 |
+| browser-testing-with-devtools | 浏览器测试与 DevTools 调试（需 chrome-devtools MCP） | agent-skills |
 
 副本来源登记：见 `adapters/agents/.agents/skills/_vendor-sources.yaml`。
 
@@ -104,16 +104,16 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | 性能审查 | perf-auditor | review | performance-optimization + verification |
 | 代码简化 | code-simplifier | simplify | code-simplification + verification |
 | 测试工程师 | test-engineer | test | TDD + verification |
-| 测试工程师 | test-engineer | e2e | agent-browser + verification |
-| 网探 | web-investigator | research | agent-browser |
+| 测试工程师 | test-engineer | e2e | browser-testing-with-devtools + verification |
+| 网探 | web-investigator | research | browser-testing-with-devtools |
 
 ---
 
 ## 测试工程师 E2E
 
-`wu_type: e2e` 且 `auto` 时：**必须先 Read** `agent-browser/SKILL.md`（路径见适配器 bindings；再按 skill 执行）。
+`wu_type: e2e` 且 `auto` 时：**必须先 Read** `browser-testing-with-devtools/SKILL.md`（路径见适配器 bindings；再按 skill 执行）。
 
-执行优先级：Playwright MCP → `agent-browser`（`infsh`）→ 项目 CLI。返回 `e2e_via: playwright-mcp | agent-browser | cli | n/a`。
+执行优先级：Playwright MCP → `browser-testing-with-devtools`（chrome-devtools MCP）→ 项目 CLI。返回 `e2e_via: playwright-mcp | browser-testing-with-devtools | cli | n/a`。
 
 ---
 

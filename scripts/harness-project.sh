@@ -261,7 +261,7 @@ project_cursor() {
 
   # skills（共享层 → 平台层 mirror；用户可定制：默认 skip-if-exists，--force 覆盖）
   local skill_output
-  skill_output="$(project_platform_skills "$target_root" ".cursor" "$ADAPTERS_DIR/agents/.agents/skills" "$force" 2>&1)"
+  skill_output="$(project_platform_skills "$target_root" ".cursor" "$KIT_ROOT/.agents/skills" "$force" 2>&1)"
   [[ -n "$skill_output" ]] && echo "$skill_output"
 
   # hooks（从 core/extensions 投影；脚本 + content + config 示例，非用户文件，始终覆盖）
@@ -298,7 +298,7 @@ project_claude() {
 
   # skills（共享层 → 平台层 mirror；Claude Code 自动发现 .claude/skills/）
   local skill_output
-  skill_output="$(project_platform_skills "$target_root" ".claude" "$ADAPTERS_DIR/agents/.agents/skills" "$force" 2>&1)"
+  skill_output="$(project_platform_skills "$target_root" ".claude" "$KIT_ROOT/.agents/skills" "$force" 2>&1)"
   [[ -n "$skill_output" ]] && echo "$skill_output"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）

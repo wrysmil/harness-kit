@@ -184,11 +184,12 @@ Honesty about what you couldn't verify is more valuable than false confidence.
 
 After implementing with source-driven development:
 
-- [ ] Framework and library versions were identified from the dependency file
-- [ ] Official documentation was fetched for framework-specific patterns
-- [ ] All sources are official documentation, not blog posts or training data
-- [ ] Code follows the patterns shown in the current version's documentation
-- [ ] Non-trivial decisions include source citations with full URLs
-- [ ] No deprecated APIs are used (checked against migration guides)
-- [ ] Conflicts between docs and existing code were surfaced to the user
-- [ ] Anything that could not be verified is explicitly flagged as unverified
+- 产物已写入 `.ai-runtime-artifacts/stack/YYYY-MM-DD-stack.md`（FM: `route: source-driven-development`, `skills: source-driven-development`, Stack Detection 结果）
+- Framework and library versions were identified from the dependency file
+- Official documentation was fetched for framework-specific patterns
+- All sources are official documentation, not blog posts or training data
+- Code follows the patterns shown in the current version's documentation
+- Non-trivial decisions include source citations with full URLs
+- No deprecated APIs are used (checked against migration guides)
+- Conflicts between docs and existing code were surfaced to the user
+- Anything that could not be verified is explicitly flagged as unverified

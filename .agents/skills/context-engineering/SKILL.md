@@ -39,7 +39,14 @@ Structure context from most persistent to most transient:
 
 Create a rules file that persists across sessions. This is the highest-leverage context you can provide.
 
-**CLAUDE.md** (for Claude Code):
+**在 harness-kit 项目中的上下文入口文件：**
+- `harness-kit/project.md` → AGENTS.md stub，指向 core/routing.md
+- `harness-kit/project.profile.md` → 技术栈、命令、公约、边界（L1 上下文）
+- `harness-kit/core/routing.md` → 路由与阶段门禁（始终加载）
+- `harness-kit/core/context-map.md` → 项目模块索引（L2 上下文）
+
+**通用示例（非 harness-kit 项目参考）：**
+
 ```markdown
 # Project: [Name]
 
@@ -284,6 +291,7 @@ This catches wrong directions before you've built on them. It's a 30-second inve
 After setting up context, confirm:
 
 - [ ] Rules file exists and covers tech stack, commands, conventions, and boundaries
+- [ ] **harness-kit 项目：** `project.profile.md` 已读（L1）、`context-map.md` 已读（L2）、WU Context Block 已按 dispatcher-workflow.md §0.5 打包
 - [ ] Agent output follows the patterns shown in the rules file
 - [ ] Agent references actual project files and APIs (not hallucinated ones)
 - [ ] Context is refreshed when switching between major tasks
