@@ -51,7 +51,7 @@
 
 ## 参考资料索引
 
-以下参考资料统一存放在 `harness-kit/references/`（集中式），供各 skill 按需加载：
+以下参考资料统一存放在 `harness-kit/references/`（集中式）。**不是"按需参考"，而是对应阶段路由的强制门禁。** Leader 进入路由时必须 Read 关联 references 并逐项对照执行（见 `routing.md` § 参考资料强制加载）。
 
 | 文件 | 用途 | 被引用的 skill |
 |------|------|---------------|
@@ -63,4 +63,4 @@
 | `harness-kit/references/observability-checklist.md` | 可观测性（RED/USE、日志/指标/告警） | `observability-and-instrumentation` |
 | `harness-kit/references/accessibility-checklist.md` | WCAG 2.1 AA 无障碍检查 | `frontend-ui-engineering`, `shipping-and-launch` |
 
-> 来源：[agent-skills](https://github.com/addyosmani/agent-skills) `references/` 目录，保持同步。
+**违反：** 未 Read references 即声称完成 → 无效；产物无 `### References 检查` → 退回。

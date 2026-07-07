@@ -36,14 +36,14 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | explorer | explore, * | **无** |
 | explorer | investigate | systematic-debugging |
 | debugger | bugfix, * | systematic-debugging, source-driven-development, verification-before-completion |
-| debugger | ui-bug | systematic-debugging, source-driven-development, verification-before-completion, agent-browser |
+| debugger | ui-bug | systematic-debugging, source-driven-development, verification-before-completion, browser-testing-with-devtools |
 | web-investigator | research, * | agent-browser |
 | reviewer | review, * | requesting-code-review, code-review-and-quality, verification-before-completion |
 | security-auditor | review, * | security-and-hardening, verification-before-completion |
 | perf-auditor | review, * | performance-optimization, verification-before-completion |
 | code-simplifier | simplify, * | code-simplification, verification-before-completion |
 | test-engineer | test | test-driven-development, verification-before-completion |
-| test-engineer | e2e | agent-browser, verification-before-completion |
+| test-engineer | e2e | browser-testing-with-devtools, verification-before-completion |
 
 ---
 
@@ -76,6 +76,7 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | frontend-design | UI 实现审美 | 全局复制 |
 | frontend-ui-engineering | a11y / 状态 / 性能工程 | agent-skills（副本） |
 | agent-browser | 浏览器自动化与网页交互（Playwright 驱动） | inference.sh |
+| browser-testing-with-devtools | Chrome DevTools MCP 前端 UI 测试（DOM/控制台/网络/性能/a11y） | agent-skills（副本） |
 
 副本来源登记：见 `.agents/skills/_vendor-sources.yaml`。
 
@@ -104,16 +105,16 @@ Leader 或子 Agent 看到 **`auto`** 时：
 | 性能审查 | perf-auditor | review | performance-optimization + verification |
 | 代码简化 | code-simplifier | simplify | code-simplification + verification |
 | 测试工程师 | test-engineer | test | TDD + verification |
-| 测试工程师 | test-engineer | e2e | agent-browser + verification |
+| 测试工程师 | test-engineer | e2e | browser-testing-with-devtools + verification |
 | 网探 | web-investigator | research | agent-browser |
 
 ---
 
 ## 测试工程师 E2E
 
-`wu_type: e2e` 且 `auto` 时：**必须先 Read** `agent-browser/SKILL.md`（路径见适配器 bindings；再按 skill 执行）。
+`wu_type: e2e` 且 `auto` 时：**必须先 Read** `browser-testing-with-devtools/SKILL.md`（路径见适配器 bindings；再按 skill 执行）。
 
-执行优先级：Playwright MCP → `agent-browser` → 项目 CLI。返回 `e2e_via: playwright-mcp | agent-browser | cli | n/a`。
+执行优先级：Chrome DevTools MCP（`browser-testing-with-devtools`）→ `agent-browser`（Playwright 后备）→ 项目 CLI。返回 `e2e_via: chrome-devtools-mcp | playwright-mcp | agent-browser | cli | n/a`。
 
 ---
 
@@ -154,6 +155,20 @@ Leader 或子 Agent 看到 **`auto`** 时：
 3. `~/.agents/skills/<slug>/SKILL.md`（用户全局）
 
 共享层 `.agents/skills/` 包含所有平台通用 skill（TDD、verification、code-review 等）；平台层仅放平台特有 skill。
+
+---
+
+## References 加载纪律
+
+子 Agent 派发时，Leader 必须将关联 references 的 checklist 条目注入 WU Context Block（见 `dispatcher-workflow.md` § 强制 References 打包）。子 Agent 返回时：
+
+- WU 产物中必须包含 `### References 检查` 段落
+- 逐条标注 `pass / fail / n/a`
+- 任一 `fail` → wu_status: blocked，Leader 不得整合
+
+Leader 自身（尾盘 / Ship Gate）：必须 Read 全量 references 并自检，写入 collective-test.md 或 ship-check.md。
+
+详见 `routing.md` § 参考资料强制加载。
 
 ---
 

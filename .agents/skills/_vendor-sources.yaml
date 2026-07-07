@@ -87,6 +87,10 @@ skills:
     source: d:\workspace\ai\agent-skills\skills\frontend-ui-engineering\SKILL.md
     upstream: agent-skills
     note: "a11y 检查清单 / 状态管理 / 性能工程参考"
+  browser-testing-with-devtools:
+    source: d:\workspace\ai\agent-skills\skills\browser-testing-with-devtools\SKILL.md
+    upstream: agent-skills
+    note: "Chrome DevTools MCP 浏览器测试：DOM 检查、控制台分析、网络请求、性能追踪、可访问性验证。替代 Playwright 做前端 UI 测试"
 
   # ========================
   # 编排（合并自三平台特化）

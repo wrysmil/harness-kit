@@ -142,19 +142,19 @@
 | --- | --- |
 | 小改动 / Tier 0 | 无 stage skill；回复须含改动摘要 + 验证命令输出 |
 | 需求澄清（按需前置） | **①** Load `interview-me` → **②** Write `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md`（FM: route=interview-me, confidence, confirmed）。用户显式确认后才进入方案设计。 |
-| Leader 直做 / Tier 1 | **①** Self-Context Pack（读 `project.profile.md`、相关 spec、目标源文件 ≤5 个、参考范例）→ **②** Load `verification-before-completion` → **③** `project.verification.md` → **④** Write `verification-lite.md` |
+| Leader 直做 / Tier 1 | **①** Self-Context Pack（读 `project.profile.md`、相关 spec、目标源文件 ≤5 个、参考范例）→ **②** Load `verification-before-completion` → **③** `project.verification.md` → **④** Read `harness-kit/references/definition-of-done.md` → **⑤** Write `verification-lite.md`（含 `### References 检查`） |
 | 需求澄清 / 方案设计 | **①** Load `source-driven-development`（STACK DETECTION：读 `package.json` 等 → Write `.ai-runtime-artifacts/stack/`）→ **②** Load `brainstorming` → **③** `artifacts.md` → **④** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。多 WU 并行时 **⑤** Load `api-and-interface-design` → Write `.ai-runtime-artifacts/contracts/`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming。 |
 | 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
-| 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
-| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** 委派 reviewer；并行 **③** Load `security-and-hardening` → 委派 security-auditor；按需 **④** Load `performance-optimization` → 委派 perf-auditor |
-| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
+| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包，含相关 references）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
+| 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` → **③** Read `harness-kit/references/definition-of-done.md` |
+| 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** Read `harness-kit/references/security-checklist.md` + `harness-kit/references/performance-checklist.md` → **③** 委派 reviewer；并行 **④** Load `security-and-hardening` → 委派 security-auditor；按需 **⑤** Load `performance-optimization` → 委派 perf-auditor |
+| **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → Read `harness-kit/references/definition-of-done.md`（对照检查）→ `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec。产物必须含 `### References 检查` |
 | 缺陷调查 | **①** Load `systematic-debugging` → **②** `source-driven-development`（STACK DETECTION）→ **③** `project.profile.md`；委派见适配器 `bindings.md` |
 | 信息调研 / 网页搜索 | 委派 web-investigator → `core/orchestration/agents/web-investigator.md`（见适配器 bindings） |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | `runbooks.md` 对应节 |
-| **发布上线 / Ship Gate（尾盘后）** | **①** Load `shipping-and-launch` → Pre-Launch Checklist → **②** Load `observability-and-instrumentation` → 埋点/告警/日志检查 → **③** Write `.ai-runtime-artifacts/reviews/YYYY-MM-DD-ship-check.md`（FM: route=orchestration.ship, artifact=ship-check） |
+| **发布上线 / Ship Gate（尾盘后）** | **①** Load `shipping-and-launch` → Pre-Launch Checklist → **②** Load `observability-and-instrumentation` → 埋点/告警/日志检查 → **③** Read `harness-kit/references/definition-of-done.md` + `security-checklist.md` + `performance-checklist.md` + `observability-checklist.md` + `accessibility-checklist.md`（全量对照）→ **④** Write `.ai-runtime-artifacts/reviews/YYYY-MM-DD-ship-check.md`（FM: route=orchestration.ship, artifact=ship-check，含 `### References 检查`） |
 | 文档审查 | **①** Load `document-review` → **②** 根据文档类型加载 `review-rules/*.md` |
 
 **禁止：** 在未判定 route 前预读 `core/orchestration/dispatcher-workflow.md`、`skill-preferences.md` 或全套 `project.*`。
@@ -267,3 +267,51 @@
 | `harness-kit/references/accessibility-checklist.md` | WCAG 2.1 AA 无障碍检查 | `frontend-ui-engineering`, `shipping-and-launch` |
 
 > 来源：[agent-skills](https://github.com/addyosmani/agent-skills) `references/` 目录，保持同步。
+
+## 参考资料强制加载
+
+**上表所有 reference 文件不是"按需参考"，而是对应阶段的强制门禁。** 在指定路由中，Leader 必须 Read 关联的 reference 文件并对照执行，不得跳过。
+
+### 加载规则
+
+1. **路由触发即加载**：进入路由表中任一判定时，查下表找到对应 references，**必须 Read** 全文
+2. **子 Agent 不代劳**：references 加载由 Leader 执行（子 Agent 加载 skill 时 skill 内部已有 references 引用）
+3. **对照执行，不打勾不算完**：Read 后逐项 check，在产物中记录结论（`pass / fail / n/a`）
+4. **Fail → STOP**：任一项 fail 不得进入下一阶段
+
+### 路由 → References 映射
+
+| 路由判定 | 必须加载的 references |
+| --- | --- |
+| 需求澄清 / 方案设计 | （无） |
+| 实施计划 | `definition-of-done.md`（为每个 WU 标注 done criteria 来源） |
+| Leader 直做 / Tier 1 | `definition-of-done.md` |
+| 多 task 编码 / 并行实现 | `orchestration-patterns.md`（步骤 0 前） |
+| 验证 / 跑命令 | `definition-of-done.md` |
+| 代码审查（尾盘/批次） | `security-checklist.md` + `performance-checklist.md` |
+| GROUP 收尾 / 批次交付 | `definition-of-done.md` + `security-checklist.md` + `performance-checklist.md` |
+| 缺陷调查 | `testing-patterns.md`（回归测试要求） |
+| 发布上线 / Ship Gate | `definition-of-done.md` + `security-checklist.md` + `performance-checklist.md` + `observability-checklist.md` + `accessibility-checklist.md` |
+
+### 尾盘强制全量 checklist
+
+**GROUP 收尾 / 批次交付 / Ship Gate** 三条路由，必须对照**全部 7 个 reference**：
+
+| # | Reference | 检查内容 | 谁做 |
+| --- | --- | --- | --- |
+| 1 | `definition-of-done.md` | 全量 done 清单逐项打勾 | Leader |
+| 2 | `testing-patterns.md` | AAA / Mock / 反模式检查 | Leader + test-engineer |
+| 3 | `security-checklist.md` | OWASP Top 10 + LLM 安全 | security-auditor |
+| 4 | `performance-checklist.md` | CWV + N+1 + Bundle | perf-auditor |
+| 5 | `observability-checklist.md` | 日志/指标/告警 | Leader |
+| 6 | `accessibility-checklist.md` | WCAG 2.1 AA | Leader（前端项目） |
+| 7 | `orchestration-patterns.md` | 编排反模式自检 | Leader |
+
+**产物要求**：尾盘 collective-test.md 或 ship-check.md 中必须包含 `### References 检查` 段落，逐项列出检查结果。
+
+### 违规视为未完成
+
+- 未 Read reference 即声称完成 → **无效**
+- Read 了但未逐项检查 → **无效**
+- 子 Agent 未返回 references 检查结果 → Leader 必须补查
+- 在 verification / collective-test 产物中无 `### References 检查` 段落 → **退回**
