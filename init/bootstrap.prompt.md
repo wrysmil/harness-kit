@@ -79,7 +79,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 
 ```
 .agents/
-├── skills/          ← 11 个共享 skill（TDD、verification、code-review 等）
+├── skills/          ← 共享 skill（TDD、verification、code-review 等，共 25 个）
 ├── agents/          ← 7 个 agent manifest（coder、implementer、reviewer 等）
 └── README.md
 ```
@@ -99,7 +99,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 ```
 .claude/
 ├── rules/                       ← 必生成：ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
-├── skills/                      ← 13 个共享 skill 镜像（orchestration、git-xywh、TDD、verification 等）
+├── skills/                      ← 共享 skill 镜像（从 `.agents/skills/` 自动投影，共 25 个）
 ├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
 │   └── content/                 ← 配套 content/*.md
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
@@ -125,7 +125,7 @@ test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
 # 2) skills（共享层 → 平台层 mirror；Claude Code 自动发现）
 test -d .claude/skills/orchestration && echo "OK: skills/orchestration"
 test -d .claude/skills/git-xywh              && echo "OK: skills/git-xywh"
-# 其余 11 个 skill 同理
+# 其余 skill 同理（`ls -d .claude/skills/*/ | wc -l` 验证总数）
 
 # 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
 test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"

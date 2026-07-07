@@ -20,7 +20,7 @@
 | 验证 / 跑命令 | `verification-before-completion` skill → `project.verification.md` |
 | 尾盘 / GROUP 收尾 | `verification-before-completion` → `requesting-code-review` |
 | Git 任务 / 提交 / MR | `git-xywh` skill + `project.git.md` + `core/runbooks.md` § Git 协作 |
-| 多 task 实现 | `claude-orchestration` skill → `core/orchestration/dispatcher-workflow.md` |
+| 多 task 实现 | `orchestration` skill → `core/orchestration/dispatcher-workflow.md` |
 | 文档审查 | `document-review` skill → `artifact-templates/document-review.md` |
 | 改代码 / 验证（实现阶段） | `project.profile.md`、`context-map.md`（涉及模块时） |
 

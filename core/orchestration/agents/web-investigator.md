@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | 关键词搜索 | **先发现** search 类 MCP；**无则**内置 `WebSearch` / `web_search` | 见下 § 搜索工具发现 |
 | 静态页正文 | 读页类 MCP（如 `read_website`，按上下文发现） | Markdown 摘录，省 token |
-| 动态页 / 交互 / 截图 | Skill `browser-testing-with-devtools`（chrome-devtools MCP）或 Playwright 类 MCP | 登录、JS 渲染、全页截图 |
+| 动态页 / 交互 / 截图 | Skill `agent-browser` 或 Playwright 类 MCP | 登录、JS 渲染、全页截图 |
 
 **禁止：** 用 `curl`/`wget` 代替 MCP（除非用户要求或 MCP 不可用）；禁止假定固定 MCP 名称（如 `bocha_web_search`）已启用。
 
@@ -32,7 +32,7 @@
 ## WU Skills
 
 - `auto` → Read `core/orchestration/skill-preferences.md`（`agent_role: web-investigator` + `wu_type: research`）
-- 默认：`browser-testing-with-devtools`（动态浏览与截图场景）
+- 默认：`agent-browser`（动态浏览与截图场景）
 
 ---
 

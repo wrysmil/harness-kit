@@ -48,7 +48,7 @@
 | 竞品调研 | `.ai-runtime-artifacts/specs/2026-05-26-ctrip-ai-tripplanner-competitive-spec.md` | 携程 AI 行程对标 |
 | Demo 打磨 | `.ai-runtime-artifacts/plans/2026-05-26-demo-polish-amap-integration-plan.md` | LLM Key / 高德 / 聊天冒烟 |
 | 系统设置 | `backend/app/core/system_settings.py` | LLM Key 合并与 gateway 重启 |
-| 网探角色 | `.cursor/agents/harness-web-investigator.md` | 竞品截图与页面取证 |
+| 网探角色 | `.agents/agents/web-investigator.md` | 竞品截图与页面取证 |
 
 ## 读码优先级
 

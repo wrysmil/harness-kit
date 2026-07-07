@@ -98,7 +98,7 @@ WU-01：实现Coder角色基础框架
 【允许修改范围】
 仅限以下文件（路径完整）：
 - `harness-kit/core/orchestration/agents/coder.md`
-- `harness-kit/adapters/cursor/.cursor/agents/harness-coder.md`
+- `harness-kit/.agents/agents/coder.md`
 - `harness-kit/docs/superpowers/specs/2026-05-26-coder-role-design.md`
 
 【禁止行为】
@@ -117,7 +117,7 @@ WU-01：实现Coder角色基础框架
 必须执行并回报结果：
 ```bash
 # 运行Coder角色相关测试
-npm test -- harness-kit/adapters/cursor/.cursor/agents/harness-coder.test.ts
+npm test -- harness-kit/.agents/agents/coder.md.test.ts
 ```
 
 【上下文资料】

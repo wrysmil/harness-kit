@@ -93,7 +93,7 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
                                                             │
                     ┌───────────────────────────────────────┼───────────────────────┐
                     ▼                   ▼                   ▼                       ▼
-              harness-coder      harness-implementer   harness-test-engineer   harness-reviewer
+              coder            implementer         test-engineer        reviewer
               （写业务代码）      （文档/chore/配置）     （测试/E2E）            （独立审查，可选）
 ```
 
@@ -117,10 +117,10 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | 角色 | 对应 Subagent | 干什么 | 不干什么 |
 |------|---------------|--------|----------|
 | **Leader** | 主会话 | 和你对接、拆任务、派活、整合结果、**对甲方汇报**、Git 提交 | 大规模亲自写业务代码 |
-| **Coder** | `harness-coder` | 写代码 + **单测** + 轻量审查 + 自检 | E2E/集成测试、改 plan、终审 |
-| **Implementer** | `harness-implementer` | 文档 / 配置 / chore | 代码闭环、改 plan |
-| **Test Engineer** | `harness-test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 browser-testing-with-devtools） | 改业务实现 |
-| **Reviewer** | `harness-reviewer` | 独立 code review（只读） | 与写代码的 Agent 同一实例 |
+| **Coder** | `coder` | 写代码 + **单测** + 轻量审查 + 自检 | E2E/集成测试、改 plan、终审 |
+| **Implementer** | `implementer` | 文档 / 配置 / chore | 代码闭环、改 plan |
+| **Test Engineer** | `test-engineer` | 集成 / E2E / 前端自动化（`e2e` 必读 `agent-browser`） | 改业务实现 |
+| **Reviewer** | `reviewer` | 独立 code review（只读） | 与写代码的 Agent 同一实例 |
 | **Explorer / Debugger** | 探查 / 排障 | 摸底、查 bug | — |
 
 **Leader 汇报（给你看）：** 状态 · 本轮做/不做什么 · 风险 · 怎么验收 · 下一步（是否还要审查）。
@@ -155,14 +155,14 @@ Cursor 上把「谁来做、做到哪一步、什么时候必须等你点头」�
 | 顺序 | 动作 | 落盘 |
 | --- | --- | --- |
 | 1 | 按 `project.verification.md` 跑本批次验证（先测后审） | `verifications/*-collective-test.md` |
-| 2 | 委派 **harness-reviewer**（独立实例）；Reviewer 只返回，Leader Write | `reviews/*-code-review.md` |
+| 2 | 委派 **reviewer**（独立实例）；Reviewer 只返回，Leader Write | `reviews/*-code-review.md` |
 | 3 | 更新 execution-log § 尾盘门禁 | 两产物链接 + 结论 |
 
 **完成** = 上表 1–3 通过，不是末个 Coder 报 `done`。
 
 ### 还要不要集体 Reviewer？（尾盘 B）
 
-| 情况 | 尾盘 `harness-reviewer` |
+| 情况 | 尾盘 `reviewer` |
 |------|-------------------------|
 | 改文件 >5，或动到安全/鉴权/支付 | **必须** |
 | 公共 API、DB 迁移、跨模块架构 | **必须** |
@@ -199,9 +199,9 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 | 类型 | 路径 |
 |------|------|
 | 顶层契约 | `AGENTS.md` |
-| Claude Code | `CLAUDE.md`、`.claude/rules/ai-entry.md`（always-loaded）、`.claude/skills/`（13 个共享 skill 镜像）、`.claude/hooks/` + `content/` + `settings.json.example`（opt-in hooks） |
+| Claude Code | `CLAUDE.md`、`.claude/rules/ai-entry.md`（always-loaded）、`.claude/skills/`（共享 skill 镜像）、`.claude/hooks/` + `content/` + `settings.json.example`（opt-in hooks） |
 | Gemini | `GEMINI.md` |
-| Cursor | `.cursor/rules/`、`.cursor/agents/harness-*`（**含 harness-coder**）、`.cursor/hooks.json`（opt-in） |
+| Cursor | `.cursor/rules/`、`.agents/agents/`（共享 subagent）、`.cursor/hooks.json`（opt-in） |
 | Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
 | Agents / Skills | `.agents/`（含 `orchestration`） |
 | Hooks 扩展 | `.cursor/hooks/` 或 `.claude/hooks/` + `content/*.md`（来自 `core/extensions/hooks/`，opt-in） |
@@ -294,7 +294,7 @@ harness-kit/
 | 路径 | 性质 | 作用 |
 |------|------|------|
 | `.claude/rules/ai-entry.md` | 必生成 | always-loaded：强制声明 `「Harness：…」`、写文件纪律、同轮禁止 |
-| `.claude/skills/<slug>/SKILL.md` | 必生成 ×13 | 共享层 skill 镜像：orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、browser-testing-with-devtools |
+| `.claude/skills/<slug>/SKILL.md` | 必生成 | 共享层 skill 镜像（从 `.agents/skills/` 自动投影） |
 | `.claude/hooks/harness-session-init.sh` | opt-in | SessionStart 钩子脚本 |
 | `.claude/hooks/harness-subagent-stop.sh` | opt-in | SubagentStop 钩子脚本 |
 | `.claude/hooks/content/*.md` | opt-in | 钩子提示词内容 |
@@ -327,8 +327,8 @@ harness-kit/
 1. 先输出简短方案（改哪些文件、是否动 routing / 门禁 / 投影层），等我确认后再改文件；若我已在开头说「直接做」，可跳过确认。
 2. 遵守 Harness 双层结构：
    - 编排深读：`harness-kit/core/orchestration/`（不投影）
-   - 投影层：`harness-kit/adapters/cursor/.cursor/agents/`、`.cursor/rules/` → bootstrap 后到项目根 `.cursor/`
-   深读与投影须一致；改 agent 时同步 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`。
+   - 投影层：`harness-kit/.agents/agents/` → bootstrap 后到项目根 `.agents/agents/`
+   - 深读与投影须一致；改 agent 时同步 `orchestration/agents/<role>.md` 与 `.agents/agents/<role>.md`。
 3. 凡影响「谁来做、何时停、派谁」的变更，必须同步：
    - `harness-kit/core/routing.md`（Cursor / Claude 并列列）
    - `harness-kit/entrypoints/AGENTS.md` 路由摘要（如需要）
@@ -345,22 +345,22 @@ harness-kit/
 
 ```text
 【角色定义】
-- 角色英文名 / harness 文件名：例如 security-auditor → harness-security-auditor
+- 角色英文名 / 文件名：例如 security-auditor
 - 触发场景与 wu_type（若有）：例如 wu_type: security-review
 - 职责（做 / 不做）：...
 - readonly：true | false
 - 与 Leader / Coder / Reviewer 的边界：...
 
-请按现有 harness-coder 模式落地：
+请按现有 coder 模式落地：
 1. 新增 `harness-kit/core/orchestration/agents/<role>.md`（详细 prompt、返回字段、禁止项）
-2. 新增 `harness-kit/adapters/cursor/.cursor/agents/harness-<role>.md`（front matter：name、description、model、readonly）
+2. 新增 `harness-kit/.agents/agents/<role>.md`（front matter：name、description、model、readonly）
 3. 更新 `platform-adapters.zh.md` 角色映射表
 4. 更新 `dispatcher-workflow.md` 步骤 2 派发表与委派 prompt 必填项
 5. 更新 `cursor-subagent-routing.mdc` 与 `core/routing.md`（若新任务类型进路由表）
 6. 更新 `skill-preferences.zh.md`（若该角色有默认 skill 链）
 7. 更新本 README「六个角色」表
 
-参考实现：`harness-coder`（`orchestration/agents/coder.md` + `.cursor/agents/harness-coder.md` + `docs/superpowers/specs/2026-05-26-coder-role-design.md`）。
+参考实现：`coder`（`orchestration/agents/coder.md` + `.agents/agents/coder.md` + `docs/superpowers/specs/2026-05-26-coder-role-design.md`）。
 ```
 
 ### 话术 B：修改工作编排（派发 / 并行 / 整合）
@@ -383,11 +383,11 @@ harness-kit/
 ### 话术 C：调整现有 Agent（不改名、不新增文件）
 
 ```text
-【调整对象】：harness-coder | harness-implementer | harness-reviewer | harness-test-engineer | harness-explorer | harness-debugger | Leader
+【调整对象】：coder | implementer | reviewer | test-engineer | explorer | debugger | Leader
 
 【变更内容】：例如 Coder 返回字段、自检门槛、禁止加载的 skill 列表、Implementer 适用 wu_type
 
-请只改对应 `orchestration/agents/<role>.md` 与 `.cursor/agents/harness-<role>.md`，并检查 dispatcher / routing / README 是否有硬编码引用需要同步。
+请只改对应 `orchestration/agents/<role>.md` 与 `.agents/agents/<role>.md`，并检查 dispatcher / routing / README 是否有硬编码引用需要同步。
 ```
 
 ### 改造后：已接入项目如何生效
@@ -395,7 +395,7 @@ harness-kit/
 | 变更位置 | 业务项目要做的 |
 |----------|----------------|
 | 仅 `orchestration/`、`core/` | 拉取最新 `harness-kit/` 即可；AI 深读路径自动更新 |
-| `.cursor/agents/`、`.cursor/rules/` | 重新投影：把 `harness-kit/adapters/cursor/.cursor/` 同步到项目根 `.cursor/`（或重跑 bootstrap 投影步骤） |
+| `.agents/agents/`、`.cursor/rules/` | 重新投影：运行 `bash harness-kit/scripts/harness-project.sh project --force`（或重跑 bootstrap 投影步骤） |
 | `entrypoints/` | 重新投影 `AGENTS.md` 等根入口（合并时保留项目自有段落） |
 
 投影命令可参考 `harness-kit/init/bootstrap.prompt.md` § 投影工具适配。

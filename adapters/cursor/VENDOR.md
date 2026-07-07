@@ -35,7 +35,7 @@
 | `.cursor/hooks.json.example` | 新建（Cursor 原生 hooks） |
 | `config.defaults.yaml` | `CONFIG.yaml`（简化） |
 | `.cursor/rules/cursor-subagent-routing.mdc` | Rule 1–15 + platform-adapters + 阶段门禁 |
-| `.cursor/agents/harness-*.md` | orchestration/agents/* 投影 |
+| `.agents/agents/*.md` | orchestration/agents/* 投影 |
 | `.cursor/skills/*/` 能力副本 | 自全局 superpowers 等复制，见 `_vendor-sources.yaml` |
 | `orchestration/skill-preferences.zh.md` | 任务 ↔ skill 偏好（文档维护，`auto` 查表） |
 | `.agents/skills/orchestration/SKILL.md` | dispatcher 摘要（指向完整 workflow） |

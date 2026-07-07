@@ -3,12 +3,12 @@
 1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：删除 harness-kit/.git/（以及存在的 .gitignore / .gitattributes / .gitmodules；不要动项目自身的 .git/），在项目根 .gitignore 追加（保留已有内容） `harness-kit/*` 和 `.ai-runtime-artifacts/` 两条。
 2. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
 3. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
-   **运行后根据检测到的平台检查对应文件（用 test -f / test -d / test -x 自检，缺一即视为投影失败并补跑 --force）：**
+   **根据检测到的平台检查对应文件（用 test -f / test -d / test -x 自检，缺一即视为投影失败并补跑 --force）：**
 
    **Claude 平台层文件：**
    - `.claude/rules/ai-entry.md`（always-loaded；强制声明 + 写文件纪律）
-   - `.claude/skills/` 下 13 个共享 skill 镜像（claude-orchestration、git-xywh、verification-before-completion、systematic-debugging、test-driven-development、document-review、requesting-code-review、receiving-code-review、frontend-design、ui-ux-pro-max、browser-testing-with-devtools、cursor-orchestration、trae-orchestration）
-   - `.claude/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`.claude/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
+   - `.claude/skills/` 下共享 skill 镜像（由 `harness-project.sh` 从 `.agents/skills/` 自动投影，共 25 个，含 orchestration / git-xywh / verification-before-completion / systematic-debugging 等）
+   - `.claude/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`block-native-plan-mode.sh`、`.claude/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
 
    **Trae 平台层文件：**
    - `.trae/rules/ai-entry.md`（统一入口）

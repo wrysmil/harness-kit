@@ -55,7 +55,7 @@ detect_platform() {
 
 project_shared() {
   local target_root="${1:-.}"
-  local src="$ADAPTERS_DIR/agents/.agents"
+  local src="$ROOT_DIR/$HK/.agents"
   local count=0
 
   echo "==> 投影共享层: .agents/"
@@ -272,7 +272,7 @@ project_cursor() {
 project_claude() {
   local target_root="${1:-.}"
   local force="${2:-0}"
-  local claude_src="$ADAPTERS_DIR/claude/.claude"
+  local claude_src="$ROOT_DIR/$HK/.claude"
   local added=0
   local skipped=0
 

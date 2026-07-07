@@ -131,4 +131,4 @@ skills:
     orchestration-patterns:
       source: d:\workspace\ai\agent-skills\references\orchestration-patterns.md
       upstream: agent-skills
-      placed_at: claude-orchestration/references/
+      placed_at: orchestration/references/

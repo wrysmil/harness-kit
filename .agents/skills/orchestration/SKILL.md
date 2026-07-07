@@ -25,7 +25,6 @@ description: 多任务并行编排调度。已批准 plan +「开始实现」后
 | Claude Code | `adapters/claude/bindings.md` | `Task(subagent_type=generalPurpose)` + core agent 文件为 prompt |
 | Cursor | `adapters/cursor/bindings.md` | `.agents/agents/<role>.md` subagent |
 | Trae | `adapters/trae/bindings.md` | Trae Agent 模式 + core agent 文件 |
-| Codex | `adapters/codex/bindings.md` | omx CLI |
 
 通用 agent_role 映射见 `core/orchestration/dispatcher-workflow.md` § 步骤 2。`wu_skills: auto` → `core/orchestration/skill-preferences.md`。
 

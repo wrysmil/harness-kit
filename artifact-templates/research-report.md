@@ -1,8 +1,8 @@
 ---
 artifact: research-report
-route: harness-web-investigator
+route: web-investigator
 skills:
-  - browser-testing-with-devtools
+  - agent-browser
 source:
   - core/routing.md
   - user-query

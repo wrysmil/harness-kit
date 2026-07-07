@@ -41,7 +41,7 @@
 
 | 平台 | 加载 |
 | --- | --- |
-| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.cursor/agents/`、`orchestration` skill |
+| **Cursor** | `harness-kit/entrypoints/AGENTS.cursor-overlay.md`、`.cursor/rules/`、`.agents/agents/`、`orchestration` skill |
 | **Claude Code** | `CLAUDE.md`、`orchestration` skill、`adapters/claude/bindings.md` |
 | **Gemini** | `GEMINI.md` |
 

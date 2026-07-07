@@ -14,13 +14,13 @@ created_at: <YYYY-MM-DD>
 batch_id: GROUP-1
 worktree_id: 
 worktree_path: 
-reviewer_instance: harness-reviewer
+reviewer_instance: reviewer
 verdict: APPROVE
 ---
 
 # <Topic> 集体代码审查
 
-> **写入者：** Leader（收到 `harness-reviewer` 返回后落盘）。Reviewer 为 readonly，不 Write 本文件。
+> **写入者：** Leader（收到 `reviewer` 返回后落盘）。Reviewer 为 readonly，不 Write 本文件。
 
 ## 防跳过提醒
 
