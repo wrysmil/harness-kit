@@ -1,8 +1,8 @@
-# Harness Platform Entry（Claude / Gemini 共享）
+# Harness Platform Entry（Claude Code）
 
 项目背景：{{PROJECT_BACKGROUND}}
 
-> Claude/Gemini 会话须同时读根目录 **`AGENTS.md`**（Harness 覆盖层优先）。
+> Claude Code 会话须同时读根目录 **`AGENTS.md`**（Harness 覆盖层优先）。
 
 ---
 
@@ -25,7 +25,7 @@
 ### 约束
 
 - **强制声明：** 首行 `「Harness：<route 或 Tier 0/1>」`；stage skill / Tier 1+ 次行 `Skills: slug@path loaded|skipped`
-- **未声明时：** 读取根目录 `CLAUDE.md` 或 `GEMINI.md` 与 `harness-kit/core/routing.md` 后重试
+- **未声明时：** 读取根目录 `CLAUDE.md` 与 `harness-kit/core/routing.md` 后重试
 - 非琐碎任务前声明路由、技能与来源；完成声明须附验证证据
 - 用户指定 skill 为附加项，不替代默认 route（除非用户明确排除）
 

@@ -75,7 +75,6 @@ required_kit_files=(
   "entrypoints/AGENTS.md"
   "entrypoints/HARNESS-PLATFORM-ENTRY.md"
   "entrypoints/CLAUDE.md"
-  "entrypoints/GEMINI.md"
   "entrypoints/AGENTS.cursor-overlay.md"
   "core/extensions/README.md"
   "core/extensions/hooks/README.md"
@@ -124,7 +123,6 @@ required_kit_files=(
 required_deployed_shared=(
   "AGENTS.md"
   "CLAUDE.md"
-  "GEMINI.md"
   ".agents/README.md"
   ".agents/agents/coder.md"
   ".agents/agents/implementer.md"
@@ -328,7 +326,7 @@ fi
 echo "==> Checking unfinished markers"
 scan_paths=()
 if [[ "$LAYOUT" == "deployed" ]]; then
-  scan_paths=(AGENTS.md CLAUDE.md GEMINI.md .cursor .agents)
+  scan_paths=(AGENTS.md CLAUDE.md .cursor .agents)
 fi
 scan_paths+=("$(kit_path .)")
 if [[ -d ".ai-runtime-artifacts" ]]; then

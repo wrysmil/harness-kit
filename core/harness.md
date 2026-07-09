@@ -36,7 +36,7 @@
 
 由根目录投影和 Harness 内部脚本组成：
 
-- `CLAUDE.md`、`GEMINI.md`（投影桩；共享正文 `entrypoints/HARNESS-PLATFORM-ENTRY.md`）
+- `CLAUDE.md`（投影桩；共享正文 `entrypoints/HARNESS-PLATFORM-ENTRY.md`）
 - 适配器入口文件（见 `adapters/*/bindings.md`）
 - `harness-kit/scripts/install-ai-skills.sh`
 - `harness-kit/scripts/harness-init.sh`
@@ -53,5 +53,5 @@
    - `harness-kit/context-map.md`
    - `harness-kit/project.verification.md`
    - `harness-kit/project.git.md`
-4. AI 用 `project.profile.md` 摘要替换 `CLAUDE.md`、`GEMINI.md` 与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
+4. AI 用 `project.profile.md` 摘要替换 `CLAUDE.md` 与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
 5. 人 review `project.profile.md` 与 `project.git.md` 中的推断项和待确认项。

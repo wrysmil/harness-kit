@@ -200,7 +200,6 @@ WU 内 **轻量审查**（Coder + 独立 reviewer）**不替代** 上表尾盘 B
 |------|------|
 | 顶层契约 | `AGENTS.md` |
 | Claude Code | `CLAUDE.md`、`.claude/rules/ai-entry.md`（always-loaded）、`.claude/skills/`（共享 skill 镜像）、`.claude/hooks/` + `content/` + `settings.json.example`（opt-in hooks） |
-| Gemini | `GEMINI.md` |
 | Cursor | `.cursor/rules/`、`.agents/agents/`（共享 subagent）、`.cursor/hooks.json`（opt-in） |
 | Cursor 编排深读 | `harness-kit/core/orchestration/`（不投影，供 AI 读取） |
 | Agents / Skills | `.agents/`（含 `orchestration`） |
@@ -277,11 +276,11 @@ harness-kit/
      harness-kit/*
      .ai-runtime-artifacts/
      ```
-2. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md、GEMINI.md 等）。
+2. 从 harness-kit/entrypoints/ 投影根目录 AI 入口文件（AGENTS.md、CLAUDE.md 等）。
 3. 运行 `bash harness-kit/scripts/harness-project.sh project`，自动检测平台并投影共享层（.agents/）与平台适配层（.cursor/、.claude/、.trae/ 等）。
 4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后执行 harness-kit/scripts/install-ai-skills.sh。
 5. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。
-6. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md、GEMINI.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
+6. 读取并执行 harness-kit/init/project-profiler.prompt.md（以 harness-kit/init/templates/ 为章节骨架，更新四份 project.*，用 project.profile 摘要替换 CLAUDE.md 与 harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md 中的 {{PROJECT_BACKGROUND}}，并运行 harness-kit/scripts/harness-check.sh）。
 7. 汇总推断项、待确认项和验证结果。
 
 详版步骤见 harness-kit/init/bootstrap.prompt.md。

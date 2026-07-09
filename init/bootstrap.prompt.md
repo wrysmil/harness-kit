@@ -52,9 +52,8 @@ bash harness-kit/scripts/harness-project.sh detect
 - `harness-kit/entrypoints/AGENTS.md` -> `AGENTS.md`
 - `harness-kit/entrypoints/AGENTS.cursor-overlay.md` -> 保留在 harness-kit 内（Cursor 深读）
 - `harness-kit/entrypoints/CLAUDE.md` -> `CLAUDE.md`
-- `harness-kit/entrypoints/GEMINI.md` -> `GEMINI.md`
 
-`harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 为 Claude/Gemini **共享正文**（不单独投影到根目录）。
+`harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 为 Claude Code **共享正文**（不单独投影到根目录）。
 
 如果目标文件已存在，先读取现有内容，只合并 Harness 入口，不删除项目已有约束。
 
@@ -203,8 +202,8 @@ bash harness-kit/scripts/install-ai-skills.sh
 
 用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换下列文件中的 `{{PROJECT_BACKGROUND}}`（勿删除 Harness 规则段落）：
 
-- 根目录 `CLAUDE.md`、`GEMINI.md`（若已投影）
-- `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`（共享正文，供 Claude/Gemini 深读）
+- 根目录 `CLAUDE.md`（若已投影）
+- `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`（共享正文，供 Claude Code 深读）
 
 ## 验证
 

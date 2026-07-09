@@ -41,7 +41,7 @@ created_at: 2026-05-14
 
 ## 填充平台入口背景
 
-用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换根目录 `CLAUDE.md`、`GEMINI.md`（若已投影）与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
+用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换根目录 `CLAUDE.md`（若已投影）与 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 中的 `{{PROJECT_BACKGROUND}}`。
 
 ## 要求
 

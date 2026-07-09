@@ -12,7 +12,7 @@
 ## Harness 文档验证
 
 ```bash
-rg -n "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" AGENTS.md CLAUDE.md GEMINI.md .cursor .agents harness-kit .ai-runtime-artifacts
+rg -n "T[B]D|T[O]DO|FIX[M]E|待[定]|占[位]" AGENTS.md CLAUDE.md .cursor .agents harness-kit .ai-runtime-artifacts
 bash -n harness-kit/scripts/install-ai-skills.sh
 bash -n harness-kit/scripts/harness-init.sh
 bash -n harness-kit/scripts/harness-check.sh

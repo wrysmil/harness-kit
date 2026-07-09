@@ -29,6 +29,6 @@
 
 - 编排 skill（`orchestration`）— 已在 `.agents/skills/`
 - 子 Agent manifest（coder / implementer / reviewer / …）— 已在 `.agents/agents/`
-- 入口文件（AGENTS.md / CLAUDE.md / GEMINI.md）— 在 `entrypoints/`
+- 入口文件（AGENTS.md / CLAUDE.md）— 在 `entrypoints/`
 
 这些都已经统一，无需再放到 extensions。
