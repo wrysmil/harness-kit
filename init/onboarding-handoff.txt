@@ -8,20 +8,17 @@
    **Claude 平台层文件：**
    - `.claude/rules/ai-entry.md`（always-loaded；强制声明 + 写文件纪律）
    - `.claude/skills/` 下 skill 镜像（由 `harness-project.sh` 从 `harness-kit/.agents/skills/` 自动投影）
-   - `.claude/agents/` 下 agent manifest
    - `.claude/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`block-native-plan-mode.sh`、`.claude/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
 
    **Trae 平台层文件：**
    - `.trae/rules/ai-entry.md`（统一入口）
    - `.trae/rules/trae-subagent-routing.md`（子 Agent 路由协议）
    - `.trae/skills/` 下 skill 镜像（由 `harness-project.sh` 从 `harness-kit/.agents/skills/` 自动投影）
-   - `.trae/agents/` 下 agent manifest
    - `.trae/hooks/harness-session-init.sh`、`harness-subagent-stop.sh`、`.trae/hooks/content/`、`settings.json.example`（opt-in：默认不启用 hooks）
 
    **Cursor 平台层文件：**
    - `.cursor/rules/ai-entry.mdc`、`.cursor/rules/cursor-subagent-routing.mdc`
    - `.cursor/skills/` 下 skill 镜像
-   - `.cursor/agents/` 下 agent manifest
    - `.cursor/hooks/` 及 `hooks.json.example`
 4. 如需安装或检查 AI runtime，请先说明会修改哪些本机环境，然后由你执行 harness-kit/scripts/install-ai-skills.sh。该脚本会按当前平台（harness-project.sh detect 结果）选择性执行平台对应的 ~/.<platform>/skills/ 检查。可用 --platform 显式指定。
 5. 创建 .ai-runtime-artifacts/ 及其子目录（含 execution-logs/ 与 execution-logs/tracking/）。

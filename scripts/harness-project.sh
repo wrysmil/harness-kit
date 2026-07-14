@@ -175,7 +175,7 @@ EOF
   esac
 }
 
-project_agents() {
+project_platform_skills() {
   local target_root="$1"
   local platform_dir="$2"
   local force="${3:-0}"
@@ -206,24 +206,8 @@ project_agents() {
     done
   fi
 
-  # agents（agent manifest，共享层 → 平台层 mirror）
-  if [[ -d "$src/agents" ]]; then
-    mkdir -p "$target_root/$platform_dir/agents"
-    for agent_file in "$src/agents"/*.md; do
-      [[ -f "$agent_file" ]] || continue
-      local name
-      name="$(basename "$agent_file")"
-      if [[ "$force" != "1" && -f "$target_root/$platform_dir/agents/$name" ]]; then
-        skipped=$((skipped + 1))
-        continue
-      fi
-      cp "$agent_file" "$target_root/$platform_dir/agents/"
-      added=$((added + 1))
-    done
-  fi
-
   if [[ "$added" -gt 0 || "$skipped" -gt 0 ]]; then
-    echo "   $platform_dir/skills + agents: +$added 跳过 $skipped"
+    echo "   $platform_dir/skills: +$added 跳过 $skipped"
   fi
 }
 
@@ -278,8 +262,8 @@ project_cursor() {
     done
   fi
 
-  # skills + agents（共享层 → 平台层 mirror）
-  project_agents "$target_root" ".cursor" "$force"
+  # skills（共享层 → 平台层 mirror）
+  project_platform_skills "$target_root" ".cursor" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + config 示例，非用户文件，始终覆盖）
   project_hooks "$target_root" "cursor"
@@ -313,8 +297,8 @@ project_claude() {
     done
   fi
 
-  # skills + agents（共享层 → 平台层 mirror）
-  project_agents "$target_root" ".claude" "$force"
+  # skills（共享层 → 平台层 mirror）
+  project_platform_skills "$target_root" ".claude" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   project_hooks "$target_root" "claude"
@@ -357,8 +341,8 @@ project_trae() {
     done
   fi
 
-  # skills + agents（共享层 → 平台层 mirror）
-  project_agents "$target_root" ".trae" "$force"
+  # skills（共享层 → 平台层 mirror）
+  project_platform_skills "$target_root" ".trae" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   if [[ -d "$ext_root" ]]; then
