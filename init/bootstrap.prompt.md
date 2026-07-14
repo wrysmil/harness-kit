@@ -73,42 +73,36 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 
 ### 投影结构
 
-**共享层（所有平台）：** `.agents/`（bootstrapped from harness-kit）
-
-
-```
-.agents/
-├── skills/          ← 共享 skill（TDD、verification、code-review 等，共 25 个）
-├── agents/          ← 7 个 agent manifest（coder、implementer、reviewer 等）
-└── README.md
-```
-
-**Cursor 平台层：** `adapters/cursor/.cursor/` -> `.cursor/`
+**Cursor 平台层：** `adapters/cursor/.cursor/` + `harness-kit/.agents/` -> `.cursor/`
 
 ```
 .cursor/
 ├── rules/           ← ai-entry.mdc、cursor-subagent-routing.mdc
+├── skills/          ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/          ← 从 harness-kit/.agents/agents/ 镜像
 ├── hooks/           ← session-init、subagent-track-reminder
-├── skills/          ← git-xywh（组织特有）
 └── hooks.json.example
 ```
 
-**Claude 平台层：** 共享 `.agents/` + `.claude/` 三件套
+**Claude 平台层：** `harness-kit/.claude/` + `harness-kit/.agents/` -> `.claude/`
 
 ```
 .claude/
-├── rules/                       ← 必生成：ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
-├── skills/                      ← 共享 skill 镜像（从 `.agents/skills/` 自动投影，共 25 个）
+├── rules/                       ← ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
+├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像
 ├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
 │   └── content/                 ← 配套 content/*.md
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
 ```
 
-**Trae 平台层：** `adapters/trae/.trae/` -> `.trae/`
+**Trae 平台层：** `adapters/trae/.trae/` + `harness-kit/.agents/` -> `.trae/`
 
 ```
 .trae/
 ├── rules/                       ← ai-entry.md、trae-subagent-routing.md
+├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像
 ├── hooks/                       ← session-init、subagent-stop（opt-in）
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
 ```
@@ -121,12 +115,13 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 # 1) rules（always-loaded；Claude Code 会话开始自动加载）
 test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
 
-# 2) skills（共享层 → 平台层 mirror；Claude Code 自动发现）
-test -d .claude/skills/orchestration && echo "OK: skills/orchestration"
-test -d .claude/skills/git-xywh              && echo "OK: skills/git-xywh"
-# 其余 skill 同理（`ls -d .claude/skills/*/ | wc -l` 验证总数）
+# 2) skills（Claude Code 自动发现 .claude/skills/）
+ls -d .claude/skills/*/ | wc -l
 
-# 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+# 3) agents
+ls .claude/agents/*.md | wc -l
+
+# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
 test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"
 test -x .claude/hooks/harness-subagent-stop.sh   && echo "OK: hooks/harness-subagent-stop.sh"
 test -f .claude/settings.json.example            && echo "OK: settings.json.example"
@@ -139,7 +134,13 @@ test -f .claude/settings.json.example            && echo "OK: settings.json.exam
 test -f .trae/rules/ai-entry.md                  && echo "OK: rules/ai-entry.md"
 test -f .trae/rules/trae-subagent-routing.md    && echo "OK: rules/trae-subagent-routing.md"
 
-# 2) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+# 2) skills（Trae skill 目录）
+ls -d .trae/skills/*/ | wc -l
+
+# 3) agents
+ls .trae/agents/*.md | wc -l
+
+# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
 test -x .trae/hooks/harness-session-init.sh      && echo "OK: hooks/harness-session-init.sh"
 test -x .trae/hooks/harness-subagent-stop.sh    && echo "OK: hooks/harness-subagent-stop.sh"
 test -f .trae/settings.json.example              && echo "OK: settings.json.example"
@@ -152,7 +153,13 @@ test -f .trae/settings.json.example              && echo "OK: settings.json.exam
 test -f .cursor/rules/ai-entry.mdc               && echo "OK: rules/ai-entry.mdc"
 test -f .cursor/rules/cursor-subagent-routing.mdc && echo "OK: rules/cursor-subagent-routing.mdc"
 
-# 2) hooks
+# 2) skills
+ls -d .cursor/skills/*/ | wc -l
+
+# 3) agents
+ls .cursor/agents/*.md | wc -l
+
+# 4) hooks
 test -f .cursor/hooks.json.example               && echo "OK: hooks.json.example"
 ```
 

@@ -175,11 +175,11 @@ EOF
   esac
 }
 
-project_platform_skills() {
+project_agents() {
   local target_root="$1"
   local platform_dir="$2"
-  local src="$3"
-  local force="${4:-0}"
+  local force="${3:-0}"
+  local src="$KIT_ROOT/.agents"
   local added=0
   local skipped=0
 
@@ -187,23 +187,43 @@ project_platform_skills() {
     return 0
   fi
 
-  for skill_dir in "$src"/*/; do
-    [[ -d "$skill_dir" ]] || continue
-    [[ -f "$skill_dir/SKILL.md" ]] || continue
-    local skill_name
-    skill_name="$(basename "$skill_dir")"
-    mkdir -p "$target_root/$platform_dir/skills/$skill_name"
-    if [[ "$force" != "1" && -f "$target_root/$platform_dir/skills/$skill_name/SKILL.md" ]]; then
-      echo "   skip: $platform_dir/skills/$skill_name（已存在，--force 覆盖）"
-      skipped=$((skipped + 1))
-      continue
-    fi
-    cp -R "$skill_dir"* "$target_root/$platform_dir/skills/$skill_name/"
-    added=$((added + 1))
-  done
+  # skills（共享层 → 平台层 mirror）
+  if [[ -d "$src/skills" ]]; then
+    mkdir -p "$target_root/$platform_dir/skills"
+    for skill_dir in "$src/skills"/*/; do
+      [[ -d "$skill_dir" ]] || continue
+      [[ -f "$skill_dir/SKILL.md" ]] || continue
+      local skill_name
+      skill_name="$(basename "$skill_dir")"
+      if [[ "$force" != "1" && -f "$target_root/$platform_dir/skills/$skill_name/SKILL.md" ]]; then
+        echo "   skip: $platform_dir/skills/$skill_name（已存在，--force 覆盖）"
+        skipped=$((skipped + 1))
+        continue
+      fi
+      mkdir -p "$target_root/$platform_dir/skills/$skill_name"
+      cp -R "$skill_dir"* "$target_root/$platform_dir/skills/$skill_name/"
+      added=$((added + 1))
+    done
+  fi
+
+  # agents（agent manifest，共享层 → 平台层 mirror）
+  if [[ -d "$src/agents" ]]; then
+    mkdir -p "$target_root/$platform_dir/agents"
+    for agent_file in "$src/agents"/*.md; do
+      [[ -f "$agent_file" ]] || continue
+      local name
+      name="$(basename "$agent_file")"
+      if [[ "$force" != "1" && -f "$target_root/$platform_dir/agents/$name" ]]; then
+        skipped=$((skipped + 1))
+        continue
+      fi
+      cp "$agent_file" "$target_root/$platform_dir/agents/"
+      added=$((added + 1))
+    done
+  fi
 
   if [[ "$added" -gt 0 || "$skipped" -gt 0 ]]; then
-    echo "   $platform_dir/skills: +$added 跳过 $skipped"
+    echo "   $platform_dir/skills + agents: +$added 跳过 $skipped"
   fi
 }
 
@@ -258,10 +278,8 @@ project_cursor() {
     done
   fi
 
-  # skills（共享层 → 平台层 mirror；用户可定制：默认 skip-if-exists，--force 覆盖）
-  local skill_output
-  skill_output="$(project_platform_skills "$target_root" ".cursor" "$KIT_ROOT/.agents/skills" "$force" 2>&1)"
-  [[ -n "$skill_output" ]] && echo "$skill_output"
+  # skills + agents（共享层 → 平台层 mirror）
+  project_agents "$target_root" ".cursor" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + config 示例，非用户文件，始终覆盖）
   project_hooks "$target_root" "cursor"
@@ -295,10 +313,8 @@ project_claude() {
     done
   fi
 
-  # skills（共享层 → 平台层 mirror；Claude Code 自动发现 .claude/skills/）
-  local skill_output
-  skill_output="$(project_platform_skills "$target_root" ".claude" "$KIT_ROOT/.agents/skills" "$force" 2>&1)"
-  [[ -n "$skill_output" ]] && echo "$skill_output"
+  # skills + agents（共享层 → 平台层 mirror）
+  project_agents "$target_root" ".claude" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   project_hooks "$target_root" "claude"
@@ -340,6 +356,9 @@ project_trae() {
       added=$((added + 1))
     done
   fi
+
+  # skills + agents（共享层 → 平台层 mirror）
+  project_agents "$target_root" ".trae" "$force"
 
   # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
   if [[ -d "$ext_root" ]]; then
@@ -421,9 +440,6 @@ case "$cmd" in
     # 投影目标：当前工作目录（用户项目根）
     target_dir="$(pwd)"
 
-    # 共享层始终投影
-    project_shared "$target_dir"
-
     # MCP 投影（所有平台共用，标准 .mcp.json；用户已有则跳过）
     project_mcp "$target_dir"
 
@@ -463,7 +479,7 @@ case "$cmd" in
         _rules_count="$(ls "$target_dir/.claude/rules/"*.md 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥1）"
         _skills_count="$(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
-        echo "    [skills]  共 ${_skills_count} 个 skill 镜像（应 13）"
+        echo "    [skills]  共 ${_skills_count} 个 skill"
         echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
         echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
         echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
@@ -474,6 +490,8 @@ case "$cmd" in
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK .trae/rules/trae-subagent-routing.md" || echo "MISSING .trae/rules/trae-subagent-routing.md")"
         _rules_count="$(ls "$target_dir/.trae/rules/"*.md 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥2）"
+        _skills_count="$(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [skills]  共 ${_skills_count} 个 skill"
         echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
         echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
         echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
@@ -481,6 +499,7 @@ case "$cmd" in
       all)
         echo "==> ✅ Cursor 平台层："
         echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK" || echo "MISSING") .cursor/rules/ai-entry.mdc"
+        echo "    [skills]  $(ls -d "$target_dir/.cursor/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
         echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-session-init.sh" && echo "OK" || echo "MISSING") harness-session-init.sh"
         echo "==> ✅ Claude 平台层："
         echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK" || echo "MISSING") .claude/rules/ai-entry.md"
@@ -489,16 +508,16 @@ case "$cmd" in
         echo "==> ✅ Trae 平台层："
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK" || echo "MISSING") .trae/rules/ai-entry.md"
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK" || echo "MISSING") .trae/rules/trae-subagent-routing.md"
+        echo "    [skills]  $(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
         echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK" || echo "MISSING") settings.json.example"
         ;;
     esac
 
     echo
-    echo "==> 复制以下 4 行到 init 后的回复中（AI 必读）："
+    echo "==> 复制以下 3 行到 init 后的回复中（AI 必读）："
     echo "    1) 检测到平台: $platform"
-    echo "    2) 共享层 + 平台层投影完成"
-    echo "    3) hooks 扩展已投影（opt-in，未启用）"
-    echo "    4) 运行 'bash harness-kit/scripts/harness-project.sh project --platform $platform --force' 可强制覆盖"
+    echo "    2) 平台层投影完成（skills + rules + hooks）"
+    echo "    3) 运行 'bash harness-kit/scripts/harness-project.sh project --platform $platform --force' 可强制覆盖"
     ;;
 
   *)
