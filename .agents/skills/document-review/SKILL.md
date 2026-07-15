@@ -1,82 +1,82 @@
 ---
 name: document-review
-description: Use when reviewing any document (spec, design, plan) for completeness, clarity, and quality — especially environment preparation completeness. Triggers: review document, check document, audit spec, audit design, 审查文档, 检查文档, 文档审查
+description: 审查任何文档（规格、设计、计划）的完整性、清晰度和质量——特别是环境准备完整性时使用。触发词：review document, check document, audit spec, audit design, 审查文档, 检查文档, 文档审查
 ---
 
-# Document Review
+# 文档审查
 
-Systematic document review with type-specific rules. **Environment preparation** is a first-class check for design and plan documents.
+系统化文档审查，附带按类型分类的审查规则。**环境准备**是设计和计划文档的首要检查项。
 
-**Core principle:** Missing environment setup causes more rework than missing features.
+**核心原则：** 缺失环境配置带来的返工比缺失功能更严重。
 
-## When to Use
+## 使用时机
 
-**Always:**
-- Before approving a spec, design, or implementation plan
-- When user asks to review, audit, or check a document
-- After brainstorming, before writing-plans (optional gate on design docs)
+**始终使用：**
+- 在批准规格、设计或实施计划之前
+- 当用户要求审查、审计或检查文档时
+- 头脑风暴之后、编写计划之前（设计文档的可选门禁）
 
-**Document types:**
-- Requirements / spec documents
-- Architecture / technical design documents
-- Implementation plans
-- Environment / deployment configuration docs
+**文档类型：**
+- 需求/规格文档
+- 架构/技术设计文档
+- 实施计划
+- 环境/部署配置文档
 
-## Document Type Detection
+## 文档类型检测
 
-Read the document, then match keywords (first match wins; if multiple match, prefer design > plan > spec):
+阅读文档，然后匹配关键词（首次匹配即胜出；如果多个匹配，优先选择 design > plan > spec）：
 
-| Document signals | Type | Load rule file |
+| 文档信号 | 类型 | 加载规则文件 |
 | --- | --- | --- |
-| 需求, 用户故事, 功能, spec, requirement | Spec / requirements | `review-rules/spec.md` |
-| 架构, 设计, 实现, API, 环境, 部署, design | Architecture / technical design | `review-rules/design.md` |
-| 计划, plan, 任务, 阶段, Phase, Task | Implementation plan | `review-rules/plan.md` |
+| 需求, 用户故事, 功能, spec, requirement | 规格/需求 | `review-rules/spec.md` |
+| 架构, 设计, 实现, API, 环境, 部署, design | 架构/技术设计 | `review-rules/design.md` |
+| 计划, plan, 任务, 阶段, Phase, Task | 实施计划 | `review-rules/plan.md` |
 
-After detection, **Read** the matching rule file and `checklists/review-checklist.md`.
+检测完成后，**阅读**匹配的规则文件和 `checklists/review-checklist.md`。
 
-## Review Flow
+## 审查流程
 
 ```
-1. DETECT document type
-2. LOAD review-rules/<type>.md + checklists/review-checklist.md
-3. REVIEW against rules (score each dimension)
-4. OUTPUT report (use artifact-templates/document-review.md)
-5. NEXT: pass → continue; fail → list missing items by priority
+1. 检测文档类型
+2. 加载 review-rules/<类型>.md + checklists/review-checklist.md
+3. 对照规则审查（逐维度打分）
+4. 输出报告（使用 artifact-templates/document-review.md）
+5. 下一步：通过 → 继续；不通过 → 按优先级列出缺失项
 ```
 
-## Output Format
+## 输出格式
 
-Write to `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<topic>-document-review.md` using `artifact-templates/document-review.md`.
+写入 `.ai-runtime-artifacts/reviews/YYYY-MM-DD-<主题>-document-review.md`，使用 `artifact-templates/document-review.md` 模板。
 
-Required sections:
-- Document type
-- Rules loaded
-- Scores: completeness, clarity, environment prep (if applicable)
-- Missing items (priority ordered)
-- Concrete improvement suggestions
-- Next steps
+必需章节：
+- 文档类型
+- 已加载的规则
+- 评分：完整性、清晰度、环境准备（如适用）
+- 缺失项（按优先级排序）
+- 具体改进建议
+- 后续步骤
 
-## Integration
+## 集成
 
-| Stage | Skill |
+| 阶段 | 技能 |
 | --- | --- |
-| Code self-test / Leader review | `requesting-code-review` (not this skill) |
-| Implementation | `test-driven-development` + `writing-plans` (plans must have Phase 1 env prep) |
-| Claiming done | `verification-before-completion` |
+| 代码自测 / Leader 审查 | `requesting-code-review`（非本技能） |
+| 实施 | `test-driven-development` + `writing-plans`（计划必须包含 Phase 1 环境准备） |
+| 声明完成 | `verification-before-completion` |
 
-This skill reviews **documents only**, not source code.
+本技能**仅审查文档**，不审查源代码。
 
-## Red Flags — STOP
+## 红色警报 — 停止
 
-- Skipping environment preparation review on design/plan docs
-- Surface-level review without listing specific missing items
-- Approving a plan whose Phase 1 is not environment setup
-- Reviewing code with this skill (use `requesting-code-review`)
+- 跳过设计/计划文档的环境准备审查
+- 只做表面审查而不列出具体缺失项
+- 批准 Phase 1 不是环境准备的计划
+- 用本技能审查代码（应使用 `requesting-code-review`）
 
-## Rationalization Prevention
+## 防狡辩
 
-| Excuse | Reality |
+| 借口 | 事实 |
 | --- | --- |
-| "Env setup is obvious" | List deps, env vars, services explicitly or fail |
-| "We'll add tests later" | Plan must include test strategy now |
-| "Doc is mostly complete" | Score each dimension; list gaps |
+| "环境配置很明显" | 必须明确列出依赖、环境变量、服务，否则不通过 |
+| "测试后面再加" | 计划必须现在就包含测试策略 |
+| "文档基本完整" | 逐维度打分；列出缺口 |

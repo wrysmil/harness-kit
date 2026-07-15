@@ -1,5 +1,5 @@
 ---
-name: Git
+name: git-xywh
 slug: git-xywh
 version: 1.0.9
 description: "组织级 Git 工作流：三主干（main / test / develop）、五类临时分支（feature / task / temp / bugfix / test）、多环境隔离、Angular 提交与 MR 流程；并涵盖日常安全操作（合并、变基、冲突、恢复）。在以下情况使用：（1）任务涉及上述分支、提测线、热修或版本标签；（2）需要写符合规范的提交说明或走合并请求；（3）需要避免误操作受保护分支或污染历史。"

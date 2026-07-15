@@ -21,7 +21,6 @@ infsh login
 infsh app run agent-browser --function open --input '{"url": "https://example.com"}' --session new
 ```
 
-
 ## Core Workflow
 
 Every browser automation follows this pattern:
@@ -59,34 +58,34 @@ infsh app run agent-browser --function close --session $SESSION_ID --input '{}'
 
 ## Functions
 
-| Function | Description |
-|----------|-------------|
-| `open` | Navigate to URL, configure browser (viewport, proxy, video recording) |
-| `snapshot` | Re-fetch page state with `@e` refs after DOM changes |
-| `interact` | Perform actions using `@e` refs (click, fill, drag, upload, etc.) |
-| `screenshot` | Take page screenshot (viewport or full page) |
-| `execute` | Run JavaScript code on the page |
-| `close` | Close session, returns video if recording was enabled |
+| Function     | Description                                                           |
+| ------------ | --------------------------------------------------------------------- |
+| `open`       | Navigate to URL, configure browser (viewport, proxy, video recording) |
+| `snapshot`   | Re-fetch page state with `@e` refs after DOM changes                  |
+| `interact`   | Perform actions using `@e` refs (click, fill, drag, upload, etc.)     |
+| `screenshot` | Take page screenshot (viewport or full page)                          |
+| `execute`    | Run JavaScript code on the page                                       |
+| `close`      | Close session, returns video if recording was enabled                 |
 
 ## Interact Actions
 
-| Action | Description | Required Fields |
-|--------|-------------|-----------------|
-| `click` | Click element | `ref` |
-| `dblclick` | Double-click element | `ref` |
-| `fill` | Clear and type text | `ref`, `text` |
-| `type` | Type text (no clear) | `text` |
-| `press` | Press key (Enter, Tab, etc.) | `text` |
-| `select` | Select dropdown option | `ref`, `text` |
-| `hover` | Hover over element | `ref` |
-| `check` | Check checkbox | `ref` |
-| `uncheck` | Uncheck checkbox | `ref` |
-| `drag` | Drag and drop | `ref`, `target_ref` |
-| `upload` | Upload file(s) | `ref`, `file_paths` |
-| `scroll` | Scroll page | `direction` (up/down/left/right), `scroll_amount` |
-| `back` | Go back in history | - |
-| `wait` | Wait milliseconds | `wait_ms` |
-| `goto` | Navigate to URL | `url` |
+| Action     | Description                  | Required Fields                                   |
+| ---------- | ---------------------------- | ------------------------------------------------- |
+| `click`    | Click element                | `ref`                                             |
+| `dblclick` | Double-click element         | `ref`                                             |
+| `fill`     | Clear and type text          | `ref`, `text`                                     |
+| `type`     | Type text (no clear)         | `text`                                            |
+| `press`    | Press key (Enter, Tab, etc.) | `text`                                            |
+| `select`   | Select dropdown option       | `ref`, `text`                                     |
+| `hover`    | Hover over element           | `ref`                                             |
+| `check`    | Check checkbox               | `ref`                                             |
+| `uncheck`  | Uncheck checkbox             | `ref`                                             |
+| `drag`     | Drag and drop                | `ref`, `target_ref`                               |
+| `upload`   | Upload file(s)               | `ref`, `file_paths`                               |
+| `scroll`   | Scroll page                  | `direction` (up/down/left/right), `scroll_amount` |
+| `back`     | Go back in history           | -                                                 |
+| `wait`     | Wait milliseconds            | `wait_ms`                                         |
+| `goto`     | Navigate to URL              | `url`                                             |
 
 ## Element Refs
 
@@ -101,6 +100,7 @@ Elements are returned with `@e` refs:
 ```
 
 **Important:** Refs are invalidated after navigation. Always re-snapshot after:
+
 - Clicking links/buttons that navigate
 - Form submissions
 - Dynamic content loading
@@ -190,22 +190,22 @@ infsh app run agent-browser --function execute --session $SESSION --input '{
 
 ## Deep-Dive Documentation
 
-| Reference | Description |
-|-----------|-------------|
-| [references/commands.md](references/commands.md) | Full function reference with all options |
-| [references/snapshot-refs.md](references/snapshot-refs.md) | Ref lifecycle, invalidation rules, troubleshooting |
-| [references/session-management.md](references/session-management.md) | Session persistence, parallel sessions |
-| [references/authentication.md](references/authentication.md) | Login flows, OAuth, 2FA handling |
-| [references/video-recording.md](references/video-recording.md) | Recording workflows for debugging |
-| [references/proxy-support.md](references/proxy-support.md) | Proxy configuration, geo-testing |
+| Reference                                                            | Description                                        |
+| -------------------------------------------------------------------- | -------------------------------------------------- |
+| [references/commands.md](references/commands.md)                     | Full function reference with all options           |
+| [references/snapshot-refs.md](references/snapshot-refs.md)           | Ref lifecycle, invalidation rules, troubleshooting |
+| [references/session-management.md](references/session-management.md) | Session persistence, parallel sessions             |
+| [references/authentication.md](references/authentication.md)         | Login flows, OAuth, 2FA handling                   |
+| [references/video-recording.md](references/video-recording.md)       | Recording workflows for debugging                  |
+| [references/proxy-support.md](references/proxy-support.md)           | Proxy configuration, geo-testing                   |
 
 ## Ready-to-Use Templates
 
-| Template | Description |
-|----------|-------------|
-| [templates/form-automation.sh](templates/form-automation.sh) | Form filling with validation |
-| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Login once, reuse session |
-| [templates/capture-workflow.sh](templates/capture-workflow.sh) | Content extraction with screenshots |
+| Template                                                                 | Description                         |
+| ------------------------------------------------------------------------ | ----------------------------------- |
+| [templates/form-automation.sh](templates/form-automation.sh)             | Form filling with validation        |
+| [templates/authenticated-session.sh](templates/authenticated-session.sh) | Login once, reuse session           |
+| [templates/capture-workflow.sh](templates/capture-workflow.sh)           | Content extraction with screenshots |
 
 ## Examples
 

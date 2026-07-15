@@ -53,6 +53,7 @@ required_kit_files=(
   "init/onboarding-handoff.txt"
   "init/project-profiler.prompt.md"
   "init/templates/project.profile.md"
+  "init/templates/branch.profile.md"
   "init/templates/context-map.md"
   "init/templates/project.verification.md"
   "init/templates/project.git.md"
