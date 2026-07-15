@@ -992,7 +992,7 @@ git commit -m "feat(core): routing — Claude Code first + platform hook table"
 | Claude Code | `CLAUDE.md`、`.claude/rules/`、`.claude/agents/harness-*`、`.claude/skills/`、`.claude/settings.json`（**主平台**） |
 ```
 
-并把表格顺序改为：Claude Code → Cursor → Gemini。
+并把表格顺序改为：Claude Code → Cursor。
 
 - [ ] **Step 11.4：更新 `entrypoints/HARNESS-PLATFORM-ENTRY.md`**
 

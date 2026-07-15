@@ -56,7 +56,7 @@ Harness Kit 已在实践中验证：**工具中立层**（`core/routing.md`、�
 
 - 独立 npm 包、HTTP 编排服务、可视化控制台
 - 替换各平台原生 UI / 模型路由
-- Gemini、Copilot CLI 适配器实现（matrix 可预留行）
+- Copilot CLI 适配器实现（matrix 可预留行）
 - 全自动 parity 测试矩阵（首版：`harness-check` 静态检查 + 人工维护 matrix）
 - 在 worktree 内强制子 Agent commit（仍由 `git-xywh` + Leader 负责）
 

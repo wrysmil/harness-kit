@@ -36,7 +36,7 @@
 Harness 工程化常卡在「起步」：规则散落、各工具各一套、验证标准不统一。Harness Kit 的目标是：
 
 1. **降低接入成本** — 将 `harness-kit/` 放入项目，把初始化话术交给 AI 即可。
-2. **统一多工具入口** — 同一套规范投影到 Cursor、Claude Code、Gemini 等环境。
+2. **统一多工具入口** — 同一套规范投影到 Cursor、Claude Code 等环境。
 3. **可迁移、可沉淀** — 规范在 `harness-kit/` 中迭代，团队可逐步优化为自有资产。
 
 ---
@@ -266,7 +266,7 @@ harness-kit/
 ```text
 请先读取 harness-kit/README.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
-0. 先问我：「你当前使用哪个 AI 编程工具？」（Cursor / Claude Code / Trae / Gemini / 其他）。根据我的回答确定平台适配层投影范围，后续步骤仅投影对应平台。
+0. 先问我：「你当前使用哪个 AI 编程工具？」（Cursor / Claude Code / Trae / 其他）。根据我的回答确定平台适配层投影范围，后续步骤仅投影对应平台。
 1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：
    - 删除 harness-kit/.git/（harness-kit 源仓库的 .git；不要动到项目自身的 .git/）
    - 如存在 harness-kit/.gitignore、harness-kit/.gitattributes、harness-kit/.gitmodules，一并删除
