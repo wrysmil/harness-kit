@@ -15,6 +15,7 @@
   - **全平台**：`orchestration` → `core/orchestration/dispatcher-workflow.md`
 - **Tier 0** 单文件机械修改：Leader 直做，无 FM（见 § 任务 Tier）。
 - **Tier 1+** 简单实现：Leader 直做或编排（见 § WU 编排硬触发）。
+- **文档优先（强制）：** 任何实现任务（Tier 1+）必须先扫描 `.ai-runtime-artifacts/` 中与当前任务相关的 specs/plans/decisions/contracts/research，再读 `project.profile.md` + `context-map.md`。**跳过此步骤直接写代码 = 未按 harness 执行**。跨会话的文档是桥 — 读它们就不需要「每次重新调教」。细则见 `source-driven-development` skill Step 0 及 § 按判定加载「Leader 直做 / Tier 1」。
 - 项目级 skill 优先于通用 skill。
 - **Git 协作**：组织级分支、提交、MR、热修、合流默认 invoke **`git-xywh`** skill；本项目差异与 AI 约束见 `harness-kit/project.git.md`（不将 skill 全文复制进仓库）。
 
@@ -93,7 +94,7 @@
 
 **Tier 1 触发（任一即须）：** ≥2 写文件；跑过测试/lint；用户说 fix/实现/改 bug；Leader 直做已批准 plan 且不委派 WU。
 
-**Tier 1 自上下文打包（必执行）：** Leader 在开始写代码前必须执行 Self-Context Pack（见 `core/orchestration/dispatcher-workflow.md` §步骤 0.5 Tier 1 自打包）。读取 project.profile.md（L1）、相关 spec 章节（L2）、目标源文件 ≤5 个（L3）、参考范例、明确约束。不执行上下文准备的 Tier 1 实现视为不规范。
+**Tier 1 自上下文打包（必执行）：** Leader 在开始写代码前必须执行 Self-Context Pack（见 `core/orchestration/dispatcher-workflow.md` §步骤 0.5 Tier 1 自打包）。**首步必须扫描 `.ai-runtime-artifacts/` 中与任务相关的产物**（`specs/`、`plans/`、`decisions/`、`contracts/`、`research/`），然后读取 project.profile.md（L1）、相关 spec 章节（L2）、目标源文件 ≤5 个（L3）、参考范例、明确约束。必须先 Load `source-driven-development` skill → 执行 Step 0（项目文档检查）→ 再进入编码。不执行上下文准备的 Tier 1 实现视为不规范。
 
 **禁止：** 用 Tier 0 规避 Tier 1；用 Tier 1 Leader 直做规避 Tier 2 编排（见下节硬触发）。
 
@@ -142,10 +143,10 @@
 | --- | --- |
 | 小改动 / Tier 0 | 无 stage skill；回复须含改动摘要 + 验证命令输出 |
 | 需求澄清（按需前置） | **①** Load `interview-me` → **②** Write `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md`（FM: route=interview-me, confidence, confirmed）。用户显式确认后才进入方案设计。 |
-| Leader 直做 / Tier 1 | **①** Self-Context Pack（读 `project.profile.md`、相关 spec、目标源文件 ≤5 个、参考范例）→ **②** Load `verification-before-completion` → **③** `project.verification.md` → **④** Read `harness-kit/references/definition-of-done.md` → **⑤** Write `verification-lite.md`（含 `### References 检查`） |
-| 需求澄清 / 方案设计 | **①** Load `source-driven-development`（STACK DETECTION：读 `package.json` 等 → Write `.ai-runtime-artifacts/stack/`）→ **②** Load `brainstorming` → **③** `artifacts.md` → **④** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。多 WU 并行时 **⑤** Load `api-and-interface-design` → Write `.ai-runtime-artifacts/contracts/`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming。 |
-| 实施计划 | **①** Load `writing-plans` → **②** `artifacts.md` → **③** `plan.harness-overlay.md`（FM + Next）；并行时 **④** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
-| 多 task 编码 / 并行实现 | 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包，含相关 references）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
+| Leader 直做 / Tier 1 | **①** Load `source-driven-development` → 执行 **Step 0**：扫描 `.ai-runtime-artifacts/`（`find .ai-runtime-artifacts/ -name "*<topic>*.md"`）→ Read 1-3 个最相关产物 → **②** Self-Context Pack（读 `project.profile.md`、相关 spec 章节、目标源文件 ≤5 个、参考范例）→ **③** Load `verification-before-completion` → **④** `project.verification.md` → **⑤** Read `harness-kit/references/definition-of-done.md` → **⑥** Write `verification-lite.md`（含 `### References 检查`） |
+| 需求澄清 / 方案设计 | **①** 先扫描 `.ai-runtime-artifacts/` 中已有相关产物（避免重复设计）→ **②** Load `source-driven-development`（STACK DETECTION：读 `package.json` 等 → Write `.ai-runtime-artifacts/stack/`）→ **③** Load `brainstorming` → **④** `artifacts.md` → **⑤** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。多 WU 并行时 **⑥** Load `api-and-interface-design` → Write `.ai-runtime-artifacts/contracts/`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming。 |
+| 实施计划 | **①** 先扫描 `.ai-runtime-artifacts/specs/` 中相关方案 + `.ai-runtime-artifacts/plans/` 中已有计划 → **②** Load `writing-plans` → **③** `artifacts.md` → **④** `plan.harness-overlay.md`（FM + Next）；并行时 **⑤** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
+| 多 task 编码 / 并行实现 | **文档优先扫描** `.ai-runtime-artifacts/`（specs/plans/decisions/contracts/research）→ 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包，含相关 references + artifacts）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
 | 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` → **③** Read `harness-kit/references/definition-of-done.md` |
 | 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** Read `harness-kit/references/security-checklist.md` + `harness-kit/references/performance-checklist.md` → **③** 委派 reviewer；并行 **④** Load `security-and-hardening` → 委派 security-auditor；按需 **⑤** Load `performance-optimization` → 委派 perf-auditor |
 | **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → Read `harness-kit/references/definition-of-done.md`（对照检查）→ `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec。产物必须含 `### References 检查` |
@@ -246,6 +247,7 @@
 - **强制声明：** 首行 `「Harness：…」`；次行 `Skills:` 格式见 § 阶段指定 skill 必用（Tier 1+ 或 stage skill 时必填）
 - **未声明时的用户干预：** 首句无 `「Harness：…」` → 发送：`请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
 - **跳过门禁时的干预：** `你跳过了阶段门禁。我只要求写方案/计划，不要改代码。写入 .ai-runtime-artifacts/ 后暂停等我确认。`
+- **跳过文档扫描时的干预：** `你没有先扫描 .ai-runtime-artifacts/ 中的相关产物就开始写代码。请先 Load source-driven-development skill → 执行 Step 0（扫描项目文档）→ 找到并阅读相关 specs/plans/decisions，然后再开始实现。`
 - **走平台原生 plan 工具时的干预：** `你用了 Claude Code EnterPlanMode / Cursor Plan 模式，绕过了 Harness。撤回该 plan，Load writing-plans skill 重新写 .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md（FM + Next + dispatch）。`
 - 执行非小型任务前，先在过程产物或回复中声明本次 route、skills 和 source。
 - route 必须同时体现默认 skills 和用户指定 skills；如果跳过默认 skills，必须记录用户的明确排除指令。

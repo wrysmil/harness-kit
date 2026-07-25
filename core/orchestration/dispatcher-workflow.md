@@ -37,6 +37,8 @@
 
 Leader 在派发 WU 前执行上下文打包，为每个 Worker 准备精确上下文。原理见 `context-engineering` skill。
 
+**前置步骤（必执行）：** 在开始打包前，Leader 必须先执行 `source-driven-development` Step 0 — 扫描 `.ai-runtime-artifacts/` 中与当前 GROUP/任务相关的 specs、plans、decisions、contracts、research。找到的产物将成为后续打包的 L2 输入。
+
 ### 打包流程
 
 对每个 WU，Leader 按以下顺序准备 WU Context Block：
