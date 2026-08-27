@@ -1,0 +1,87 @@
+﻿<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>harness — sidebar footer 全局徽章</title>
+<style>
+  /* 模拟 DSH sidebar footer 区域 */
+  body { margin: 0; background: #111; font-family: system-ui, sans-serif; }
+  .dsh-shell { display: flex; height: 100vh; }
+  .sidebar { width: 220px; background: #1a1a1a; border-right: 1px solid #333; display: flex; flex-direction: column; }
+  .sidebar-content { flex: 1; }
+  .sidebar-footer {
+    padding: 8px 12px;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .sidebar-footer:hover { background: #252525; }
+
+  /* 徽章 */
+  .sf-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #e5e5e5;
+  }
+  .sf-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    flex-shrink: 0;
+  }
+  .sf-badge .dot.green { background: #22c55e; }
+  .sf-badge .dot.red { background: #ef4444; }
+
+  /* 状态文字 */
+  .sf-label { color: #e5e5e5; font-size: 12px; }
+
+  /* 主内容区 */
+  .main { flex: 1; padding: 20px; color: #ccc; font-size: 14px; }
+  .main h2 { color: #fff; margin-top: 0; }
+  .hint { font-size: 12px; color: #666; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="dsh-shell">
+  <div class="sidebar">
+    <div class="sidebar-content"></div>
+    <!-- 全局徽章 — 点击切换状态 -->
+    <div class="sidebar-footer" onclick="cycle()" title="点击切换 harness 状态">
+      <div class="sf-badge">
+        <span class="dot" id="dot"></span>
+        <span class="sf-label" id="label">harness</span>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <h2>Sidebar Footer 全局徽章</h2>
+    <p>显示 harness 当前全局状态。点击 footer 区域可切换状态。</p>
+    <div class="hint">💡 状态随 ctx.events 流实时更新（harness.flow.started / harness.flow.aborted / harness.gate.unlocked）</div>
+    <div style="margin-top:24px">
+      <b>3 种状态：</b><br>
+      🟡 <b>3 active</b> — 有多个 flow 同时进行<br>
+      🟢 <b>all open</b> — 无 locked gate<br>
+      🔴 <b>1 rejected</b> — 有 flow 被 gate 拦截
+    </div>
+  </div>
+</div>
+<script>
+const states = [
+  { dot: '', label: '3 active', dotClass: '' },       // amber
+  { dot: 'green', label: 'all open', dotClass: 'green' },
+  { dot: 'red', label: '1 rejected', dotClass: 'red' },
+];
+let s = 0;
+function cycle() {
+  s = (s + 1) % states.length;
+  const { dot, label, dotClass } = states[s];
+  document.getElementById('dot').className = 'dot' + (dotClass ? ' '+dotClass : '');
+  document.getElementById('label').textContent = label;
+}
+</script>
+</body>
+</html>
