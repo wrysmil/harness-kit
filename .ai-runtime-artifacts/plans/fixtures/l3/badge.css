@@ -1,0 +1,126 @@
+/* badge.css — C 形态：conversation 浮徽章 + popover */
+/* 注入到 DSH conversation.chat.turnTail slot */
+
+/* === 浮徽章（右下角固定）=== */
+.badge-fab {
+  position: fixed;
+  right: 18px;
+  top: 74px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--dsh-bg, #1a1a1a);
+  border: 1px solid var(--dsh-border, #333);
+  border-radius: 999px;
+  padding: 4px 10px 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.badge-fab:hover { background: var(--dsh-hover, #252525); }
+
+/* 状态点 */
+.badge-fab .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #f59e0b; /* amber — locked */
+  animation: pulse 2s infinite;
+}
+.badge-fab .dot.unlocked { background: #22c55e; animation: none; }
+
+/* 名称 */
+.badge-fab .nm { color: var(--dsh-text, #e5e5e5); font-weight: 500; }
+
+/* locked 标签 */
+.badge-fab .badge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #f59e0b;
+  color: #000;
+  font-weight: 600;
+}
+.badge-fab .badge.unlocked { background: #22c55e; color: #fff; }
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+/* === Popover === */
+.popover {
+  position: fixed;
+  right: 18px;
+  top: 114px;
+  width: 320px;
+  background: var(--dsh-bg, #1a1a1a);
+  border: 1px solid var(--dsh-border, #333);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  overflow: hidden;
+  z-index: 9998;
+}
+.popover.hidden { display: none; }
+
+/* Popover 头部 */
+.popover .ph {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--dsh-border, #333);
+  background: var(--dsh-header, #222);
+}
+.popover .ph b { color: var(--dsh-text, #e5e5e5); font-size: 13px; }
+.popover .ph .stage {
+  font-size: 11px;
+  color: var(--dsh-muted, #888);
+  background: var(--dsh-bg2, #2a2a2a);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* Popover 内容 */
+.popover .pb { padding: 10px 14px; }
+
+/* gate 条 */
+.gate-strip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--dsh-border, #2a2a2a);
+}
+.gate-strip:last-child { border-bottom: none; }
+.gate-strip .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.gate-strip .dot.pass { background: #22c55e; }
+.gate-strip .nm { color: var(--dsh-text, #e5e5e5); font-size: 12px; font-weight: 500; }
+.gate-strip .why { color: var(--dsh-muted, #888); font-size: 11px; margin-top: 2px; }
+
+/* flow strip */
+.flow-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+.flow-strip .chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--dsh-bg2, #2a2a2a);
+  color: var(--dsh-muted, #888);
+}
+.flow-strip .chip.active {
+  background: #f59e0b33;
+  color: #f59e0b;
+  border: 1px solid #f59e0b66;
+}

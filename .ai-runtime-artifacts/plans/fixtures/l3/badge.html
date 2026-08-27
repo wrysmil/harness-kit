@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>harness badge — C 形态</title>
+<link rel="stylesheet" href="badge.css">
+<style>
+  body { margin: 0; background: #0d0d0d; font-family: system-ui, sans-serif; }
+  .dsh-conv {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 80px 20px 200px;
+    color: #e5e5e5;
+  }
+  .dsh-conv p { margin: 0 0 12px; padding: 8px 12px; border-radius: 8px; background: #1a1a1a; }
+  .dsh-conv p.human { background: #1f2937; }
+  .dsh-conv .turn { margin-bottom: 4px; }
+  .dsh-conv .role { font-size: 11px; color: #888; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="dsh-conv">
+  <div class="turn">
+    <div class="role">User</div>
+    <p class="human">帮我设计一个 rate limiter</p>
+  </div>
+  <div class="turn">
+    <div class="role">harness.leader</div>
+    <p>收到. 创建 flow <b>feat/rate-limiter</b>，stage=clarify。</p>
+  </div>
+
+  <!-- 浮徽章 -->
+  <div class="badge-fab" onclick="document.getElementById('popover').classList.toggle('hidden')">
+    <span class="dot"></span>
+    <span class="nm">harness · plan</span>
+    <span class="badge">locked</span>
+  </div>
+
+  <!-- Popover -->
+  <div class="popover" id="popover">
+    <div class="ph">
+      <b>harness · feat/rate-limiter</b>
+      <span class="stage">stage 03/07</span>
+    </div>
+    <div class="pb">
+      <div class="gate-strip">
+        <span class="dot"></span>
+        <div>
+          <div class="nm">gate · plan-approved</div>
+          <div class="why">写代码被拦截 — 需要 approve plan</div>
+        </div>
+      </div>
+      <div class="flow-strip">
+        <span class="chip active">clarify ✓</span>
+        <span class="chip active">design ✓</span>
+        <span class="chip active">plan ·</span>
+        <span class="chip">implement</span>
+        <span class="chip">verify</span>
+        <span class="chip">review</span>
+        <span class="chip">ship</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
