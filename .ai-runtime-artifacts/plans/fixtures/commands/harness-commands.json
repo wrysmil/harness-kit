@@ -1,0 +1,19 @@
+{
+  "commands": [
+    { "name": "/harness",           "args": "",                           "description": "打开 harness 面板；列出当前所有 flow 状态" },
+    { "name": "/harness feat",      "args": "<flow-id> [--force]",        "description": "启动 feat flow (7-stage)",            "builtin": "feat"    },
+    { "name": "/harness bug",        "args": "<flow-id>",                  "description": "启动 bug flow (4-step)",              "builtin": "bug"     },
+    { "name": "/harness hotfix",     "args": "<flow-id>",                  "description": "启动 hotfix flow (skip design)",       "builtin": "hotfix"  },
+    { "name": "/harness explore",    "args": "<topic>",                    "description": "启动 explore flow (research)",         "builtin": "explore" },
+    { "name": "/harness verify",     "args": "<target>",                   "description": "对 MR/分支跑测试 + checklist",        "builtin": "verify"  },
+    { "name": "/harness refactor",   "args": "<flow-id>",                  "description": "启动 refactor flow",                 "builtin": "refactor" },
+    { "name": "/harness approve",     "args": "<flow-id> [<file-index>]",  "description": "显式批准指定 flow 的产物（kind 同 spec validKinds）" },
+    { "name": "/harness switch",     "args": "<flow-id>",                  "description": "切换当前 active flow" },
+    { "name": "/harness abort",      "args": "<flow-id>",                  "description": "强制放弃一条 flow（status=aborted）" },
+    { "name": "/harness continue",   "args": "<flow-id>",                  "description": "继续 paused flow（如 merge 冲突解决后）" },
+    { "name": "/harness diagnose",   "args": "",                           "description": "显示 harness-kit 当前状态诊断" },
+    { "name": "/harness check",      "args": "<flow-id>",                  "description": "跑指定 flow 的 reference checklist" },
+    { "name": "/harness focus",      "args": "",                           "description": "在 form A (drawer) / B (details) / C (badge) 之间循环切换" },
+    { "name": "/harness reload",     "args": "",                           "description": "显式重载 harness-kit preset（运行中会话新 preset 仅下次会话生效）" }
+  ]
+}
