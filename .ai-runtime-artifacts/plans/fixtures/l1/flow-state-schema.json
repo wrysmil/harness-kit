@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "type": "number", "const": 1 },
+    "presetVersion": { "type": "number" },
+    "sessionId": { "type": "string" },
+    "activeFlowId": { "type": ["string","null"], "description": "v1.6 新增：原生工具 gate 解析的 fallback" },
+    "flows": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "flowId":      { "type": "string" },
+          "status":      { "type": "string", "enum": ["active","paused_waiting_user","aborted","failed","done"] },
+          "builtinFlow": { "type": "string" },
+          "stage":       { "type": "string" },
+          "gate": {
+            "type": "object",
+            "properties": {
+              "id":     { "type": "string" },
+              "locked": { "type": "boolean" },
+              "reason": { "type": ["string","null"] },
+              "hint":   { "type": ["string","null"] }
+            }
+          },
+          "tier":       { "type": "string", "enum": ["t0","t1","t2"] },
+          "cwd":        { "type": "string" },
+          "worktree":   { "type": ["string","null"] },
+          "artifacts":  { "type": "object" },
+          "approvedBy": { "type": ["string","null"] },
+          "createdAt":  { "type": "string" },
+          "updatedAt":  { "type": "string" }
+        },
+        "required": ["flowId","status","stage"]
+      }
+    }
+  },
+  "required": ["schemaVersion","sessionId","flows"]
+}
