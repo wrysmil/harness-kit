@@ -1,0 +1,28 @@
+{
+  "name": "harness_advance",
+  "description": "推进 flow 到目标 stage，触发 gate 检查。",
+  "stage": "all",
+  "handler": "./l1/handlers/harness_advance.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["flowId", "to"],
+    "properties": {
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "to": { "type": "string", "enum": ["clarify","design","plan","implement","verify","review","ship"] },
+      "force": { "type": "boolean", "default": false }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "stage": { "type": "string" },
+      "gate": { "type": "string" },
+      "reason": { "type": "string" },
+      "hint": { "type": "string" }
+    }
+  }
+}

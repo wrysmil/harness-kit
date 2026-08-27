@@ -1,0 +1,27 @@
+{
+  "name": "harness_artifact_write",
+  "description": "将 AI 产物写入 .ai-runtime-artifacts/<flow-id>/<kind>s/ 目录。path must start with .ai-runtime-artifacts/<dirName>/<kind>s/ (dirName = flowId 中 / 替换为 __)。禁止写入其他位置。",
+  "stage": "all",
+  "handler": "./l1/handlers/harness_artifact_write.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["flowId", "kind", "path"],
+    "properties": {
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "kind": { "type": "string", "enum": ["spec","plan","verification","review","execution","retro"] },
+      "path": { "type": "string" },
+      "content": { "type": "string" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "written": { "type": "string" },
+      "error": { "type": "string" }
+    }
+  }
+}

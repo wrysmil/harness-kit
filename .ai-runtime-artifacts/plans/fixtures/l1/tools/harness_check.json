@@ -1,0 +1,25 @@
+{
+  "name": "harness_check",
+  "description": "运行 reference checklist（definition-of-done / security / performance / observability / accessibility / testing / orchestration），不推进 stage。",
+  "stage": "all",
+  "handler": "./l1/handlers/harness_check.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["flowId"],
+    "properties": {
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "checklist": { "type": "string", "enum": ["definition-of-done","security","performance","observability","accessibility","testing","orchestration"] }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "results": { "type": "object" },
+      "error": { "type": "string" }
+    }
+  }
+}

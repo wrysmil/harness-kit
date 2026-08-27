@@ -1,0 +1,27 @@
+{
+  "name": "harness_flow",
+  "description": "管理 harness flow（list / switch / create / abort）。",
+  "stage": "all",
+  "handler": "./l1/handlers/harness_flow.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["action"],
+    "properties": {
+      "action": { "type": "string", "enum": ["list","switch","create","abort"] },
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "builtinFlowId": { "type": "string", "enum": ["feat","bug","hotfix","explore","verify","refactor"] }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "flows": { "type": "array" },
+      "activeFlowId": { "type": ["string","null"] },
+      "error": { "type": "string" }
+    }
+  }
+}

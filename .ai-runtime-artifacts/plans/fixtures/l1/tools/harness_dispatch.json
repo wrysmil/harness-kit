@@ -1,0 +1,26 @@
+{
+  "name": "harness_dispatch",
+  "description": "将 Tier 2 plan 分发到独立 worktree，执行 WU fan-out 并收集结果。",
+  "stage": "implement",
+  "handler": "./l1/handlers/harness_dispatch.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["flowId"],
+    "properties": {
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "planPath": { "type": "string" },
+      "parallel": { "type": "boolean", "default": true }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "results": { "type": "array" },
+      "error": { "type": "string" }
+    }
+  }
+}

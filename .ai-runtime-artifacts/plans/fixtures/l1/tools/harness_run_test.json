@@ -1,0 +1,25 @@
+{
+  "name": "harness_run_test",
+  "description": "在工作目录运行测试套件，收集结果写入 verifications/ 目录。",
+  "stage": "verify",
+  "handler": "./l1/handlers/harness_run_test.js",
+  "input_schema": {
+    "type": "object",
+    "required": ["flowId"],
+    "properties": {
+      "flowId": {
+        "type": "string",
+        "pattern": "^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$"
+      },
+      "testCommand": { "type": "string" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "ok": { "type": "boolean" },
+      "verificationPath": { "type": "string" },
+      "error": { "type": "string" }
+    }
+  }
+}
