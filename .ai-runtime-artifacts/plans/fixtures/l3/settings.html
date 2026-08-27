@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Harness — Settings 资产管理页</title>
+<style>
+  body { margin: 0; background: #0d0d0d; font-family: system-ui, sans-serif; color: #e5e5e5; }
+  .shell { display: flex; height: 100vh; }
+  .settings-nav { width: 180px; background: #1a1a1a; border-right: 1px solid #333; padding: 16px 0; }
+  .settings-nav .item {
+    padding: 8px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #888;
+    border-left: 2px solid transparent;
+  }
+  .settings-nav .item.active { color: #fff; border-left-color: #f59e0b; background: #252525; }
+  .settings-nav .item:hover { color: #fff; }
+  .content { flex: 1; padding: 24px 32px; overflow-y: auto; }
+  .content h2 { color: #fff; margin: 0 0 20px; font-size: 18px; border-bottom: 1px solid #333; padding-bottom: 12px; }
+
+  /* tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+  .tab { padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; background: #222; color: #888; }
+  .tab.active { background: #f59e0b33; color: #f59e0b; border: 1px solid #f59e0b66; }
+
+  /* 状态徽章 */
+  .status { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+  .status.done { background: #22c55e33; color: #22c55e; }
+  .status.active { background: #f59e0b33; color: #f59e0b; }
+  .status.warn { background: #eab30833; color: #eab308; }
+  .status.idle { background: #333; color: #666; }
+
+  /* 表格 */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: #888; font-weight: 400; padding: 6px 8px; border-bottom: 1px solid #333; font-size: 11px; text-transform: uppercase; }
+  td { padding: 10px 8px; border-bottom: 1px solid #222; }
+  tr:hover td { background: #1a1a1a; }
+  .name { color: #fff; }
+  .flow-id { font-family: monospace; font-size: 12px; color: #888; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="settings-nav">
+    <div class="item">General</div>
+    <div class="item">Account</div>
+    <div class="item">Plugins</div>
+    <div class="item active">Harness</div>
+    <div class="item">Skills</div>
+    <div class="item">Models</div>
+  </div>
+  <div class="content">
+    <h2>⚙ Harness 资产管理</h2>
+
+    <!-- tabs -->
+    <div class="tabs">
+      <div class="tab active">Agent</div>
+      <div class="tab">Skill</div>
+      <div class="tab">Tool</div>
+      <div class="tab">Flow</div>
+    </div>
+
+    <!-- agent 表格 -->
+    <table>
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Scope</th>
+          <th>Flow</th>
+          <th>Stage</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">harness.leader</td>
+          <td>session</td>
+          <td class="flow-id">feat/rate-limiter</td>
+          <td>plan (3/7)</td>
+          <td><span class="status active">active</span></td>
+        </tr>
+        <tr>
+          <td class="name">harness.coder</td>
+          <td>worktree</td>
+          <td class="flow-id">feat/rate-limiter</td>
+          <td>—</td>
+          <td><span class="status idle">idle</span></td>
+        </tr>
+        <tr>
+          <td class="name">harness.reviewer</td>
+          <td>task</td>
+          <td class="flow-id">bug/login-500</td>
+          <td>review (6/7)</td>
+          <td><span class="status warn">blocked</span></td>
+        </tr>
+        <tr>
+          <td class="name">harness.tester</td>
+          <td>task</td>
+          <td class="flow-id">feat/ui-overhaul</td>
+          <td>verify (5/7)</td>
+          <td><span class="status done">done</span></td>
+        </tr>
+        <tr>
+          <td class="name">harness.security</td>
+          <td>task</td>
+          <td class="flow-id">feat/ui-overhaul</td>
+          <td>review (6/7)</td>
+          <td><span class="status idle">idle</span></td>
+        </tr>
+        <tr>
+          <td class="name">harness.perf</td>
+          <td>task</td>
+          <td class="flow-id">feat/ui-overhaul</td>
+          <td>review (6/7)</td>
+          <td><span class="status idle">disabled</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
