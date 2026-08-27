@@ -1,0 +1,9 @@
+agent-presets:
+  id: harness-kit
+  default: true
+  compose:
+    - plugin: '@deepseek-ai/dsh-system-prompt'
+      prompt-sections: [ui:deliverable-file-references, harness:flow-policy, harness:gate-rules, harness:artifact-fm]
+    - plugin: harness:tools
+    - plugin: harness:gate-enforcer
+    - plugin: harness:skills-registry

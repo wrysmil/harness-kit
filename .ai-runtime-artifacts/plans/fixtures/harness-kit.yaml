@@ -1,0 +1,40 @@
+flow:
+  id: harness-kit
+  version: 1
+  stages:
+    - { id: clarify,   skill: harness-brief,    agent: harness.leader }
+    - { id: design,    skill: harness-spec,     agent: harness.leader }
+    - { id: plan,      skill: harness-plan,     agent: harness.leader }
+    - { id: implement, skill: harness-dispatch, agents: [harness.coder, harness.tester] }
+    - { id: verify,    skill: harness-verify,   agent: harness.tester }
+    - { id: review,    skill: harness-review,   agents: [harness.reviewer, harness.security, harness.perf] }
+    - { id: ship,      skill: harness-ship,     agent: harness.leader }
+  gates:
+    - { id: spec-approved, before: plan, requires: { artifact: spec, field: approved } }
+    - { id: plan-approved, before: implement, blocks: [write, edit, dispatch], requires: { artifact: plan, field: approved } }
+    - { id: verify-passed, before: review, requires: { artifact: verification, field: status, equals: pass } }
+    - { id: refs-checked,  before: ship, requires: { checklists: all, status: pass } }
+  artifacts:
+    dir: .ai-runtime-artifacts
+    per_flow_subdir: "{flow-id}"
+    kinds:
+      spec:         { dir: specs,         ext: md }
+      plan:         { dir: plans,         ext: md }
+      verification: { dir: verifications, ext: md }
+      review:       { dir: reviews,       ext: md }
+      execution:    { dir: execution-logs, ext: md }
+      retro:        { dir: retros,        ext: md }
+  checklists: [definition-of-done, security, performance, observability, accessibility, testing, orchestration]
+  tiers:
+    - { id: t0, files: 1, no-test: true }
+    - { id: t1, files: "2+", auto-dispatch: false, cwd_strategy: session_root }
+    - { id: t2, dispatch: required, worktree: ../.harness-worktrees/<repo>/wt-<dirName> }
+  flow_id_regex: '^[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?(\/[a-z0-9]([a-z0-9-]{0,62}[a-z0-9])?)*$'
+
+builtin_flows:
+  - { id: feat,    alias: /harness feat,    stages: [clarify, design, plan, implement, verify, review, ship] }
+  - { id: bug,     alias: /harness bug,     stages: [repro, fix, verify, ship] }
+  - { id: hotfix,  alias: /harness hotfix,  stages: [worktree, fix, smoke, ship] }
+  - { id: explore, alias: /harness explore, stages: [explore, summarize] }
+  - { id: verify,  alias: /harness verify,  stages: [run-tests, checklist] }
+  - { id: refactor, alias: /harness refactor, stages: [test-baseline, plan, refactor, verify] }
