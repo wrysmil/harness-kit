@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness · 只读产物观测面板 — Demo</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1d212b;
+    --border: #2a2f3a;
+    --text: #e6e8ec;
+    --muted: #8b93a1;
+    --faint: #5c6470;
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --fail: #f87171;
+    --info: #60a5fa;
+    --violet: #a78bfa;
+    --cyan: #22d3ee;
+    --radius: 12px;
+    --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 0 0 80px;
+  }
+  a { color: var(--info); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(15,17,21,.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 16px; }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg,var(--info),var(--violet)); }
+  .topbar .sub { color: var(--muted); font-size: 12.5px; }
+  .spacer { flex: 1; }
+  .pill {
+    font-size: 11px; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--border); color: var(--muted); background: var(--panel);
+  }
+  .pill.light { color: var(--cyan); border-color: rgba(34,211,238,.3); background: rgba(34,211,238,.08); }
+
+  /* Layout */
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 22px 28px; }
+  .lay { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
+
+  /* Sidebar */
+  .side {
+    position: sticky; top: 76px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .side h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin: 14px 0 8px; }
+  .side h3:first-child { margin-top: 0; }
+  .side a.nav {
+    display: block; padding: 7px 10px; border-radius: 8px; color: var(--muted);
+    font-size: 13.5px; margin-bottom: 2px;
+  }
+  .side a.nav:hover { background: var(--panel2); color: var(--text); text-decoration: none; }
+  .side a.nav .cnt { float: right; color: var(--faint); font-size: 11px; font-family: var(--mono); }
+  .side a.nav.active { background: rgba(96,165,250,.12); color: var(--info); }
+  .side .note { font-size: 11.5px; color: var(--faint); padding: 12px 4px 0; border-top: 1px dashed var(--border); margin-top: 12px; }
+
+  /* Main */
+  .hdr { margin-bottom: 20px; }
+  .hdr h1 { font-size: 24px; margin-bottom: 4px; }
+  .hdr p { color: var(--muted); font-size: 14px; max-width: 640px; }
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin: 22px 0; }
+  .kpi {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+  }
+  .kpi .lbl { font-size: 12px; color: var(--muted); }
+  .kpi .val { font-size: 30px; font-weight: 700; margin-top: 6px; font-family: var(--mono); }
+  .kpi .sub { font-size: 11.5px; color: var(--faint); margin-top: 4px; }
+  .ring { display: flex; align-items: center; gap: 12px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .big { font-size: 26px; font-weight: 700; }
+
+  .section { margin-bottom: 30px; }
+  .sec-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .sec-title .tag { font-size: 11px; color: var(--faint); font-weight: 400; }
+
+  /* Group cards */
+  .group {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
+  }
+  .group > summary {
+    list-style: none; cursor: pointer; padding: 15px 20px;
+    display: flex; align-items: center; gap: 14px; 
+  }
+  .group > summary::-webkit-details-marker { display: none; }
+  .group > summary:hover { background: var(--panel2); }
+  .g-status { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .g-status.ok { background: var(--ok); box-shadow: 0 0 8px rgba(52,211,153,.5); }
+  .g-status.warn { background: var(--warn); box-shadow: 0 0 8px rgba(251,191,36,.5); }
+  .g-status.fail { background: var(--fail); box-shadow: 0 0 8px rgba(248,113,113,.5); }
+  .g-title { font-weight: 700; font-size: 15px; }
+  .g-meta { color: var(--muted); font-size: 12px; }
+  .g-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .chev { transition: transform .2s; color: var(--faint); }
+  .group[open] .chev { transform: rotate(90deg); }
+  .group-body { padding: 0 20px 18px; }
+
+  /* WU table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--faint); font-weight: 500; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px; border-bottom: 1px solid rgba(42,47,58,.5); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .code { font-family: var(--mono); font-size: 12px; }
+  .chip { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-family: var(--mono); }
+  .chip.feature { background: rgba(96,165,250,.12); color: var(--info); }
+  .chip.chore { background: rgba(139,147,161,.12); color: var(--muted); }
+  .chip.bugfix { background: rgba(248,113,113,.12); color: var(--fail); }
+  .chip.refactor { background: rgba(167,139,250,.12); color: var(--violet); }
+  .chip.role-coder { background: rgba(52,211,153,.12); color: var(--ok); }
+  .chip.role-impl { background: rgba(251,191,36,.12); color: var(--warn); }
+  .chip.role-test { background: rgba(34,211,238,.12); color: var(--cyan); }
+  .files { color: var(--muted); font-size: 12.5px; }
+  .files .f { font-family: var(--mono); font-size: 11.5px; }
+
+  /* Verdict badges */
+  .verdict { font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; font-family: var(--mono); }
+  .v-pass { background: rgba(52,211,153,.15); color: var(--ok); }
+  .v-fail { background: rgba(248,113,113,.15); color: var(--fail); }
+  .v-approve { background: rgba(52,211,153,.15); color: var(--ok); }
+  .v-done { background: rgba(96,165,250,.15); color: var(--info); }
+  .v-planned { background: rgba(251,191,36,.15); color: var(--warn); }
+  .v-blocked { background: rgba(248,113,113,.15); color: var(--fail); }
+  .v-skip { background: rgba(139,147,161,.15); color: var(--muted); }
+
+  /* Gate checklist */
+  .gates { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .gate { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--panel2); border-radius: 8px; border: 1px solid var(--border); }
+  .gate .icon { width: 8px; height: 8px; border-radius: 50%; }
+  .gate .icon.ok { background: var(--ok); }
+  .gate .icon.bad { background: var(--fail); }
+  .gate .icon.pend { background: var(--warn); }
+  .gate .gt { font-size: 13px; }
+  .gate .gd { font-size: 11.5px; color: var(--muted); margin-left: auto; }
+
+  /* Timeline */
+  .tl { position: relative; padding-left: 24px; }
+  .tl:before { content: ""; position: absolute; left: 7px; top: 4px; bottom: 4px; width: 2px; background: var(--border); }
+  .tl-item { position: relative; padding-bottom: 18px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item:before { content: ""; position: absolute; left: -22px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); border: 2px solid var(--info); }
+  .tl-item.done:before { background: var(--ok); border-color: var(--ok); }
+  .tl-item.nd:before { border-color: var(--warn); }
+  .tl-t { font-size: 13px; font-weight: 600; }
+  .tl-d { font-size: 12px; color: var(--muted); }
+  .tl-art { font-size: 11px; color: var(--faint); font-family: var(--mono); }
+
+  /* Artifact cards */
+  .art-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; margin-bottom: 12px; position: relative;
+  }
+  .art-card .kind { font-family: var(--mono); font-size: 11px; color: var(--cyan); }
+  .art-card .nm { font-size: 14px; font-weight: 600; margin: 3px 0 6px; }
+  .art-card .dt { font-size: 11.5px; color: var(--faint); font-family: var(--mono); }
+  .fm { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .fm kbd { font-family: var(--mono); font-size: 11px; background: var(--panel2); border: 1px solid var(--border); border-radius: 5px; padding: 2px 7px; color: var(--muted); }
+  .fm kbd b { color: var(--text); font-weight: 500; }
+
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+
+  .empty { color: var(--faint); font-size: 13px; padding: 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); }
+  .foot { text-align: center; color: var(--faint); font-size: 12px; margin-top: 40px; }
+
+  /* Detail modal-ish */
+  .scrolly { max-height: 420px; overflow: auto; }
+  .frontmatter { background: #0b0d10; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--mono); font-size: 12px; line-height: 1.7; color: var(--muted); }
+  .frontmatter .k { color: var(--info); }
+  .toolbar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .seg { display: flex; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .seg button { background: transparent; border: none; color: var(--muted); padding: 7px 14px; font-size: 13px; cursor: pointer; }
+  .seg button.active { background: rgba(96,165,250,.15); color: var(--info); }
+  .filter { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); padding: 7px 12px; font-size: 13px; }
+  @media (max-width: 900px) { .lay { grid-template-columns: 1fr; } .side { position: static; } .kpis { grid-template-columns: repeat(2,1fr);} .card-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> Harness Artifacts</div>
+  <div class="sub">只读产物观测面板 · demo</div>
+  <div class="spacer"></div>
+  <span class="pill">source: `.ai-runtime-artifacts/`</span>
+  <span class="pill light">READ-ONLY</span>
+</div>
+
+<div class="wrap">
+  <div class="lay">
+
+    <!-- Sidebar -->
+    <aside class="side">
+      <h3>阶段</h3>
+      <a class="nav active" href="#overview">总览 <span class="cnt">1</span></a>
+      <a class="nav" href="#specs">Specs <span class="cnt">3</span></a>
+      <a class="nav" href="#plans">Plans <span class="cnt">2</span></a>
+      <a class="nav" href="#dispatch">Dispatch <span class="cnt">1</span></a>
+      <a class="nav" href="#exec">执行日志 <span class="cnt">4</span></a>
+      <a class="nav" href="#verif">验证 <span class="cnt">2</span></a>
+      <a class="nav" href="#review">审查 <span class="cnt">2</span></a>
+      <a class="nav" href="#decisions">决策 <span class="cnt">1</span></a>
+      <h3>批次 / GROUP</h3>
+      <a class="nav" href="#group1">GROUP-1 <span class="cnt">2+ WU</span></a>
+      <a class="nav" href="#group2">GROUP-2 <span class="cnt">1 WU</span></a>
+      <div class="note">拖动滚动可浏览。所有数据来自产物 front matter 与模板字段的**只读**聚合，不写回任何文件。</div>
+    </aside>
+
+    <!-- Main -->
+    <main>
+
+      <div class="hdr" id="overview">
+        <h1>过程产物观测面板</h1>
+        <p>把 <code class="code">.ai-runtime-artifacts/</code> 里落盘的 spec / plan / dispatch / 执行日志 / 验证 / 审查 / 决策 做只读聚合，让「团队现在进行到哪、门禁卡没卡」一眼看见。</p>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpis">
+        <div class="kpi"><div class="lbl">产物总数</div><div class="val">15</div><div class="sub">specs 3 · plans 2 · 其余 10</div></div>
+        <div class="kpi">
+          <div class="lbl">阶段完成度</div>
+          <div class="ring">
+            <svg width="44" height="44"><circle cx="22" cy="22" r="18" fill="none" stroke="#2a2f3a" stroke-width="4"/><circle cx="22" cy="22" r="18" fill="none" stroke="#34d399" stroke-width="4" stroke-dasharray="113" stroke-dashoffset="34" stroke-linecap="round"/></svg>
+            <span class="big">70%</span>
+          </div>
+        </div>
+        <div class="kpi"><div class="lbl">门禁通过率</div><div class="val" style="color:var(--ok)">5/6</div><div class="sub">1 处待确认</div></div>
+        <div class="kpi"><div class="lbl">尾盘验证</div><div class="val" style="color:var(--ok)">PASS</div><div class="sub">collective-test 已通过</div></div>
+        <div class="kpi"><div class="lbl">集体审查</div><div class="val" style="color:var(--ok)">APPROVE</div><div class="sub">reviewer: 独立实例</div></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="seg">
+          <button class="active">全部</button>
+          <button>今日</button>
+          <button>本周</button>
+          <button>本批次</button>
+        </div>
+        <select class="filter"><option>全部类型</option><option>spec</option><option>plan</option><option>dispatch</option><option>verification</option><option>review</option></select>
+        <select class="filter"><option>全部 verdict</option><option>PASS</option><option>FAIL</option><option>APPROVE</option></select>
+      </div>
+
+      <!-- GROUP-1 batch status -->
+      <div class="section" id="group1">
+        <div class="sec-title">批次 / GROUP 状态 <span class="tag">尾盘门禁（closeout gate）</span></div>
+        <details class="group" open>
+          <summary>
+            <span class="g-status ok"></span>
+            <div>
+              <div class="g-title">GROUP-1 · auth-batch (2026-05-28)</div>
+              <div class="g-meta">3 WU · coder×2 + implementer×1 · 并行 worktree</div>
+            </div>
+            <div class="g-right"><span class="verdict v-pass">尾盘 PASS</span><span class="chev">▸</span></div>
+          </summary>
+          <div class="group-body">
+            <div class="card-grid" style="margin-bottom:16px">
+              <div>
+                <div class="sec-title" style="font-size:13px">WU 清单</div>
+                <table>
+                  <thead><tr><th>WU</th><th>类型</th><th>派给</th><th>文件</th><th>结果</th></tr></thead>
+                  <tbody>
+                    <tr><td class="code">WU-01</td><td><span class="chip feature">feature</span></td><td><span class="chip role-coder">coder</span></td><td class="files"><span class="f">api/auth.ts</span></td><td><span class="verdict v-done">done</span></td></tr>
+                    <tr><td class="code">WU-02</td><td><span class="chip bugfix">bugfix</span></td><td><span class="chip role-coder">coder</span></td><td class="files"><span class="f">hooks/useSession.ts</span></td><td><span class="verdict v-done">done</span></td></tr>
+                    <tr><td class="code">WU-03</td><td><span class="chip chore">chore</span></td><td><span class="chip role-impl">implementer</span></td><td class="files"><span class="f">README.md</span></td><td><span class="verdict v-done">done</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="sec-title" style="font-size:13px">尾盘门禁</div>
+                <div class="gates">
+                  <div class="gate"><span class="icon ok"></span><span class="gt">集体测试 collective-test</span><span class="gd">PASS</span></div>
+                  <div class="gate"><span class="icon ok"></span><span class="gt">集体审查 code-review</span><span class="gd">APPROVE</span></div>
+                  <div class="gate"><span class="icon ok"></span><span class="gt">execution-log § 尾盘门禁</span><span class="gd">已更新</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card-grid">
+              <div>
+                <div class="sec-title" style="font-size:13px">门禁产物链接</div>
+                <div class="fm">
+                  <kbd><b>collective-test</b> · 2026-05-28-auth-batch-collective-test.md</kbd>
+                  <kbd><b>code-review</b> · 2026-05-28-auth-batch-code-review.md</kbd>
+                </div>
+              </div>
+              <div>
+                <div class="sec-title" style="font-size:13px">判定依据</div>
+                <div class="empty" style="padding:10px;font-size:12px">尾盘 B 需 reviewer 条件：改文件 ≤5 且无安全/鉴权风险 → 已写入 code-review 产物 + 依据</div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- Gate overview -->
+      <div class="section">
+        <div class="sec-title">阶段门禁总览 <span class="tag">spec / plan 强制暂停</span></div>
+        <div class="gates">
+          <div class="gate"><span class="icon ok"></span><span class="gt">spec（brainstorming）</span><span class="gd">✓ 已确认</span></div>
+          <div class="gate"><span class="icon ok"></span><span class="gt">plan（writing-plans）</span><span class="gd">✓ 已确认</span></div>
+          <div class="gate"><span class="icon ok"></span><span class="gt">集成验证</span><span class="gd">✓ PASS</span></div>
+          <div class="gate"><span class="icon pend"></span><span class="gt">待你确认「开始实现」</span><span class="gd">⏳ 等待</span></div>
+        </div>
+      </div>
+
+      <!-- Artifact timeline -->
+      <div class="section" id="exec">
+        <div class="sec-title">执行日志 · 时间线 <span class="tag">append-only tracking</span></div>
+        <div class="tl">
+          <div class="tl-item done"><div class="tl-t">spec 确认 · auth-batch</div><div class="tl-d">需求与设计范围、验收标准</div><div class="tl-art">specs/2026-05-14-auth-batch-spec.md</div></div>
+          <div class="tl-item done"><div class="tl-t">plan 确认 · WU 拆解</div><div class="tl-d">writing-plans · 3 WU + dispatch</div><div class="tl-art">plans/2026-05-28-auth-batch-plan.md</div></div>
+          <div class="tl-item done"><div class="tl-t">并行执行 GROUP-1</div><div class="tl-d">3 WU 并行 · worktree 隔离</div><div class="tl-art">execution-logs/tracking/...</div></div>
+          <div class="tl-item done"><div class="tl-t">集体测试</div><div class="tl-d">verdict: PASS</div><div class="tl-art">verifications/2026-05-28-auth-batch-collective-test.md</div></div>
+          <div class="tl-item done"><div class="tl-t">集体审查</div><div class="tl-d">verdict: APPROVE</div><div class="tl-art">reviews/2026-05-28-auth-batch-code-review.md</div></div>
+          <div class="tl-item nd"><div class="tl-t">提交 / 合并</div><div class="tl-d">待你确认后 leader 执行 git 提交</div><div class="tl-art">—</div></div>
+        </div>
+      </div>
+
+      <!-- Artifact cards -->
+      <div class="section" id="specs">
+        <div class="sec-title">Specs</div>
+        <div class="art-card">
+          <div class="kind">spec</div>
+          <div class="nm">auth-batch — 需求与设计</div>
+          <div class="dt">2026-05-14 · route: superpowers:brainstorming</div>
+          <div class="fm">
+            <kbd><b>created_at</b> 2026-05-14</kbd>
+            <kbd><b>skills</b> brainstorming</kbd>
+            <kbd><b>tier</b> 2</kbd>
+            <kbd><b>source</b> AGENTS.md, core/routing.md</kbd>
+          </div>
+        </div>
+        <div class="art-card">
+          <div class="kind">implementation-plan</div>
+          <div class="nm">auth-batch — 实施计划</div>
+          <div class="dt">2026-05-28 · dispatch → *.dispatch.md</div>
+          <div class="fm">
+            <kbd><b>dispatch</b> 2026-05-28-auth-batch-dispatch.md</kbd>
+            <kbd><b>skills</b> writing-plans</kbd>
+            <kbd><b>created_at</b> 2026-05-28</kbd>
+          </div>
+          <div class="frontmatter" style="margin-top:12px"><span class="k">---</span>
+<span class="k">artifact</span>: implementation-plan
+<span class="k">route</span>: superpowers:writing-plans
+<span class="k">skills_evidence</span>:
+  - ~/.agents/skills/writing-plans/SKILL.md
+<span class="k">dispatch</span>: .ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md
+<span class="k">created_at</span>: 2026-05-28
+<span class="k">---</span></div>
+        </div>
+      </div>
+
+      <div class="section" id="plans">
+        <div class="sec-title">Plans</div>
+        <div class="card-grid">
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">implementation-plan</div>
+            <div class="nm">cursor-worktree-isolation-plan.md</div>
+            <div class="dt">2026-05-28 · 3 WU</div>
+            <div class="fm"><kbd><b>art</b> plan</kbd><kbd><b>dispatch</b> ✓</kbd></div>
+          </div>
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">implementation-dispatch</div>
+            <div class="nm">cursor-worktree-isolation-dispatch.md</div>
+            <div class="dt">2026-05-28 · 执行图</div>
+            <div class="fm"><kbd><b>plan</b> ✓</kbd><kbd><b>platform</b> cursor</kbd></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="verif">
+        <div class="sec-title">验证</div>
+        <div class="card-grid">
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">verification</div>
+            <div class="nm">auth-batch collective-test</div>
+            <div class="badge-row"><span class="verdict v-pass">PASS</span></div>
+            <div class="fm"><kbd><b>batch_id</b> GROUP-1</kbd><kbd><b>verdict</b> PASS</kbd></div>
+          </div>
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">verification</div>
+            <div class="nm">auth-batch verification-lite</div>
+            <div class="badge-row"><span class="verdict v-pass">PASS</span></div>
+            <div class="fm"><kbd><b>tier</b> 1</kbd><kbd><b>verdict</b> PASS</kbd></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="review">
+        <div class="sec-title">审查</div>
+        <div class="card-grid">
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">review · code-review</div>
+            <div class="nm">auth-batch code-review</div>
+            <div class="badge-row"><span class="verdict v-approve">APPROVE</span></div>
+            <div class="fm"><kbd><b>reviewer</b> reviewer（独立实例）</kbd><kbd><b>readonly</b> true</kbd></div>
+          </div>
+          <div class="art-card" style="margin-bottom:0">
+            <div class="kind">review · document-review</div>
+            <div class="nm">cross-platform-capability-kernel</div>
+            <div class="badge-row"><span class="verdict v-approve">APPROVE</span></div>
+            <div class="fm"><kbd><b>reviewer</b> 独立实例</kbd></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="decisions">
+        <div class="sec-title">决策</div>
+        <div class="art-card">
+          <div class="kind">decision-record</div>
+          <div class="nm">worktree 物理隔离 vs 纯内存隔离</div>
+          <div class="dt">接受：worktree 隔离 · 拒绝：纯内存</div>
+          <div class="badge-row"><span class="verdict v-done">已记录</span></div>
+        </div>
+      </div>
+
+      <div class="foot">Harness Artifacts Dashboard · 只读演示 · 数据为 mock，用于展示布局与信息架构（DOM 已用真实产物字段建模）</div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // 纯前端交互：侧栏高亮 + 分组开合。非真实数据管道。
+  document.querySelectorAll('.side a.nav').forEach(a => {
+    a.addEventListener('click', () => {
+      document.querySelectorAll('.side a.nav').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+  const segs = document.querySelectorAll('.seg button');
+  segs.forEach(b => b.addEventListener('click', () => {
+    segs.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+{
+  "meta": {
+    "generated_at": "2026-08-30T16:51:27.033Z",
+    "real_count": 11,
+    "demo_count": 12,
+    "root": ".ai-runtime-artifacts",
+    "note": "real=扫描产物；demo=auth-batch 占位示例（未落盘）。蓝色实线=推导关系，虚线=topic 聚类。"
+  },
+  "nodes": [
+    {
+      "id": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "label": "2026-05-28-cursor-worktree-isolation-dispatch",
+      "type": "dispatch",
+      "artifact": "implementation-dispatch",
+      "route": "cursor-orchestration:dispatcher-workflow",
+      "date": "2026-05-28",
+      "topic": "cursor-worktree-isolation-dispatch",
+      "verdict": ""
+    },
+    {
+      "id": "src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md",
+      "label": "2026-05-28-cursor-git-worktree-isolation-for-subagents-design",
+      "type": "source-doc",
+      "path": "docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md"
+    },
+    {
+      "id": "skill:dispatcher-workflow",
+      "label": "dispatcher-workflow",
+      "type": "skill"
+    },
+    {
+      "id": "skill:writing-plans",
+      "label": "writing-plans",
+      "type": "skill"
+    },
+    {
+      "id": "skill:cursor-orchestration",
+      "label": "cursor-orchestration",
+      "type": "skill"
+    },
+    {
+      "id": "plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "label": "2026-05-28-cursor-worktree-isolation-plan",
+      "type": "plan",
+      "artifact": "implementation-plan",
+      "route": "superpowers:writing-plans",
+      "date": "2026-05-28",
+      "topic": "cursor-worktree-isolation-plan",
+      "verdict": ""
+    },
+    {
+      "id": "reviews/2026-06-03-cross-platform-capability-kernel-document-review.md",
+      "label": "2026-06-03-cross-platform-capability-kernel-document-review",
+      "type": "review",
+      "artifact": "document-review",
+      "route": "superpowers:document-review",
+      "date": "2026-06-03",
+      "topic": "cross-platform-capability-kernel",
+      "verdict": "conditional-pass"
+    },
+    {
+      "id": "src:docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md",
+      "label": "2026-06-03-cross-platform-capability-kernel-design",
+      "type": "source-doc",
+      "path": "docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md"
+    },
+    {
+      "id": "skill:document-review",
+      "label": "document-review",
+      "type": "skill"
+    },
+    {
+      "id": ".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "label": "2026-05-28-cursor-worktree-isolation-plan",
+      "type": "unresolved",
+      "unresolved": true
+    },
+    {
+      "id": ".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "label": "2026-05-28-cursor-worktree-isolation-dispatch",
+      "type": "unresolved",
+      "unresolved": true
+    },
+    {
+      "id": ".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md",
+      "label": "auth-batch-spec",
+      "type": "spec",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-14"
+    },
+    {
+      "id": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md",
+      "label": "auth-batch-plan",
+      "type": "plan",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-28"
+    },
+    {
+      "id": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md",
+      "label": "auth-batch-dispatch",
+      "type": "dispatch",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-28"
+    },
+    {
+      "id": ".ai-runtime-artifacts/execution-logs/tracking/2026-05-28-auth-batch-track.md",
+      "label": "auth-batch-track",
+      "type": "track",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-28"
+    },
+    {
+      "id": ".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md",
+      "label": "auth-batch-collective-test",
+      "type": "verification",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-28",
+      "verdict": "PASS"
+    },
+    {
+      "id": ".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md",
+      "label": "auth-batch-code-review",
+      "type": "review",
+      "demo": true,
+      "topic": "auth-batch",
+      "date": "2026-05-28",
+      "verdict": "APPROVE"
+    },
+    {
+      "id": "skill:brainstorming",
+      "label": "brainstorming",
+      "type": "skill",
+      "demo": true
+    },
+    {
+      "id": "skill:writing-plans",
+      "label": "writing-plans",
+      "type": "skill",
+      "demo": true
+    },
+    {
+      "id": "skill:verification-before-completion",
+      "label": "verification-before-completion",
+      "type": "skill",
+      "demo": true
+    },
+    {
+      "id": "skill:requesting-code-review",
+      "label": "requesting-code-review",
+      "type": "skill",
+      "demo": true
+    },
+    {
+      "id": "skill:orchestration",
+      "label": "orchestration",
+      "type": "skill",
+      "demo": true
+    },
+    {
+      "id": "src:docs/superpowers/specs/2026-05-14-auth-batch-design.md",
+      "label": "auth-batch-design",
+      "type": "source-doc",
+      "demo": true
+    }
+  ],
+  "edges": [
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "to": ".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "label": "plan→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "to": "src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md",
+      "label": "from→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "to": "skill:dispatcher-workflow",
+      "label": "uses→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "to": "skill:writing-plans",
+      "label": "uses→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "to": "skill:cursor-orchestration",
+      "label": "uses→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "to": ".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-dispatch.md",
+      "label": "dispatches→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "to": "src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md",
+      "label": "from→"
+    },
+    {
+      "from": "plans/2026-05-28-cursor-worktree-isolation-plan.md",
+      "to": "skill:writing-plans",
+      "label": "uses→"
+    },
+    {
+      "from": "reviews/2026-06-03-cross-platform-capability-kernel-document-review.md",
+      "to": "src:docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md",
+      "label": "from→"
+    },
+    {
+      "from": "reviews/2026-06-03-cross-platform-capability-kernel-document-review.md",
+      "to": "skill:document-review",
+      "label": "uses→"
+    },
+    {
+      "from": ".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md",
+      "to": "src:docs/superpowers/specs/2026-05-14-auth-batch-design.md",
+      "label": "from→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md",
+      "to": "skill:brainstorming",
+      "label": "uses→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md",
+      "to": ".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md",
+      "label": "dispatches→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md",
+      "to": "skill:writing-plans",
+      "label": "uses→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md",
+      "to": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md",
+      "label": "plan→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md",
+      "to": "skill:orchestration",
+      "label": "uses→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/execution-logs/tracking/2026-05-28-auth-batch-track.md",
+      "to": ".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md",
+      "label": "tracks→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md",
+      "to": "skill:verification-before-completion",
+      "label": "uses→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md",
+      "to": "skill:requesting-code-review",
+      "label": "uses→",
+      "demo": true
+    },
+    {
+      "from": ".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md",
+      "to": ".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md",
+      "label": "after→",
+      "demo": true
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harness · 产物知识图谱 — Demo</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #171a21;
+    --panel2: #1d212b;
+    --border: #2a2f3a;
+    --text: #e6e8ec;
+    --muted: #8b93a1;
+    --faint: #5c6470;
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --fail: #f87171;
+    --info: #60a5fa;
+    --violet: #a78bfa;
+    --cyan: #22d3ee;
+    --radius: 12px;
+    --mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); line-height: 1.5; overflow: hidden; }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50; height: 56px;
+    background: rgba(15,17,21,.92); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px; display: flex; align-items: center; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+  .brand .dot { width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg,var(--info),var(--violet)); }
+  .topbar .sub { color: var(--muted); font-size: 12px; }
+  .spacer { flex: 1; }
+  .pill { font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); background: var(--panel); white-space: nowrap; }
+  .pill.light { color: var(--cyan); border-color: rgba(34,211,238,.3); background: rgba(34,211,238,.08); }
+
+  /* Layout: left legend + center graph + right detail */
+  .wrap { display: grid; grid-template-columns: 240px 1fr 300px; height: calc(100vh - 56px); }
+
+  /* Left sidebar: legend + filter */
+  .left {
+    border-right: 1px solid var(--border); padding: 18px 16px; overflow-y: auto; background: var(--panel);
+  }
+  .left h3 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin: 18px 0 10px; }
+  .left h3:first-child { margin-top: 0; }
+  .legend-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; font-size: 13px; color: var(--muted); cursor: pointer; margin-bottom: 2px; }
+  .legend-item:hover { background: var(--panel2); }
+  .legend-item.active { background: rgba(96,165,250,.12); color: var(--text); }
+  .swatch { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; }
+  .legend-item .cnt { margin-left: auto; font-size: 11px; color: var(--faint); font-family: var(--mono); }
+
+  .rel-list { margin-top: 4px; }
+  .rel-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; font-size: 12.5px; color: var(--muted); cursor: pointer; }
+  .rel-item:hover { background: var(--panel2); }
+  .rel-item .line { width: 20px; height: 2px; }
+  .rel-item .arrow { font-size: 11px; }
+  .rel-item .lcnt { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .check { margin-right: 8px; }
+
+  /* Graphs canvas */
+  #cy { width: 100%; height: 100%; }
+  .cy-wrap { position: relative; background: var(--bg); }
+
+  .hint { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); background: rgba(23,26,33,.85); border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 12px; color: var(--muted); z-index: 5; pointer-events: none; }
+
+  /* Right detail panel */
+  .right { border-left: 1px solid var(--border); background: var(--panel); padding: 18px 18px; overflow-y: auto; }
+  .right h3 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin-bottom: 14px; }
+  .detail-empty { color: var(--faint); font-size: 13px; text-align: center; padding: 40px 10px; }
+  .detail-node h2 { font-size: 17px; word-break: break-all; margin-bottom: 4px; }
+  .detail-node .kind { font-family: var(--mono); font-size: 11px; color: var(--cyan); }
+  .detail-field { display: grid; grid-template-columns: 90px 1fr; gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid rgba(42,47,58,.5); font-size: 12.5px; }
+  .detail-field:last-child { border-bottom: none; }
+  .detail-field .k { color: var(--faint); }
+  .detail-field .v { color: var(--text); word-break: break-all; }
+  .badge { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; font-family: var(--mono); display: inline-block; margin: 2px; }
+  .b-info { background: rgba(96,165,250,.14); color: var(--info); }
+  .b-ok { background: rgba(52,211,153,.14); color: var(--ok); }
+  .b-warn { background: rgba(251,191,36,.14); color: var(--warn); }
+  .b-fail { background: rgba(248,113,113,.14); color: var(--fail); }
+  .b-dim { background: rgba(139,147,161,.14); color: var(--muted); }
+  .neighbors { margin-top: 6px; }
+  .nbr { padding: 6px 10px; background: var(--panel2); border-radius: 7px; margin-bottom: 6px; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .nbr:hover { background: rgba(96,165,250,.1); }
+  .nbr .lbl { color: var(--text); }
+  .nbr .edge { font-size: 11px; color: var(--faint); }
+
+  .ctrl-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .ctrl { background: var(--panel2); border: 1px solid var(--border); border-radius: 7px; color: var(--muted); padding: 5px 10px; font-size: 12px; cursor: pointer; }
+  .ctrl:hover { color: var(--text); }
+
+  .toggle-all { background: var(--panel2); border: 1px solid var(--border); border-radius: 7px; color: var(--muted); padding: 4px 8px; font-size: 11px; cursor: pointer; margin-top: 6px; }
+  .toggle-all:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> Harness Artifacts Graph</div>
+  <div class="sub">产物知识图谱 · 只读</div>
+  <div class="spacer"></div>
+  <span class="pill" id="nodeCount">节点 —</span>
+  <span class="pill light">READ-ONLY</span>
+</div>
+
+<div class="wrap">
+  <!-- Left: legend + filter -->
+  <aside class="left">
+    <h3>节点类型图例</h3>
+    <div id="legend"></div>
+    <button class="toggle-all" id="toggleAll">全部显示 / 隐藏</button>
+
+    <h3>关系类型</h3>
+    <div class="rel-list" id="relList"></div>
+
+    <h3>说明</h3>
+    <div style="font-size:12px;color:var(--faint);line-height:1.6;padding:0 4px;">
+      关系由产物 front matter 字段推导（<code>dispatch</code> / <code>plan</code> / <code>source</code> / <code>topic</code> / <code>route</code>）。<br><br>实线=推导关系；虚线=topic 聚类。点击节点看详情。
+    </div>
+  </aside>
+
+  <!-- Center: graph -->
+  <div class="cy-wrap">
+    <div id="cy"></div>
+    <div class="hint">拖拽平移 · 滚轮缩放 · 双击节点以它为中心 · 单击看详情</div>
+  </div>
+
+  <!-- Right: detail -->
+  <aside class="right">
+    <h3>节点详情</h3>
+    <div id="detail" class="detail-empty">点击图中任意节点查看其属性与关联</div>
+  </aside>
+</div>
+
+<!-- cytoscape -->
+<script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<script>
+const FALLBACK = {"meta":{"note":"inline-fallback"},"nodes":[{"id":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","label":"2026-05-28-cursor-worktree-isolation-dispatch","type":"dispatch","artifact":"implementation-dispatch","date":"2026-05-28","topic":"cursor-worktree-isolation-dispatch","route":"cursor-orchestration:dispatcher-workflow","verdict":""},{"id":"src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md","label":"2026-05-28-cursor-git-worktree-isolation-for-subagents-design","type":"source-doc","path":"docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md"},{"id":"skill:dispatcher-workflow","label":"dispatcher-workflow","type":"skill"},{"id":"skill:writing-plans","label":"writing-plans","type":"skill"},{"id":"skill:cursor-orchestration","label":"cursor-orchestration","type":"skill"},{"id":"plans/2026-05-28-cursor-worktree-isolation-plan.md","label":"2026-05-28-cursor-worktree-isolation-plan","type":"plan","artifact":"implementation-plan","date":"2026-05-28","topic":"cursor-worktree-isolation-plan","route":"superpowers:writing-plans","verdict":""},{"id":"reviews/2026-06-03-cross-platform-capability-kernel-document-review.md","label":"2026-06-03-cross-platform-capability-kernel-document-review","type":"review","artifact":"document-review","date":"2026-06-03","topic":"cross-platform-capability-kernel","route":"superpowers:document-review","verdict":"conditional-pass"},{"id":"src:docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md","label":"2026-06-03-cross-platform-capability-kernel-design","type":"source-doc","path":"docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md"},{"id":"skill:document-review","label":"document-review","type":"skill"},{"id":".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-plan.md","label":"2026-05-28-cursor-worktree-isolation-plan","type":"unresolved"},{"id":".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-dispatch.md","label":"2026-05-28-cursor-worktree-isolation-dispatch","type":"unresolved"},{"id":".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md","label":"auth-batch-spec","type":"spec","date":"2026-05-14","topic":"auth-batch","demo":true},{"id":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md","label":"auth-batch-plan","type":"plan","date":"2026-05-28","topic":"auth-batch","demo":true},{"id":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md","label":"auth-batch-dispatch","type":"dispatch","date":"2026-05-28","topic":"auth-batch","demo":true},{"id":".ai-runtime-artifacts/execution-logs/tracking/2026-05-28-auth-batch-track.md","label":"auth-batch-track","type":"track","date":"2026-05-28","topic":"auth-batch","demo":true},{"id":".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md","label":"auth-batch-collective-test","type":"verification","date":"2026-05-28","topic":"auth-batch","verdict":"PASS","demo":true},{"id":".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md","label":"auth-batch-code-review","type":"review","date":"2026-05-28","topic":"auth-batch","verdict":"APPROVE","demo":true},{"id":"skill:brainstorming","label":"brainstorming","type":"skill","demo":true},{"id":"skill:writing-plans","label":"writing-plans","type":"skill","demo":true},{"id":"skill:verification-before-completion","label":"verification-before-completion","type":"skill","demo":true},{"id":"skill:requesting-code-review","label":"requesting-code-review","type":"skill","demo":true},{"id":"skill:orchestration","label":"orchestration","type":"skill","demo":true},{"id":"src:docs/superpowers/specs/2026-05-14-auth-batch-design.md","label":"auth-batch-design","type":"source-doc","demo":true}],"edges":[{"from":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","to":".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-plan.md","label":"plan→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","to":"src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md","label":"from→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","to":"skill:dispatcher-workflow","label":"uses→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","to":"skill:writing-plans","label":"uses→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-dispatch.md","to":"skill:cursor-orchestration","label":"uses→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-plan.md","to":".ai-runtime-artifacts/plans/2026-05-28-cursor-worktree-isolation-dispatch.md","label":"dispatches→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-plan.md","to":"src:docs/superpowers/specs/2026-05-28-cursor-git-worktree-isolation-for-subagents-design.md","label":"from→"},{"from":"plans/2026-05-28-cursor-worktree-isolation-plan.md","to":"skill:writing-plans","label":"uses→"},{"from":"reviews/2026-06-03-cross-platform-capability-kernel-document-review.md","to":"src:docs/superpowers/specs/2026-06-03-cross-platform-capability-kernel-design.md","label":"from→"},{"from":"reviews/2026-06-03-cross-platform-capability-kernel-document-review.md","to":"skill:document-review","label":"uses→"},{"from":".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md","to":"src:docs/superpowers/specs/2026-05-14-auth-batch-design.md","label":"from→","demo":true},{"from":".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md","to":"skill:brainstorming","label":"uses→","demo":true},{"from":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md","to":".ai-runtime-artifacts/specs/2026-05-14-auth-batch-spec.md","label":"dispatches→","demo":true},{"from":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md","to":"skill:writing-plans","label":"uses→","demo":true},{"from":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md","to":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-plan.md","label":"plan→","demo":true},{"from":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md","to":"skill:orchestration","label":"uses→","demo":true},{"from":".ai-runtime-artifacts/execution-logs/tracking/2026-05-28-auth-batch-track.md","to":".ai-runtime-artifacts/plans/2026-05-28-auth-batch-dispatch.md","label":"tracks→","demo":true},{"from":".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md","to":"skill:verification-before-completion","label":"uses→","demo":true},{"from":".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md","to":"skill:requesting-code-review","label":"uses→","demo":true},{"from":".ai-runtime-artifacts/reviews/2026-05-28-auth-batch-code-review.md","to":".ai-runtime-artifacts/verifications/2026-05-28-auth-batch-collective-test.md","label":"after→","demo":true}]};
+window.__FALLBACK_GRAPH__ = FALLBACK;
+
+// ─── 颜色映射 ───────────────────────────────
+const NODE_COLOR = {
+  spec: '#60a5fa',
+  plan: '#a78bfa',
+  dispatch: '#22d3ee',
+  verification: '#34d399',
+  review: '#fbbf24',
+  track: '#fb7185',
+  log: '#94a3b8',
+  decision: '#f472b6',
+  reto: '#c084fc',
+  research: '#38bdf8',
+  profile: '#64748b',
+  skill: '#e2e8f0',
+  'source-doc': '#475569',
+  unresolved: '#334155',
+  artifact: '#8b93a1',
+  retro: '#c084fc',
+};
+const REL_COLOR = {
+  'dispatches→': '#60a5fa',
+  'plan→': '#a78bfa',
+  'sources→': '#fbbf24',
+  'from→': '#fbbf24',
+  'uses→': '#e2e8f0',
+  'tracks→': '#fb7185',
+  'after→': '#34d399',
+  'topic': '#475569',
+};
+
+const KINDS = ['spec','plan','dispatch','verification','review','track','log','decision','research','profile','skill','source-doc','unresolved'];
+const LABELS = {
+  spec:"Spec 方案", plan:"Plan 计划", dispatch:"Dispatch 派发", verification:"Verification 验证",
+  review:"Review 审查", track:"Tracking 追踪", log:"Log 日志", decision:"Decision 决策",
+  research:"Research 调研", profile:"Profile 画像", skill:"Skill", "source-doc":"来源文档", unresolved:"未解析"
+};
+
+let cy;
+let gdata = null;
+const legendState = {}; // type -> bool
+
+function buildGraph(data) {
+  const elements = [];
+  data.nodes.forEach(n => {
+    elements.push({ data: { id: n.id, label: n.label, type: n.type, node: n } });
+  });
+  data.edges.forEach(e => {
+    elements.push({ data: { id: e.from + '||' + e.to + '||' + e.label, source: e.from, target: e.to, label: e.label, dashed: e.dashed || e.kind === 'cluster' } });
+  });
+  return elements;
+}
+
+function render() {
+  if (!gdata) return;
+  const elements = buildGraph(gdata);
+  if (cy) cy.destroy();
+  cy = cytoscape({
+    container: document.getElementById('cy'),
+    elements,
+    style: [
+      {
+        selector: 'node',
+        style: {
+          'label': 'data(label)',
+          'text-valign': 'center',
+          'text-halign': 'center',
+          'font-size': '10px',
+          'color': '#e6e8ec',
+          'text-wrap': 'wrap',
+          'text-max-width': '120px',
+          'background-color': 'data(type)',
+          'background-opacity': '0.6',
+          'width': 'mapData(type, 0, 20, 22, 46)',
+          'height': 'mapData(type, 0, 20, 22, 46)',
+          'border-width': '2px',
+          'border-color': '#0f1115',
+          'overlay-opacity': '0',
+        },
+      },
+      {
+        selector: 'edge',
+        style: {
+          'width': 2,
+          'line-color': 'data(label)',
+          'target-arrow-color': 'data(label)',
+          'target-arrow-shape': 'triangle',
+          'curve-style': 'bezier',
+          'arrow-scale': 0.7,
+          'opacity': 0.75,
+          'label': 'data(label)',
+          'font-size': '8px',
+          'color': '#8b93a1',
+          'text-background-color': '#0f1115',
+          'text-background-opacity': 0.7,
+          'text-rotation': 'autorotate',
+        },
+      },
+      {
+        selector: 'edge[dashed]',
+        style: { 'line-style': 'dashed', 'opacity': 0.4 },
+      },
+      {
+        selector: 'node:selected',
+        style: { 'border-width': 4, 'border-color': '#22d3ee', 'background-opacity': 1 },
+      },
+      {
+        selector: 'node.faded',
+        style: { 'opacity': 0.15 },
+      },
+      {
+        selector: 'edge.faded',
+        style: { 'opacity': 0.06 },
+      },
+    ],
+    layout: { name: 'cose', animate: true, padding: 60, nodeRepulsion: 8000, idealEdgeLength: 90 },
+    wheelSensitivity: 0.2,
+  });
+
+  // 用节点真实 type 设置颜色（cytoscape 的 mapData 对字符串无效，改用 data() 样式函数后重设）
+  cy.nodes().forEach(n => {
+    const t = n.data('type');
+    n.style('background-color', NODE_COLOR[t] || NODE_COLOR.artifact);
+    n.style('width', t === 'skill' ? 26 : t === 'source-doc' ? 18 : 42);
+    n.style('height', t === 'skill' ? 26 : t === 'source-doc' ? 18 : 42);
+    if (t === 'skill') { n.style('shape', 'round-rectangle'); }
+    if (t === 'source-doc' || t === 'unresolved') { n.style('shape', 'round-rectangle'); n.style('background-opacity', 0.3); }
+  });
+  cy.edges().forEach(e => {
+    const l = e.data('label');
+    e.style('line-color', REL_COLOR[l] || '#475569');
+    e.style('target-arrow-color', REL_COLOR[l] || '#475569');
+    if (e.data('dashed')) e.style('line-style', 'dashed');
+  });
+
+  // events
+  cy.on('tap', 'node', (evt) => showDetail(evt.target.data('node')));
+  cy.on('tap', function (evt) {
+    if (evt.target === cy) clearDetail();
+  });
+  cy.on('mouseover', 'node', (evt) => highlightNeighbors(evt.target, true));
+  cy.on('mouseout', 'node', () => highlightNeighbors(null, false));
+  cy.on('dbltap', 'node', (evt) => { cy.animate({ center: { eles: evt.target } }, { duration: 300 }); });
+
+  applyFilters();
+  updateStats();
+  buildLegend();
+  buildRelList();
+  updateNodeCount();
+}
+
+// ─── filters ───────────────────────────────
+function applyFilters() {
+  cy.nodes().forEach(n => {
+    const t = n.data('type');
+    const show = legendState[t] !== false;
+    n.style('display', show ? 'element' : 'none');
+  });
+}
+function toggleType(type) {
+  legendState[type] = legendState[type] === false;
+  applyFilters();
+  buildLegend();
+}
+
+function highlightNeighbors(node, on) {
+  if (!cy) return;
+  cy.elements().removeClass('faded');
+  if (!on) return;
+  const nb = cy.elements().neighborhood(node);
+  cy.elements().difference(nb).addClass('faded');
+}
+
+// ─── legend ────────────────────────────────
+function buildLegend() {
+  const el = document.getElementById('legend');
+  const counts = {};
+  gdata.nodes.forEach(n => { counts[n.type] = (counts[n.type] || 0) + 1; });
+  el.innerHTML = '';
+  const types = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
+  types.forEach(t => {
+    const active = legendState[t] !== false;
+    const item = document.createElement('div');
+    item.className = 'legend-item' + (active ? ' active' : '');
+    item.innerHTML = `<span class="swatch" style="background:${NODE_COLOR[t]||'#888'}"></span> ${LABELS[t]||t} <span class="cnt">${counts[t]}</span>`;
+    item.onclick = () => toggleType(t);
+    el.appendChild(item);
+  });
+}
+
+function buildRelList() {
+  const el = document.getElementById('relList');
+  const counts = {};
+  gdata.edges.forEach(e => { counts[e.label] = (counts[e.label] || 0) + 1; });
+  el.innerHTML = '';
+  Object.keys(counts).forEach(l => {
+    const it = document.createElement('div');
+    it.className = 'rel-item';
+    it.innerHTML = `<span class="line" style="background:${REL_COLOR[l]||'#888'}"></span> ${l} <span class="lcnt">${counts[l]}</span>`;
+    it.onclick = () => focusEdges(l);
+    el.appendChild(it);
+  });
+}
+
+function focusEdges(label) {
+  cy.edges().forEach(e => {
+    const match = e.data('label') === label;
+    e.style('opacity', match ? 1 : 0.08);
+    e.style('width', match ? 3 : 2);
+  });
+  cy.nodes().forEach(n => {
+    const nbr = cy.edges(`[label = "${label}"]`).connectedNodes();
+    const is = nbr.some(x => x.id() === n.id());
+    n.style('opacity', is ? 1 : 0.2);
+  });
+  setTimeout(() => { // 还原
+    cy.edges().forEach(e => { e.style('opacity', 0.75); e.style('width', 2); });
+    cy.nodes().forEach(n => { n.style('opacity', 1); });
+  }, 3000);
+}
+
+// ─── detail panel ──────────────────────────
+function showDetail(n) {
+  if (!n) return;
+  const el = document.getElementById('detail');
+  const t = n.type;
+  let html = `<div class="detail-node">
+    <div class="kind">${t} · ${n.demo ? 'demo' : 'real'}</div>
+    <h2>${n.label}</h2>
+  </div>`;
+  html += `<div style="margin-top:12px">`;
+  const fields = [
+    ['类型', t],
+    ['artifact', n.artifact],
+    ['日期', n.date],
+    ['topic', n.topic],
+    ['route', n.route],
+    ['verdict', n.verdict],
+    ['batch', n.batch],
+    ['path', n.path],
+  ].filter(([k,v]) => v);
+  fields.forEach(([k,v]) => { html += `<div class="detail-field"><span class="k">${k}</span><span class="v">${v}</span></div>`; });
+  html += `</div>`;
+
+  // neighbors
+  const nbrs = [];
+  gdata.edges.forEach(e => {
+    if (e.from === n.id) nbrs.push({ node: e.to, edge: e.label, dir: '→' });
+    if (e.to === n.id) nbrs.push({ node: e.from, edge: e.label, dir: '←' });
+  });
+  if (nbrs.length) {
+    html += `<div class="neighbors" style="margin-top:14px"><div style="font-size:11.5px;color:var(--faint);margin-bottom:6px">关联 ${nbrs.length} 条边</div>`;
+    nbrs.forEach(nb => {
+      const tgt = gdata.nodes.find(x => x.id === nb.node);
+      html += `<div class="nbr" data-id="${nb.node}"><span class="edge">${nb.edge} ${nb.dir}</span><span class="lbl">${tgt ? (tgt.label || nb.node) : nb.node}</span></div>`;
+    });
+    html += `</div>`;
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('.nbr').forEach(x => {
+    x.onclick = () => {
+      const nbr = gdata.nodes.find(nn => nn.id === x.dataset.id);
+      if (nbr) showDetail(nbr);
+      const node = cy.getElementById(x.dataset.id);
+      if (node && node.length) cy.animate({ center: { eles: node }, zoom: 1.4 }, { duration: 350 });
+    };
+  });
+}
+
+function clearDetail() {
+  document.getElementById('detail').innerHTML = '<div class="detail-empty">点击图中任意节点查看其属性与关联</div>';
+}
+
+function updateStats() {
+  if (!cy) return;
+}
+function updateNodeCount() {
+  const el = document.getElementById('nodeCount');
+  const visible = cy.nodes().filter(n => n.style('display') !== 'none').length;
+  el.textContent = `节点 ${gdata.nodes.length} · 可见 ${visible} · 边 ${gdata.edges.length}`;
+}
+
+document.getElementById('toggleAll').onclick = () => {
+  const all = Object.keys(legendState).every(k => legendState[k] === false);
+  KINDS.forEach(k => { legendState[k] = all; });
+  applyFilters(); buildLegend();
+};
+
+// ─── load data ─────────────────────────────
+async function init() {
+  try {
+    const res = await fetch('./graph.json');
+    gdata = await res.json();
+  } catch (e) {
+    // fallback：内联占位？若无图，给出提示
+    document.getElementById('detail').innerHTML = '<div class="detail-empty">无法加载 graph.json（请先运行 node scripts/scan-artifacts-graph.js --out .ai-runtime-artifacts/graph.json）<br><br>下方为演示用内联数据。</div>';
+    gdata = window.__FALLBACK_GRAPH__;
+  }
+  render();
+}
+init();
+</script>
+</body>
+</html>
